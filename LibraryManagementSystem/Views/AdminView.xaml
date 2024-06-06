@@ -1,0 +1,66 @@
+﻿<Window x:Class="LibraryManagementSystem.Views.AdminView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Admin Panel" Height="600" Width="800">
+    <Grid>
+        <StackPanel Margin="10">
+            <TextBlock Text="Admin Panel" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" />
+
+            <!-- Item Management Section -->
+            <GroupBox Header="Item Management" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBox Width="200" Margin="5" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" SelectedText="Search Items"/>
+                    <Button Content="Search" Width="100" Command="{Binding SearchCommand}" Margin="5" />
+                    <TabControl>
+                        <TabItem Header="Books">
+                            <DataGrid ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                        <TabItem Header="CDs">
+                            <DataGrid ItemsSource="{Binding CDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                        <TabItem Header="EBooks">
+                            <DataGrid ItemsSource="{Binding EBooks}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                        <TabItem Header="DVDs">
+                            <DataGrid ItemsSource="{Binding DVDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                        <TabItem Header="Magazines">
+                            <DataGrid ItemsSource="{Binding Magazines}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                    </TabControl>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
+                        <Button Content="Add" Command="{Binding AddItemCommand}" Margin="5" />
+                        <Button Content="Update" Command="{Binding UpdateItemCommand}" Margin="5" />
+                        <Button Content="Delete" Command="{Binding DeleteItemCommand}" Margin="5" />
+                        <Button Content="Undo" Command="{Binding UndoCommand}" Margin="5" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- User Management Section -->
+            <GroupBox Header="User Management" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBox Width="200" Margin="5" Text="{Binding SearchUserTerm, UpdateSourceTrigger=PropertyChanged}" SelectedText="Search Users"/>
+                    <Button Content="Search" Width="100" Command="{Binding SearchUserCommand}" Margin="5" />
+                    <ListBox ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" DisplayMemberPath="Username" Margin="5" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
+                        <Button Content="Add" Command="{Binding AddUserCommand}" Margin="5" />
+                        <Button Content="Update" Command="{Binding UpdateUserCommand}" Margin="5" />
+                        <Button Content="Delete" Command="{Binding DeleteUserCommand}" Margin="5" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Loan Management Section -->
+            <GroupBox Header="Loan Management" Margin="0,0,0,10">
+                <StackPanel>
+                    <ListBox ItemsSource="{Binding Loans}" SelectedItem="{Binding SelectedLoan}" DisplayMemberPath="LoanDetails" Margin="5" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
+                        <Button Content="Approve" Command="{Binding ApproveLoanCommand}" Margin="5" />
+                        <Button Content="Reject" Command="{Binding RejectLoanCommand}" Margin="5" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
+</Window>

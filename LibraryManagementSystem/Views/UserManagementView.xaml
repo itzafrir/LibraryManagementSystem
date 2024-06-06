@@ -1,0 +1,31 @@
+﻿<Window x:Class="LibraryManagementSystem.Views.UserManagementView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="User Management" Height="450" Width="800">
+    <Grid>
+        <StackPanel Margin="10">
+            <TextBox Width="200" Margin="5" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" SelectedText="Search Users"/>
+            <Button Content="Search" Width="100" Command="{Binding SearchCommand}" Margin="5"/>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <Button Content="Add User" Width="100" Command="{Binding AddUserCommand}" Margin="5"/>
+                <Button Content="Remove User" Width="100" Command="{Binding RemoveUserCommand}" Margin="5" 
+                        IsEnabled="{Binding SelectedUser, Converter={StaticResource NullToBoolConverter}}" 
+                        Visibility="{Binding UserType, Converter={StaticResource UserTypeToVisibilityConverter}, ConverterParameter=Manager}"/>
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding FilteredUsers}" AutoGenerateColumns="True" Margin="5" SelectedItem="{Binding SelectedUser}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                    <DataGridTextColumn Header="Username" Binding="{Binding Username}" />
+                    <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" />
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" />
+                    <DataGridTextColumn Header="User Type" Binding="{Binding UserType}" />
+                    <DataGridTextColumn Header="Membership Date" Binding="{Binding MembershipDate}" />
+                    <DataGridTextColumn Header="Fines" Binding="{Binding Fines}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Window>

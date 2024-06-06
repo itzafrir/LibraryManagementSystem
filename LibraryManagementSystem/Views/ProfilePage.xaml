@@ -1,0 +1,22 @@
+﻿<Window x:Class="LibraryManagementSystem.Views.ProfilePage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Profile" Height="450" Width="800">
+    <Grid>
+        <StackPanel Margin="10">
+            <TextBlock Text="My Profile" FontSize="24" FontWeight="Bold" />
+            <TextBlock Text="{Binding UserProfile}" Margin="5"/>
+            <TabControl>
+                <TabItem Header="Current Loans">
+                    <ListBox ItemsSource="{Binding CurrentLoans}" DisplayMemberPath="Title" Margin="5"/>
+                </TabItem>
+                <TabItem Header="Orders">
+                    <ListBox ItemsSource="{Binding Orders}" DisplayMemberPath="Title" Margin="5"/>
+                </TabItem>
+                <TabItem Header="Fines">
+                    <ListBox ItemsSource="{Binding Fines}" DisplayMemberPath="Title" Margin="5"/>
+                </TabItem>
+            </TabControl>
+        </StackPanel>
+    </Grid>
+</Window>

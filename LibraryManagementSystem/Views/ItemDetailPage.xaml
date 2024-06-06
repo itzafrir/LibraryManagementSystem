@@ -1,0 +1,12 @@
+﻿<Window x:Class="LibraryManagementSystem.Views.ItemDetailPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Item Details" Height="450" Width="800">
+    <Grid>
+        <StackPanel Margin="10">
+            <TextBlock Text="{Binding SelectedItem.Title}" FontSize="24" FontWeight="Bold" />
+            <TextBlock Text="{Binding SelectedItem.GetDetails()}" Margin="5"/>
+            <Button Content="Loan Item" Width="100" Command="{Binding LoanItemCommand}" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>
