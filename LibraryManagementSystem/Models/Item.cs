@@ -14,7 +14,6 @@ namespace LibraryManagementSystem.Models
         public DateTime PublicationDate { get; set; }
         public string Publisher { get; set; }
         public string Description { get; set; }
-        public ICollection<CopiesByLocation> CopiesByLocations { get; set; }
 
         // Virtual method to get the creator of the item
         public virtual string GetCreator()

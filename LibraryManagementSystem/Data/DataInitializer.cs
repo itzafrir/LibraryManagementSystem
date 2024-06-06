@@ -10,7 +10,6 @@ namespace LibraryManagementSystem
     {
         public static void Initialize(IRepository<Item> itemRepository, IRepository<User> userRepository, IRepository<Loan> loanRepository)
         {
-            // Initialize sample items
             var items = new List<Item>
             {
                 new Book
@@ -23,19 +22,6 @@ namespace LibraryManagementSystem
                     Publisher = "Charles Scribner's Sons",
                     Description = "A novel set in the Roaring Twenties.",
                     Author = "F. Scott Fitzgerald",
-                    Genre = "Fiction",
-                    PageCount = 180,
-                    Language = "English",
-                    Format = "Hardcover",
-                    Dimensions = "5.5 x 0.8 x 8.2 inches",
-                    Series = "",
-                    Edition = 1,
-                    Keywords = new List<string> { "classic", "1920s", "American literature" },
-                    CopiesByLocations = new List<CopiesByLocation>
-                    {
-                        new CopiesByLocation { Location = "Main Library", Copies = 3 },
-                        new CopiesByLocation { Location = "East Branch", Copies = 2 }
-                    }
                 },
                 new CD
                 {
@@ -47,17 +33,6 @@ namespace LibraryManagementSystem
                     Publisher = "Apple Records",
                     Description = "The Beatles' eleventh studio album.",
                     Artist = "The Beatles",
-                    Genre = "Rock",
-                    Duration = new TimeSpan(0, 47, 23),
-                    TrackCount = 17,
-                    Label = "Apple",
-                    ReleaseDate = new DateTime(1969, 9, 26),
-                    Tracks = new List<string> { "Come Together", "Something", "Maxwell's Silver Hammer" },
-                    CopiesByLocations = new List<CopiesByLocation>
-                    {
-                        new CopiesByLocation { Location = "Main Library", Copies = 4 },
-                        new CopiesByLocation { Location = "West Branch", Copies = 3 }
-                    }
                 },
                 new EBook
                 {
@@ -68,11 +43,8 @@ namespace LibraryManagementSystem
                     PublicationDate = new DateTime(1949, 6, 8),
                     Publisher = "Secker & Warburg",
                     Description = "A dystopian social science fiction novel and cautionary tale.",
-                    Author = "George Orwell",
-                    FileFormat = "EPUB",
-                    FileSize = 2.5,
-                    DownloadLink = "http://example.com/1984.epub",
-                    Keywords = new List<string> { "dystopia", "totalitarianism", "classic" }
+                    Author = "George Orwell"
+                    // EBooks don't need CopiesByLocation
                 },
                 // Add more items as needed
             };
@@ -82,7 +54,6 @@ namespace LibraryManagementSystem
                 itemRepository.Add(item);
             }
 
-            // Initialize sample users
             var users = new List<User>
             {
                 new User
@@ -117,7 +88,6 @@ namespace LibraryManagementSystem
                 userRepository.Add(user);
             }
 
-            // Initialize sample loans
             var loans = new List<Loan>
             {
                 new Loan

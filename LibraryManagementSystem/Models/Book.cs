@@ -2,7 +2,7 @@
 
 namespace LibraryManagementSystem.Models
 {
-    public class Book : PhysicalItem
+    public class Book : Item
     {
         public string Author { get; set; }
         public string Genre { get; set; }
@@ -17,7 +17,6 @@ namespace LibraryManagementSystem.Models
         // Constructor to initialize CopiesByLocation and Keywords
         public Book()
         {
-            CopiesByLocation = new Dictionary<string, int>();
             Keywords = new List<string>();
         }
 

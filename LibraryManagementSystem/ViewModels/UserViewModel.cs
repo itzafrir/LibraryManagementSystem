@@ -2,13 +2,13 @@
 using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Services;
-using LibraryManagementSystem.Utilities.Enums;
 using System.Collections.ObjectModel;
 using System.Windows;
+using LibraryManagementSystem.Utilities.Enums;
 
 namespace LibraryManagementSystem.ViewModels
 {
-    public class UserViewModel : ObservableObject
+    public partial class UserViewModel : ObservableObject
     {
         private readonly BookService _bookService;
         private Book _selectedBook;
@@ -16,7 +16,6 @@ namespace LibraryManagementSystem.ViewModels
         private UserType _userType;
 
         public ObservableCollection<Book> Books { get; private set; }
-
         public Book SelectedBook
         {
             get => _selectedBook;
@@ -40,9 +39,9 @@ namespace LibraryManagementSystem.ViewModels
         public IRelayCommand UpdateBookCommand { get; private set; }
         public IRelayCommand DeleteBookCommand { get; private set; }
 
-        public UserViewModel(UserType userType)
+        public UserViewModel(BookService bookService, UserType userType)
         {
-            _bookService = new BookService();
+            _bookService = bookService;
             UserType = userType;
 
             Books = new ObservableCollection<Book>(_bookService.GetAllBooks());
@@ -78,7 +77,6 @@ namespace LibraryManagementSystem.ViewModels
             };
             _bookService.AddBook(newBook);
             Books.Add(newBook);
-            MessageBox.Show("Book added successfully.", "Success");
         }
 
         private void UpdateBook()

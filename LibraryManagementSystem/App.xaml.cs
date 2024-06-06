@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
-using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Services;
 using LibraryManagementSystem.Repositories;
 using LibraryManagementSystem.ViewModels;
 using LibraryManagementSystem.Views;
+using LibraryManagementSystem.Data;
+using LibraryManagementSystem.Models;
 
 namespace LibraryManagementSystem
 {
@@ -22,7 +23,11 @@ namespace LibraryManagementSystem
             _serviceProvider = serviceCollection.BuildServiceProvider();
 
             var context = _serviceProvider.GetRequiredService<LibraryContext>();
-            DataInitializer.Initialize(context);
+            var itemRepository = _serviceProvider.GetRequiredService<IRepository<Item>>();
+            var userRepository = _serviceProvider.GetRequiredService<IRepository<User>>();
+            var loanRepository = _serviceProvider.GetRequiredService<IRepository<Loan>>();
+
+            DataInitializer.Initialize(itemRepository,userRepository,loanRepository);
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
@@ -34,6 +39,7 @@ namespace LibraryManagementSystem
                 options.UseSqlite("Data Source=library.db"));
 
             services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
+            services.AddSingleton<BookService>();
             services.AddSingleton<ItemService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<MainWindowViewModel>();

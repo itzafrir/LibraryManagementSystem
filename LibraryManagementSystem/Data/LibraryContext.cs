@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using LibraryManagementSystem.Models;
 
 namespace LibraryManagementSystem.Data
@@ -17,19 +19,5 @@ namespace LibraryManagementSystem.Data
         public DbSet<Magazine> Magazines { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Loan> Loans { get; set; }
-        public DbSet<CopiesByLocation> CopiesByLocations { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<CopiesByLocation>()
-                .HasKey(c => c.Id);
-
-            modelBuilder.Entity<CopiesByLocation>()
-                .HasOne(c => c.Item)
-                .WithMany(i => i.CopiesByLocations)
-                .HasForeignKey(c => c.ItemId);
-
-            base.OnModelCreating(modelBuilder);
-        }
     }
 }

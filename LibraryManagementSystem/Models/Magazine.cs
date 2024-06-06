@@ -2,7 +2,7 @@
 
 namespace LibraryManagementSystem.Models
 {
-    public class Magazine : PhysicalItem
+    public class Magazine : Item
     {
         public string Editor { get; set; }
         public int IssueNumber { get; set; }
@@ -13,7 +13,6 @@ namespace LibraryManagementSystem.Models
         // Constructor to initialize CopiesByLocation and Articles
         public Magazine()
         {
-            CopiesByLocation = new Dictionary<string, int>();
             Articles = new List<string>();
         }
 

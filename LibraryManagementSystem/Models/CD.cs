@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LibraryManagementSystem.Models
 {
-    public class CD : PhysicalItem
+    public class CD : Item
     {
         public string Artist { get; set; }
         public string Genre { get; set; }
@@ -16,7 +16,6 @@ namespace LibraryManagementSystem.Models
         // Constructor to initialize CopiesByLocation and Tracks
         public CD()
         {
-            CopiesByLocation = new Dictionary<string, int>();
             Tracks = new List<string>();
         }
 

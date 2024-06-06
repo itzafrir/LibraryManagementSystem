@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LibraryManagementSystem.Models
 {
-    public class DVD : PhysicalItem
+    public class DVD : Item
     {
         public string Director { get; set; }
         public string Genre { get; set; }
@@ -17,7 +17,6 @@ namespace LibraryManagementSystem.Models
         // Constructor to initialize CopiesByLocation, Subtitles, and Cast
         public DVD()
         {
-            CopiesByLocation = new Dictionary<string, int>();
             Subtitles = new List<string>();
             Cast = new List<string>();
         }

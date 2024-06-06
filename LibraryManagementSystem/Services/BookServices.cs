@@ -1,67 +1,49 @@
-﻿using LibraryManagementSystem.Models;
-using LibraryManagementSystem.Data;
+﻿using LibraryManagementSystem.Data;
+using LibraryManagementSystem.Models;
 using System.Collections.Generic;
 using System.Linq;
+using LibraryManagementSystem.Repositories;
 
 namespace LibraryManagementSystem.Services
 {
     public class BookService
     {
-        public IEnumerable<Book> GetAllBooks()
+        private readonly IRepository<Book> _bookRepository;
+
+        public BookService(IRepository<Book> bookRepository)
         {
-            using (var context = new LibraryContext())
-            {
-                return context.Books.ToList();
-            }
+            _bookRepository = bookRepository;
         }
 
-        public IEnumerable<Book> SearchBooks(string searchTerm)
+        public IEnumerable<Book> GetAllBooks()
         {
-            using (var context = new LibraryContext())
-            {
-                return context.Books
-                    .Where(b => b.Title.Contains(searchTerm) || b.Author.Contains(searchTerm) || b.ISBN.Contains(searchTerm))
-                    .ToList();
-            }
+            return _bookRepository.GetAll();
         }
 
         public Book GetBookById(int id)
         {
-            using (var context = new LibraryContext())
-            {
-                return context.Books.Find(id);
-            }
+            return _bookRepository.GetById(id);
         }
 
         public void AddBook(Book book)
         {
-            using (var context = new LibraryContext())
-            {
-                context.Books.Add(book);
-                context.SaveChanges();
-            }
+            _bookRepository.Add(book);
         }
 
         public void UpdateBook(Book book)
         {
-            using (var context = new LibraryContext())
-            {
-                context.Books.Update(book);
-                context.SaveChanges();
-            }
+            _bookRepository.Update(book);
         }
 
         public void DeleteBook(int id)
         {
-            using (var context = new LibraryContext())
-            {
-                var book = context.Books.Find(id);
-                if (book != null)
-                {
-                    context.Books.Remove(book);
-                    context.SaveChanges();
-                }
-            }
+            _bookRepository.Delete(id);
+        }
+
+        public IEnumerable<Book> SearchBooks(string searchTerm)
+        {
+            return _bookRepository.GetAll()
+                .Where(book => book.Title.Contains(searchTerm) || book.Author.Contains(searchTerm));
         }
     }
 }
