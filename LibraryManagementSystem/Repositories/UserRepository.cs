@@ -7,51 +7,51 @@ using System.Linq;
 
 namespace LibraryManagementSystem.Repositories
 {
-    public class ItemRepository : IRepository<Item>
+    public class UserRepository : IRepository<User>
     {
         private readonly LibraryContext _context;
 
-        public ItemRepository(LibraryContext context)
+        public UserRepository(LibraryContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public IEnumerable<Item> GetAll()
+        public IEnumerable<User> GetAll()
         {
-            return _context.Items.ToList();
+            return _context.Users.ToList();
         }
 
-        public Item GetById(int id)
+        public User GetById(int id)
         {
-            return _context.Items.Find(id);
+            return _context.Users.Find(id);
         }
 
-        public void Add(Item entity)
+        public void Add(User entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _context.Items.Add(entity);
+            _context.Users.Add(entity);
             _context.SaveChanges();
         }
 
-        public void Update(Item entity)
+        public void Update(User entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _context.Items.Attach(entity);
+            _context.Users.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            var entity = _context.Items.Find(id);
+            var entity = _context.Users.Find(id);
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _context.Items.Remove(entity);
+            _context.Users.Remove(entity);
             _context.SaveChanges();
         }
     }

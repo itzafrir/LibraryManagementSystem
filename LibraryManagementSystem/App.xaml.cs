@@ -23,11 +23,14 @@ namespace LibraryManagementSystem
             _serviceProvider = serviceCollection.BuildServiceProvider();
 
             var context = _serviceProvider.GetRequiredService<LibraryContext>();
-            var itemRepository = _serviceProvider.GetRequiredService<IRepository<Item>>();
-            var userRepository = _serviceProvider.GetRequiredService<IRepository<User>>();
-            var loanRepository = _serviceProvider.GetRequiredService<IRepository<Loan>>();
+            var i = new ItemRepository(context);
+            var u = new UserRepository(context);
+            var l = new LoanRepository(context);
+            //var itemRepository = _serviceProvider.GetRequiredService<IRepository<Item>>();
+            //var userRepository = _serviceProvider.GetRequiredService<IRepository<User>>();
+            //var loanRepository = _serviceProvider.GetRequiredService<IRepository<Loan>>();
 
-            DataInitializer.Initialize(itemRepository,userRepository,loanRepository);
+            DataInitializer.Initialize(i,u,l);
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
@@ -39,7 +42,7 @@ namespace LibraryManagementSystem
                 options.UseSqlite("Data Source=library.db"));
 
             services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
-            services.AddSingleton<BookService>();
+            services.AddSingleton<LoanService>();
             services.AddSingleton<ItemService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<MainWindowViewModel>();

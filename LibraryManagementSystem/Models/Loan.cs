@@ -12,19 +12,23 @@ namespace LibraryManagementSystem.Models
         public DateTime DueDate { get; set; }
         public LoanStatus LoanStatus { get; set; }
 
-        // Method to return the loan
+        // Navigation properties
+        public virtual Item Item { get; set; }
+        public virtual User User { get; set; }
+
         public void ReturnLoan()
         {
+            if (LoanStatus != LoanStatus.Active)
+                throw new InvalidOperationException("Only active loans can be returned.");
+
             LoanStatus = LoanStatus.Returned;
         }
 
-        // Method to check if the loan is overdue
         public bool IsOverdue()
         {
             return LoanStatus == LoanStatus.Active && DateTime.Now > DueDate;
         }
 
-        // Method to get the loan details
         public string GetLoanDetails()
         {
             return $"Loan ID: {Id}, Item ID: {ItemId}, User ID: {UserId}, Loan Date: {LoanDate.ToShortDateString()}, Due Date: {DueDate.ToShortDateString()}, Status: {LoanStatus}";
