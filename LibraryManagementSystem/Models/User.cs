@@ -22,6 +22,16 @@ namespace LibraryManagementSystem.Models
         // Constructor to initialize lists
         public User()
         {
+            Id = 0;
+            FullName = "OMER";
+            Username = "OMER";
+            Password = "OMER";
+            Email = "OMER";
+            Address = "OMER";
+            PhoneNumber = "OMER";
+            UserType = UserType.Assistant;
+            MembershipDate = DateTime.Now;
+            Fines = 0;
             CurrentLoans = new List<Loan>();
             LoanRequests = new List<LoanRequest>();
         }

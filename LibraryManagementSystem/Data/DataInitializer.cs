@@ -3,6 +3,7 @@ using LibraryManagementSystem.Repositories;
 using LibraryManagementSystem.Utilities.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LibraryManagementSystem
 {
@@ -44,14 +45,15 @@ namespace LibraryManagementSystem
                     Publisher = "Secker & Warburg",
                     Description = "A dystopian social science fiction novel and cautionary tale.",
                     Author = "George Orwell"
-                    // EBooks don't need CopiesByLocation
                 },
-                // Add more items as needed
             };
 
             foreach (var item in items)
             {
-                itemRepository.Add(item);
+                if (!itemRepository.GetAll().Any(i => i.Title == item.Title && i.ISBN == item.ISBN))
+                {
+                    itemRepository.Add(item);
+                }
             }
 
             var users = new List<User>
@@ -80,12 +82,14 @@ namespace LibraryManagementSystem
                     MembershipDate = DateTime.Now.AddYears(-3),
                     Fines = 5.0
                 },
-                // Add more users as needed
             };
 
             foreach (var user in users)
             {
-                userRepository.Add(user);
+                if (userRepository.GetAll().All(u => u.Username != user.Username))
+                {
+                    userRepository.Add(user);
+                }
             }
 
             var loans = new List<Loan>
@@ -106,12 +110,14 @@ namespace LibraryManagementSystem
                     DueDate = DateTime.Now.AddDays(9),
                     LoanStatus = LoanStatus.Active
                 },
-                // Add more loans as needed
             };
 
             foreach (var loan in loans)
             {
-                loanRepository.Add(loan);
+                if (!loanRepository.GetAll().Any(l => l.ItemId == loan.ItemId && l.UserId == loan.UserId && l.LoanDate == loan.LoanDate))
+                {
+                    //loanRepository.Add(loan);
+                }
             }
         }
     }

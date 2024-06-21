@@ -32,7 +32,8 @@ namespace LibraryManagementSystem.Repositories
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _dbSet.Add(entity);
+            //_dbSet.Add(entity);
+            _context.Set<T>().Add(entity);
             _context.SaveChanges();
         }
 
