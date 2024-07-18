@@ -1,25 +1,30 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Models;
-using System.Windows;
+using LibraryManagementSystem.Services;
+using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
-    public partial class ItemDetailViewModel : ObservableObject
+    public class ItemDetailViewModel : ObservableObject
     {
+        private readonly ItemService _itemService;
         public Item SelectedItem { get; }
 
-        public IRelayCommand LoanItemCommand { get; }
+        public ICommand LoanItemCommand { get; }
 
-        public ItemDetailViewModel(Item selectedItem)
+        public ItemDetailViewModel(Item selectedItem, ItemService itemService)
         {
             SelectedItem = selectedItem;
+            _itemService = itemService;
+
             LoanItemCommand = new RelayCommand(LoanItem);
         }
 
         private void LoanItem()
         {
-            // Logic to loan the item
+            // Implement loan logic here
             MessageBox.Show("Item loaned successfully.", "Success");
         }
     }

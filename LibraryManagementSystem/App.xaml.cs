@@ -56,16 +56,8 @@ namespace LibraryManagementSystem
 
             #endregion
 
-            // Get list of tables
-            var tables = context.Model.GetEntityTypes()
-                .Select(t => t.GetTableName())
-                .Distinct()
-                .ToList();
-            string tableList = string.Join(", ", tables);
-
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
-
         }
 
         private void ConfigureServices(IServiceCollection services)

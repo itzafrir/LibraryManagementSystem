@@ -52,7 +52,7 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (SelectedItem != null)
             {
-                new Views.ItemDetailPage { DataContext = new ItemDetailViewModel(SelectedItem) }.Show();
+                new Views.ItemDetailPage { DataContext = new ItemDetailViewModel(SelectedItem,_itemService) }.Show();
             }
         }
     }

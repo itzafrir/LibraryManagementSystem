@@ -116,7 +116,7 @@ namespace LibraryManagementSystem
             {
                 if (!loanRepository.GetAll().Any(l => l.ItemId == loan.ItemId && l.UserId == loan.UserId && l.LoanDate == loan.LoanDate))
                 {
-                    //loanRepository.Add(loan);
+                    loanRepository.Add(loan);
                 }
             }
         }
