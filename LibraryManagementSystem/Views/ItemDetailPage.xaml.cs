@@ -1,27 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Services;
+using LibraryManagementSystem.ViewModels;
 
 namespace LibraryManagementSystem.Views
 {
-    /// <summary>
-    /// Interaction logic for ItemDetailPage.xaml
-    /// </summary>
     public partial class ItemDetailPage : Window
     {
-        public ItemDetailPage()
+        public ItemDetailPage(Item selectedItem, ItemService itemService, UserService userService, CatalogViewModel catalogViewModel)
         {
             InitializeComponent();
+            var viewModel = new ItemDetailViewModel(selectedItem, itemService, userService, catalogViewModel);
+            viewModel.RequestClose += OnRequestClose;
+            DataContext = viewModel;
+        }
+
+        private void OnRequestClose(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

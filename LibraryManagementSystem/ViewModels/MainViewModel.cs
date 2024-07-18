@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Services;
+using System;
 using System.Windows;
 
 namespace LibraryManagementSystem.ViewModels
@@ -14,6 +15,8 @@ namespace LibraryManagementSystem.ViewModels
         public IRelayCommand NavigateToProfileCommand { get; }
         public IRelayCommand NavigateToLoginCommand { get; }
 
+        public event EventHandler RequestClose;
+
         public MainWindowViewModel(ItemService itemService, UserService userService)
         {
             _itemService = itemService;
@@ -26,25 +29,40 @@ namespace LibraryManagementSystem.ViewModels
 
         private void NavigateToCatalog()
         {
-            new Views.CatalogPage { DataContext = new CatalogViewModel(_itemService) }.Show();
+            var catalogPage = new Views.CatalogPage(_itemService, _userService);
+            catalogPage.Show();
+            RequestClose?.Invoke(this, EventArgs.Empty);
         }
 
         private void NavigateToProfile()
         {
-            // Check if the user is logged in
             if (_userService.IsUserLoggedIn())
             {
-                new Views.ProfilePage { DataContext = new ProfileViewModel(_userService) }.Show();
+                var profilePage = new Views.ProfilePage
+                {
+                    DataContext = new ProfileViewModel(_userService)
+                };
+                profilePage.Show();
             }
             else
             {
-                new Views.LoginWindow { DataContext = new LoginViewModel(_userService) }.Show();
+                var loginWindow = new Views.LoginWindow
+                {
+                    DataContext = new LoginViewModel(_userService)
+                };
+                loginWindow.Show();
             }
+            RequestClose?.Invoke(this, EventArgs.Empty);
         }
 
         private void NavigateToLogin()
         {
-            new Views.LoginWindow { DataContext = new LoginViewModel(_userService) }.Show();
+            var loginWindow = new Views.LoginWindow
+            {
+                DataContext = new LoginViewModel(_userService)
+            };
+            loginWindow.Show();
+            RequestClose?.Invoke(this, EventArgs.Empty);
         }
     }
 }

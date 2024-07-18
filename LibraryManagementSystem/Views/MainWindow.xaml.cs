@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using LibraryManagementSystem.Services;
 using LibraryManagementSystem.ViewModels;
@@ -15,7 +16,15 @@ namespace LibraryManagementSystem.Views
             InitializeComponent();
             _userService = userService;
             _itemService = itemService;
-            DataContext = new MainWindowViewModel(_itemService, _userService);
+
+            var viewModel = new MainWindowViewModel(_itemService, _userService);
+            viewModel.RequestClose += OnRequestClose;
+            DataContext = viewModel;
+        }
+
+        private void OnRequestClose(object sender, EventArgs e)
+        {
+            Close();
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

@@ -10,69 +10,13 @@
 
             <ContentControl Content="{Binding SelectedItem}">
                 <ContentControl.Resources>
-                    <!-- Book Template -->
-                    <DataTemplate DataType="{x:Type models:Book}">
-                        <StackPanel Margin="10,0,0,10">
-                            <TextBlock Text="Author:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Author}" Margin="0,0,0,5"/>
-                            <TextBlock Text="Page Count:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding PageCount}" Margin="0,0,0,5"/>
-                            <TextBlock Text="Genre:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Genre}" Margin="0,0,0,5"/>
-                        </StackPanel>
-                    </DataTemplate>
-
-                    <!-- CD Template -->
-                    <DataTemplate DataType="{x:Type models:CD}">
-                        <StackPanel Margin="10,0,0,10">
-                            <TextBlock Text="Artist:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Artist}" Margin="0,0,0,5"/>
-                            <TextBlock Text="Genre:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Genre}" Margin="0,0,0,5"/>
-                            <TextBlock Text="Track Count:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding TrackCount}" Margin="0,0,0,5"/>
-                        </StackPanel>
-                    </DataTemplate>
-
-                    <!-- DVD Template -->
-                    <DataTemplate DataType="{x:Type models:DVD}">
-                        <StackPanel Margin="10,0,0,10">
-                            <TextBlock Text="Director:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Director}" Margin="0,0,0,5"/>
-                            <TextBlock Text="Genre:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Genre}" Margin="0,0,0,5"/>
-                            <TextBlock Text="Duration:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Duration}" Margin="0,0,0,5"/>
-                        </StackPanel>
-                    </DataTemplate>
-
-                    <!-- EBook Template -->
-                    <DataTemplate DataType="{x:Type models:EBook}">
-                        <StackPanel Margin="10,0,0,10">
-                            <TextBlock Text="Author:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Author}" Margin="0,0,0,5"/>
-                            <TextBlock Text="File Format:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding FileFormat}" Margin="0,0,0,5"/>
-                            <TextBlock Text="File Size:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding FileSize}" Margin="0,0,0,5"/>
-                        </StackPanel>
-                    </DataTemplate>
-
-                    <!-- Magazine Template -->
-                    <DataTemplate DataType="{x:Type models:Magazine}">
-                        <StackPanel Margin="10,0,0,10">
-                            <TextBlock Text="Publisher:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Publisher}" Margin="0,0,0,5"/>
-                            <TextBlock Text="Issue:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Issue}" Margin="0,0,0,5"/>
-                            <TextBlock Text="Pages:" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Pages}" Margin="0,0,0,5"/>
-                        </StackPanel>
-                    </DataTemplate>
+                    <!-- Templates for different item types -->
                 </ContentControl.Resources>
             </ContentControl>
 
             <Button Content="Loan Item" Width="100" Command="{Binding LoanItemCommand}" Margin="5"/>
+            <Button Content="Go Back to Catalog" Width="150" Command="{Binding GoBackToCatalogCommand}" Margin="5"/>
+            <Button Content="Home" Width="100" Command="{Binding NavigateHomeCommand}" Margin="5"/>
         </StackPanel>
     </Grid>
 </Window>

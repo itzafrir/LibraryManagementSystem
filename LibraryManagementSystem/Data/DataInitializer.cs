@@ -96,16 +96,16 @@ namespace LibraryManagementSystem
             {
                 new Loan
                 {
-                    ItemId = 1,
-                    UserId = 1,
+                    ItemId = itemRepository.GetAll().First(i => i.Title == "The Great Gatsby").Id,
+                    UserId = userRepository.GetAll().First(u => u.Username == "john_doe").Id,
                     LoanDate = DateTime.Now.AddDays(-10),
                     DueDate = DateTime.Now.AddDays(4),
                     LoanStatus = LoanStatus.Active
                 },
                 new Loan
                 {
-                    ItemId = 2,
-                    UserId = 2,
+                    ItemId = itemRepository.GetAll().First(i => i.Title == "Abbey Road").Id,
+                    UserId = userRepository.GetAll().First(u => u.Username == "jane_smith").Id,
                     LoanDate = DateTime.Now.AddDays(-5),
                     DueDate = DateTime.Now.AddDays(9),
                     LoanStatus = LoanStatus.Active
