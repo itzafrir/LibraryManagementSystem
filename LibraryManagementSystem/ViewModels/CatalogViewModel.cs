@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using LibraryManagementSystem.Utilities.Enums;
+using LibraryManagementSystem.Views;
 
 namespace LibraryManagementSystem.ViewModels
 {
@@ -92,6 +93,8 @@ namespace LibraryManagementSystem.ViewModels
                 {
                     DataContext = new ItemDetailViewModel(SelectedItem, _itemService, _userService, this)
                 };
+                // Subscribe to the RequestClose event here
+                ((ItemDetailViewModel)itemDetailPage.DataContext).RequestClose += (_, __) => itemDetailPage.Close();
                 itemDetailPage.Show();
                 RequestClose?.Invoke(this, EventArgs.Empty);
             }

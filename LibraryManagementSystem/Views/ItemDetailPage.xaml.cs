@@ -18,7 +18,7 @@ namespace LibraryManagementSystem.Views
 
         private void OnRequestClose(object sender, EventArgs e)
         {
-            Close();
+            Close(); // Ensure this is called
         }
     }
 }

@@ -4,7 +4,8 @@
         Title="Catalog" Height="450" Width="800">
     <Grid>
         <StackPanel Margin="10">
-            <TextBox Text="{Binding SearchTerm}" Width="200" Margin="0,0,0,10" SelectedText="Search..."/>
+            <TextBox Text="{Binding SearchTerm}" Width="200" Margin="0,0,0,10" SelectedText="Search..." />
+            <TextBlock Text="Filter by Item Type:" FontWeight="Bold" Margin="0,0,0,5" TextAlignment="Center"/>
             <ComboBox ItemsSource="{Binding ItemTypes}" SelectedItem="{Binding SelectedItemType}" Width="200" Margin="0,0,0,10"/>
             <Button Content="Search" Command="{Binding SearchCommand}" Width="100" Margin="0,0,0,10"/>
             <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="Title" Height="220"/>

@@ -29,7 +29,10 @@ namespace LibraryManagementSystem.ViewModels
 
         private void NavigateToCatalog()
         {
-            var catalogPage = new Views.CatalogPage(_itemService, _userService);
+            var catalogPage = new Views.CatalogPage(_itemService, _userService)
+            {
+                DataContext = new CatalogViewModel(_itemService, _userService)
+            };
             catalogPage.Show();
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
@@ -46,18 +49,15 @@ namespace LibraryManagementSystem.ViewModels
             }
             else
             {
-                var loginWindow = new Views.LoginWindow
-                {
-                    DataContext = new LoginViewModel(_userService)
-                };
-                loginWindow.Show();
+                MessageBox.Show("Please log in to view your profile.", "Not Logged In", MessageBoxButton.OK, MessageBoxImage.Warning);
+                NavigateToLogin();
             }
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
 
         private void NavigateToLogin()
         {
-            var loginWindow = new Views.LoginWindow
+            var loginWindow = new Views.LoginPage
             {
                 DataContext = new LoginViewModel(_userService)
             };

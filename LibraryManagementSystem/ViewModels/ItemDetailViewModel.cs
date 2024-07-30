@@ -46,7 +46,7 @@ namespace LibraryManagementSystem.ViewModels
         {
             var mainWindow = new Views.MainWindow(_userService, _itemService);
             mainWindow.Show();
-            RequestClose?.Invoke(this, EventArgs.Empty);
+            RequestClose?.Invoke(this, EventArgs.Empty); // Invoke the event to close the window
         }
 
         private void GoBackToCatalog()
@@ -55,9 +55,11 @@ namespace LibraryManagementSystem.ViewModels
             {
                 DataContext = _catalogViewModel
             };
+            // Subscribe to the RequestClose event here
+            ((CatalogViewModel)catalogPage.DataContext).RequestClose += (_, __) => catalogPage.Close();
             _catalogViewModel.RestoreMemento(_catalogViewModelMemento);
             catalogPage.Show();
-            RequestClose?.Invoke(this, EventArgs.Empty);
+            RequestClose?.Invoke(this, EventArgs.Empty); // Ensure this is invoked
         }
     }
 }
