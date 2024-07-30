@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using LibraryManagementSystem.Services;
+using LibraryManagementSystem.ViewModels;
 
 namespace LibraryManagementSystem.Views
 {
-    /// <summary>
-    /// Interaction logic for ProfilePage.xaml
-    /// </summary>
     public partial class ProfilePage : Window
     {
-        public ProfilePage()
+        public ProfilePage(UserService userService, Action onGoBack)
         {
             InitializeComponent();
+            var viewModel = new ProfileViewModel(userService, onGoBack);
+            viewModel.RequestClose += OnRequestClose;
+            DataContext = viewModel;
+        }
+
+        private void OnRequestClose(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

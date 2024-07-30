@@ -17,6 +17,7 @@
             <Button Content="Loan Item" Width="100" Command="{Binding LoanItemCommand}" Margin="5"/>
             <Button Content="Go Back to Catalog" Width="150" Command="{Binding GoBackToCatalogCommand}" Margin="5"/>
             <Button Content="Home" Width="100" Command="{Binding NavigateHomeCommand}" Margin="5"/>
+            <Button Content="Login" Width="100" Command="{Binding NavigateToLoginCommand}" Margin="5"/>
         </StackPanel>
     </Grid>
 </Window>

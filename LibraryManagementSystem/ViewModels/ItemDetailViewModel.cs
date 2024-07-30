@@ -15,11 +15,12 @@ namespace LibraryManagementSystem.ViewModels
         private readonly UserService _userService;
         private readonly CatalogViewModel _catalogViewModel;
         private readonly CatalogViewModelMemento _catalogViewModelMemento;
-        public Item SelectedItem { get; }
+        public Item SelectedItem { get;private set; }
 
         public ICommand LoanItemCommand { get; }
         public ICommand NavigateHomeCommand { get; }
         public ICommand GoBackToCatalogCommand { get; }
+        public IRelayCommand NavigateToLoginCommand { get; }
 
         public event EventHandler RequestClose;
 
@@ -34,8 +35,19 @@ namespace LibraryManagementSystem.ViewModels
             LoanItemCommand = new RelayCommand(LoanItem);
             NavigateHomeCommand = new RelayCommand(NavigateHome);
             GoBackToCatalogCommand = new RelayCommand(GoBackToCatalog);
+            NavigateToLoginCommand = new RelayCommand(NavigateToLogin); // Add this line
+        }
+        public ItemDetailViewModelMemento CreateMemento()
+        {
+            return new ItemDetailViewModelMemento(SelectedItem);
         }
 
+        public void RestoreMemento(ItemDetailViewModelMemento memento)
+        {
+            SelectedItem = memento.SelectedItem;
+            // You may need to notify property changes if necessary
+            OnPropertyChanged(nameof(SelectedItem));
+        }
         private void LoanItem()
         {
             // Implement loan logic here
@@ -60,6 +72,27 @@ namespace LibraryManagementSystem.ViewModels
             _catalogViewModel.RestoreMemento(_catalogViewModelMemento);
             catalogPage.Show();
             RequestClose?.Invoke(this, EventArgs.Empty); // Ensure this is invoked
+        }
+        private void NavigateToLogin()
+        {
+            var memento = CreateMemento();
+            var loginWindow = new Views.LoginWindow(_userService, () => GoBackToItemDetail(memento), NavigateHome)
+            {
+                DataContext = new LoginViewModel(_userService, () => GoBackToItemDetail(memento), NavigateHome)
+            };
+            loginWindow.Show();
+            ((LoginViewModel)loginWindow.DataContext).RequestClose += (_, __) => loginWindow.Close();
+            RequestClose?.Invoke(this, EventArgs.Empty);
+        }
+        private void GoBackToItemDetail(ItemDetailViewModelMemento memento)
+        {
+            var itemDetailPage = new Views.ItemDetailPage(memento.SelectedItem, _itemService, _userService, _catalogViewModel)
+            {
+                DataContext = this
+            };
+            ((ItemDetailViewModel)itemDetailPage.DataContext).RequestClose += (_, __) => itemDetailPage.Close();
+            RestoreMemento(memento);
+            itemDetailPage.Show();
         }
     }
 }

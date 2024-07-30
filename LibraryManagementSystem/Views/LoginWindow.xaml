@@ -10,6 +10,7 @@
             <TextBlock Text="Password:" />
             <PasswordBox Width="200" behaviors:PasswordBoxBehavior.BindPassword="True" behaviors:PasswordBoxBehavior.BoundPassword="{Binding Password, Mode=TwoWay}" Margin="0,0,0,10" />
             <Button Content="Login" Width="100" Command="{Binding LoginCommand}" />
+            <Button Content="Go Back" Width="100" Command="{Binding GoBackCommand}" Margin="5"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -44,6 +44,7 @@ namespace LibraryManagementSystem.ViewModels
         public IRelayCommand SearchCommand { get; }
         public IRelayCommand ViewItemDetailsCommand { get; }
         public IRelayCommand NavigateHomeCommand { get; }
+        public IRelayCommand NavigateToLoginCommand { get; }
 
         public event EventHandler RequestClose;
 
@@ -57,6 +58,7 @@ namespace LibraryManagementSystem.ViewModels
             SearchCommand = new RelayCommand(SearchItems);
             ViewItemDetailsCommand = new RelayCommand(ViewItemDetails);
             NavigateHomeCommand = new RelayCommand(NavigateHome);
+            NavigateToLoginCommand = new RelayCommand(NavigateToLogin); 
         }
 
         public CatalogViewModelMemento CreateMemento()
@@ -89,7 +91,7 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (SelectedItem != null)
             {
-                var itemDetailPage = new Views.ItemDetailPage(SelectedItem, _itemService, _userService, this)
+                var itemDetailPage = new ItemDetailPage(SelectedItem, _itemService, _userService, this)
                 {
                     DataContext = new ItemDetailViewModel(SelectedItem, _itemService, _userService, this)
                 };
@@ -105,6 +107,27 @@ namespace LibraryManagementSystem.ViewModels
             var mainWindow = new Views.MainWindow(_userService, _itemService);
             mainWindow.Show();
             RequestClose?.Invoke(this, EventArgs.Empty);
+        }
+        private void NavigateToLogin()
+        {
+            var memento = CreateMemento();
+            var loginWindow = new LoginWindow(_userService, () => GoBackToCatalog(memento), NavigateHome)
+            {
+                DataContext = new LoginViewModel(_userService, () => GoBackToCatalog(memento), NavigateHome)
+            };
+            ((LoginViewModel)loginWindow.DataContext).RequestClose += (_, __) => loginWindow.Close();
+            loginWindow.Show();
+            RequestClose?.Invoke(this, EventArgs.Empty);
+        }
+        private void GoBackToCatalog(CatalogViewModelMemento memento)
+        {
+            var catalogPage = new CatalogPage(_itemService, _userService)
+            {
+                DataContext = this
+            };
+            ((CatalogViewModel)catalogPage.DataContext).RequestClose += (_, __) => catalogPage.Close();
+            RestoreMemento(memento);
+            catalogPage.Show();
         }
     }
 }

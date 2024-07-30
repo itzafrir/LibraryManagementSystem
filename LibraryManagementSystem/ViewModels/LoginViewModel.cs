@@ -1,13 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Services;
+using System;
 using System.Windows;
+using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
     public partial class LoginViewModel : ObservableObject
     {
         private readonly UserService _userService;
+        private readonly Action _onSuccessfulLogin;
+        private readonly Action _onGoBack;
         private string _username;
         private string _password;
 
@@ -23,12 +27,18 @@ namespace LibraryManagementSystem.ViewModels
             set => SetProperty(ref _password, value);
         }
 
-        public IRelayCommand LoginCommand { get; }
+        public ICommand LoginCommand { get; }
+        public ICommand GoBackCommand { get; }
 
-        public LoginViewModel(UserService userService)
+        public event EventHandler RequestClose;
+
+        public LoginViewModel(UserService userService, Action onSuccessfulLogin, Action onGoBack)
         {
             _userService = userService;
+            _onSuccessfulLogin = onSuccessfulLogin;
+            _onGoBack = onGoBack;
             LoginCommand = new RelayCommand(Login);
+            GoBackCommand = new RelayCommand(GoBack);
         }
 
         private void Login()
@@ -36,13 +46,20 @@ namespace LibraryManagementSystem.ViewModels
             var user = _userService.ValidateUser(Username, Password);
             if (user != null)
             {
-                MessageBox.Show("Login successful!", "Success");
-                // Navigate to profile or main window
+                _onSuccessfulLogin?.Invoke();
+                RequestClose?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                MessageBox.Show("Invalid username or password.", "Error");
+                // Handle invalid login
+                MessageBox.Show("Invalid username/password");
             }
+        }
+
+        private void GoBack()
+        {
+            _onGoBack?.Invoke();
+            RequestClose?.Invoke(this, EventArgs.Empty);
         }
     }
 }

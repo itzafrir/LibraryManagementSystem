@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Services;
 using System;
-using System.Windows;
+using LibraryManagementSystem.Views;
 
 namespace LibraryManagementSystem.ViewModels
 {
@@ -24,16 +24,15 @@ namespace LibraryManagementSystem.ViewModels
 
             NavigateToCatalogCommand = new RelayCommand(NavigateToCatalog);
             NavigateToProfileCommand = new RelayCommand(NavigateToProfile);
-            NavigateToLoginCommand = new RelayCommand(NavigateToLogin);
+            NavigateToLoginCommand = new RelayCommand(() => NavigateToLogin(NavigateToMain));
         }
 
         private void NavigateToCatalog()
         {
-            var catalogPage = new Views.CatalogPage(_itemService, _userService)
+            var catalogPage = new CatalogPage(_itemService, _userService)
             {
                 DataContext = new CatalogViewModel(_itemService, _userService)
             };
-            ((CatalogViewModel)catalogPage.DataContext).RequestClose += (_, __) => catalogPage.Close();
             catalogPage.Show();
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
@@ -42,28 +41,34 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (_userService.IsUserLoggedIn())
             {
-                var profilePage = new Views.ProfilePage
+                var profilePage = new ProfilePage(_userService, NavigateToMain)
                 {
-                    DataContext = new ProfileViewModel(_userService)
+                    DataContext = new ProfileViewModel(_userService, NavigateToMain)
                 };
                 profilePage.Show();
             }
             else
             {
-                MessageBox.Show("Please log in to view your profile.", "Not Logged In", MessageBoxButton.OK, MessageBoxImage.Warning);
-                NavigateToLogin();
+                NavigateToLogin(NavigateToProfile);
             }
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
 
-        private void NavigateToLogin()
+        private void NavigateToLogin(Action onSuccessfulLogin, Action onGoBack = null)
         {
-            var loginWindow = new Views.LoginWindow()
+            var loginWindow = new Views.LoginWindow(_userService, onSuccessfulLogin, onGoBack ?? NavigateToMain)
             {
-                DataContext = new LoginViewModel(_userService)
+                DataContext = new LoginViewModel(_userService, onSuccessfulLogin, onGoBack ?? NavigateToMain)
             };
+            ((LoginViewModel)loginWindow.DataContext).RequestClose += (_, __) => loginWindow.Close();
             loginWindow.Show();
             RequestClose?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void NavigateToMain()
+        {
+            var mainWindow = new MainWindow(_userService, _itemService);
+            mainWindow.Show();
         }
     }
 }

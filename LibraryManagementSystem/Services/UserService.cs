@@ -1,7 +1,7 @@
 ﻿using System;
-using LibraryManagementSystem.Models;
 using System.Collections.Generic;
 using System.Linq;
+using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Utilities.Enums;
 
 namespace LibraryManagementSystem.Services
@@ -42,6 +42,43 @@ namespace LibraryManagementSystem.Services
             }
         }
 
+        public User GetCurrentUser()
+        {
+            return _currentUser;
+        }
+
+        public List<Loan> GetCurrentLoans()
+        {
+            // Retrieve loans for the current user
+            return new List<Loan>
+            {
+                new Loan { Id = 1, ItemId = 1, UserId = _currentUser.Id, LoanDate = DateTime.Now.AddDays(-10), DueDate = DateTime.Now.AddDays(4), LoanStatus = LoanStatus.Active }
+            };
+        }
+
+        public List<Item> GetOrders()
+        {
+            // Retrieve orders for the current user
+            return new List<Item>
+            {
+                new Book { Id = 1, Title = "The Great Gatsby", ISBN = "9780743273565", ItemType = ItemType.Book, Rating = 4.5, PublicationDate = new DateTime(1925, 4, 10), Publisher = "Charles Scribner's Sons", Description = "A novel set in the Roaring Twenties.", Author = "F. Scott Fitzgerald" }
+            };
+        }
+
+        public List<Fine> GetFines()
+        {
+            // Retrieve fines for the current user
+            return new List<Fine>
+            {
+                new Fine { Id = 1, UserId = _currentUser.Id, Amount = 5.0, DateIssued = DateTime.Now.AddDays(-30), DatePaid = null }
+            };
+        }
+
+        public void Logout()
+        {
+            _currentUser = null;
+        }
+
         public User? ValidateUser(string username, string password)
         {
             var user = _users.FirstOrDefault(u => u.Username == username);
@@ -56,11 +93,6 @@ namespace LibraryManagementSystem.Services
         public bool IsUserLoggedIn()
         {
             return _currentUser != null;
-        }
-
-        public User GetCurrentUser()
-        {
-            return _currentUser;
         }
     }
 }
