@@ -33,6 +33,7 @@ namespace LibraryManagementSystem.ViewModels
             {
                 DataContext = new CatalogViewModel(_itemService, _userService)
             };
+            ((CatalogViewModel)catalogPage.DataContext).RequestClose += (_, __) => catalogPage.Close();
             catalogPage.Show();
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
