@@ -16,9 +16,9 @@ namespace LibraryManagementSystem.Services
             // Dummy data for demonstration purposes
             _users = new List<User>
             {
-                new User { Id = 1, Username = "john_doe", FullName = "John Doe", Email = "john@example.com", UserType = UserType.Member, MembershipDate = DateTime.Now.AddYears(-2), Fines = 0.0 },
-                new User { Id = 2, Username = "jane_smith", FullName = "Jane Smith", Email = "jane@example.com", UserType = UserType.Librarian, MembershipDate = DateTime.Now.AddYears(-3), Fines = 5.0 },
-                new User { Id = 3, Username = "sam_green", FullName = "Sam Green", Email = "sam@example.com", UserType = UserType.Guest, MembershipDate = DateTime.Now.AddMonths(-6), Fines = 10.0 },
+                new User { Id = 1, Username = "john_doe", Password = "d",FullName = "John Doe", Email = "john@example.com", UserType = UserType.Member, MembershipDate = DateTime.Now.AddYears(-2), Fines = 0.0 },
+                new User { Id = 2, Username = "jane_smith",Password = "d", FullName = "Jane Smith", Email = "jane@example.com", UserType = UserType.Librarian, MembershipDate = DateTime.Now.AddYears(-3), Fines = 5.0 },
+                new User { Id = 3, Username = "a",Password = "a",FullName = "Sam Green", Email = "sam@example.com", UserType = UserType.Guest, MembershipDate = DateTime.Now.AddMonths(-6), Fines = 10.0 },
                 // Add more users as needed
             };
         }
