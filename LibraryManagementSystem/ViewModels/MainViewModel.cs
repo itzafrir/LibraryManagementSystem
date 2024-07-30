@@ -57,7 +57,7 @@ namespace LibraryManagementSystem.ViewModels
 
         private void NavigateToLogin()
         {
-            var loginWindow = new Views.LoginPage
+            var loginWindow = new Views.LoginWindow()
             {
                 DataContext = new LoginViewModel(_userService)
             };
