@@ -20,7 +20,10 @@ namespace LibraryManagementSystem.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Loan> Loans { get; set; }
+        public DbSet<Fine> Fines { get; set; } // Add this line
 
+        // Add a DbSet for fine payment requests
+        public DbSet<FinePayRequest> FinePayRequests { get; set; } // Add this line
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

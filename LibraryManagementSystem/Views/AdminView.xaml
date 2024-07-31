@@ -51,16 +51,19 @@
                 </StackPanel>
             </GroupBox>
 
-            <!-- Loan Management Section -->
-            <GroupBox Header="Loan Management" Margin="0,0,0,10">
+            <!-- Fine Payment Management Section -->
+            <GroupBox Header="Fine Payment Management" Margin="0,0,0,10">
                 <StackPanel>
-                    <ListBox ItemsSource="{Binding Loans}" SelectedItem="{Binding SelectedLoan}" DisplayMemberPath="LoanDetails" Margin="5" />
+                    <ListBox ItemsSource="{Binding FinePayRequests}" SelectedItem="{Binding SelectedFinePayRequest}" DisplayMemberPath="GetRequestDetails" Margin="5" />
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
-                        <Button Content="Approve" Command="{Binding ApproveLoanCommand}" Margin="5" />
-                        <Button Content="Reject" Command="{Binding RejectLoanCommand}" Margin="5" />
+                        <Button Content="Approve" Command="{Binding ApproveFinePayRequestCommand}" Margin="5" />
+                        <Button Content="Reject" Command="{Binding RejectFinePayRequestCommand}" Margin="5" />
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
+
+            <!-- Home Button -->
+            <Button Content="Home" Command="{Binding NavigateHomeCommand}" Width="100" HorizontalAlignment="Center" Margin="10"/>
         </StackPanel>
     </Grid>
 </Window>

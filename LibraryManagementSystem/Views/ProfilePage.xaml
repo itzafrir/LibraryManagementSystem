@@ -3,20 +3,72 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Profile" Height="450" Width="800">
     <Grid>
-        <StackPanel Margin="10">
-            <TextBlock Text="My Profile" FontSize="24" FontWeight="Bold" />
-            <TextBlock Text="{Binding UserProfile}" Margin="5"/>
-            <TabControl>
-                <TabItem Header="Current Loans">
-                    <ListBox ItemsSource="{Binding CurrentLoans}" DisplayMemberPath="Title" Margin="5"/>
-                </TabItem>
-                <TabItem Header="Orders">
-                    <ListBox ItemsSource="{Binding Orders}" DisplayMemberPath="Title" Margin="5"/>
-                </TabItem>
-                <TabItem Header="Fines">
-                    <ListBox ItemsSource="{Binding Fines}" DisplayMemberPath="Title" Margin="5"/>
-                </TabItem>
-            </TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Profile Details -->
+        <StackPanel Margin="10" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0">
+            <TextBlock Text="My Profile" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock Text="Username:" FontWeight="Bold"/>
+            <TextBlock Text="{Binding UserProfile.Username}" Margin="0,0,0,5"/>
+            <TextBlock Text="Full Name:" FontWeight="Bold"/>
+            <TextBlock Text="{Binding UserProfile.FullName}" Margin="0,0,0,5"/>
+            <TextBlock Text="Email:" FontWeight="Bold"/>
+            <TextBlock Text="{Binding UserProfile.Email}" Margin="0,0,0,5"/>
+            <TextBlock Text="Address:" FontWeight="Bold"/>
+            <TextBlock Text="{Binding UserProfile.Address}" Margin="0,0,0,5"/>
+            <TextBlock Text="Phone Number:" FontWeight="Bold"/>
+            <TextBlock Text="{Binding UserProfile.PhoneNumber}" Margin="0,0,0,5"/>
+            <TextBlock Text="Membership Date:" FontWeight="Bold"/>
+            <TextBlock Text="{Binding UserProfile.MembershipDate, StringFormat=yyyy-MM-dd}" Margin="0,0,0,10"/>
+        </StackPanel>
+
+        <!-- Loans, Orders, Fines Tabs -->
+        <TabControl Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Margin="10">
+            <TabItem Header="Current Loans">
+                <DataGrid ItemsSource="{Binding CurrentLoans}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Item Name" Binding="{Binding Item.Title}" />
+                        <DataGridTextColumn Header="Due Date" Binding="{Binding DueDate, StringFormat=yyyy-MM-dd}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Orders">
+                <DataGrid ItemsSource="{Binding LoanRequests}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Item Name" Binding="{Binding Title}" />
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Fines">
+                <DataGrid ItemsSource="{Binding Fines}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Item Name" Binding="{Binding Item.Title}" />
+                        <DataGridTextColumn Header="Total Fine" Binding="{Binding Amount, StringFormat=C}" />
+                        <DataGridTemplateColumn Header="Actions">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Pay" Command="{Binding DataContext.PayFineCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="2" Grid.Column="1" Margin="10">
+            <Button Content="Log Out" Width="100" Command="{Binding LogoutCommand}" Margin="5"/>
+            <Button Content="Go Back" Width="100" Command="{Binding GoBackCommand}" Margin="5"/>
         </StackPanel>
     </Grid>
 </Window>
