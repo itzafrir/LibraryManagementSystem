@@ -20,7 +20,8 @@ namespace LibraryManagementSystem.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Loan> Loans { get; set; }
-        public DbSet<Fine> Fines { get; set; } // Add this line
+        public DbSet<Fine> Fines { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         // Add a DbSet for fine payment requests
         public DbSet<FinePayRequest> FinePayRequests { get; set; } // Add this line

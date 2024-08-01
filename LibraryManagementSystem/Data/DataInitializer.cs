@@ -68,7 +68,6 @@ namespace LibraryManagementSystem
                     PhoneNumber = "555-1234",
                     UserType = UserType.Member,
                     MembershipDate = DateTime.Now.AddYears(-2),
-                    Fines = 0.0
                 },
                 new User
                 {
@@ -80,7 +79,6 @@ namespace LibraryManagementSystem
                     PhoneNumber = "555-5678",
                     UserType = UserType.Librarian,
                     MembershipDate = DateTime.Now.AddYears(-3),
-                    Fines = 5.0
                 },
             };
 

@@ -81,7 +81,6 @@ namespace LibraryManagementSystem.ViewModels
                 PhoneNumber = "000-000-0000",
                 UserType = UserType.Member,
                 MembershipDate = DateTime.Now,
-                Fines = 0.0
             };
 
             _userService.AddUser(newUser);

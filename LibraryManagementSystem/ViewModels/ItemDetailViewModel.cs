@@ -1,11 +1,12 @@
-﻿using System.Windows;
+﻿using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Services;
 using LibraryManagementSystem.Utilities;
-using System.Windows.Input;
-using System;
 
 namespace LibraryManagementSystem.ViewModels
 {
@@ -15,12 +16,18 @@ namespace LibraryManagementSystem.ViewModels
         private readonly UserService _userService;
         private readonly CatalogViewModel _catalogViewModel;
         private readonly CatalogViewModelMemento _catalogViewModelMemento;
-        public Item SelectedItem { get;private set; }
+
+        private string _newReviewText;
+        private int _newReviewRating;
+        private bool _canAddReview;
+
+        public Item SelectedItem { get; private set; }
 
         public ICommand LoanItemCommand { get; }
         public ICommand NavigateHomeCommand { get; }
         public ICommand GoBackToCatalogCommand { get; }
         public IRelayCommand NavigateToLoginCommand { get; }
+        public IRelayCommand AddReviewCommand { get; }
 
         public event EventHandler RequestClose;
 
@@ -35,8 +42,67 @@ namespace LibraryManagementSystem.ViewModels
             LoanItemCommand = new RelayCommand(LoanItem);
             NavigateHomeCommand = new RelayCommand(NavigateHome);
             GoBackToCatalogCommand = new RelayCommand(GoBackToCatalog);
-            NavigateToLoginCommand = new RelayCommand(NavigateToLogin); // Add this line
+            NavigateToLoginCommand = new RelayCommand(NavigateToLogin);
+            AddReviewCommand = new RelayCommand(AddReview, CanExecuteAddReview);
+
+            UpdateCanAddReview();
         }
+
+        public string NewReviewText
+        {
+            get => _newReviewText;
+            set
+            {
+                SetProperty(ref _newReviewText, value);
+                UpdateCanAddReview();
+            }
+        }
+
+        public int NewReviewRating
+        {
+            get => _newReviewRating;
+            set
+            {
+                SetProperty(ref _newReviewRating, value);
+                UpdateCanAddReview();
+            }
+        }
+
+        public bool CanAddReview
+        {
+            get => _canAddReview;
+            private set => SetProperty(ref _canAddReview, value);
+        }
+
+        private bool CanExecuteAddReview()
+        {
+            var currentUser = _userService.GetCurrentUser();
+            return currentUser != null && !SelectedItem.Reviews.Any(r => r.UserId == currentUser.Id);
+        }
+
+        private void UpdateCanAddReview()
+        {
+            CanAddReview = CanExecuteAddReview();
+            AddReviewCommand.NotifyCanExecuteChanged();
+        }
+
+        private void AddReview()
+        {
+            if (_userService.IsUserLoggedIn() && !string.IsNullOrWhiteSpace(NewReviewText) && NewReviewRating > 0)
+            {
+                var review = new Review(_userService.GetCurrentUser().Id, NewReviewRating, NewReviewText);
+                SelectedItem.AddReview(review);
+                OnPropertyChanged(nameof(SelectedItem.Reviews));
+                NewReviewText = string.Empty;
+                NewReviewRating = 0;
+                UpdateCanAddReview();
+            }
+            else
+            {
+                MessageBox.Show("Please provide a rating and review text.");
+            }
+        }
+
         public ItemDetailViewModelMemento CreateMemento()
         {
             return new ItemDetailViewModelMemento(SelectedItem);
@@ -45,12 +111,11 @@ namespace LibraryManagementSystem.ViewModels
         public void RestoreMemento(ItemDetailViewModelMemento memento)
         {
             SelectedItem = memento.SelectedItem;
-            // You may need to notify property changes if necessary
             OnPropertyChanged(nameof(SelectedItem));
         }
+
         private void LoanItem()
         {
-            // Implement loan logic here
             MessageBox.Show("Item loaned successfully.", "Success");
         }
 
@@ -58,7 +123,7 @@ namespace LibraryManagementSystem.ViewModels
         {
             var mainWindow = new Views.MainWindow(_userService, _itemService);
             mainWindow.Show();
-            RequestClose?.Invoke(this, EventArgs.Empty); // Invoke the event to close the window
+            RequestClose?.Invoke(this, EventArgs.Empty);
         }
 
         private void GoBackToCatalog()
@@ -67,12 +132,12 @@ namespace LibraryManagementSystem.ViewModels
             {
                 DataContext = _catalogViewModel
             };
-            // Subscribe to the RequestClose event here
             ((CatalogViewModel)catalogPage.DataContext).RequestClose += (_, __) => catalogPage.Close();
             _catalogViewModel.RestoreMemento(_catalogViewModelMemento);
             catalogPage.Show();
-            RequestClose?.Invoke(this, EventArgs.Empty); // Ensure this is invoked
+            RequestClose?.Invoke(this, EventArgs.Empty);
         }
+
         private void NavigateToLogin()
         {
             var memento = CreateMemento();
@@ -84,6 +149,7 @@ namespace LibraryManagementSystem.ViewModels
             ((LoginViewModel)loginWindow.DataContext).RequestClose += (_, __) => loginWindow.Close();
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
+
         private void GoBackToItemDetail(ItemDetailViewModelMemento memento)
         {
             var itemDetailPage = new Views.ItemDetailPage(memento.SelectedItem, _itemService, _userService, _catalogViewModel)

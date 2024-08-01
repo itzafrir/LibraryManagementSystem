@@ -9,7 +9,6 @@ namespace LibraryManagementSystem.Services
     public class UserService
     {
         private readonly List<User> _users;
-        private readonly List<Fine> _fines;
         private readonly List<FinePayRequest> _finePayRequests;
         private readonly List<LoanRequest> _loanRequests;
         private User _currentUser;
@@ -19,17 +18,16 @@ namespace LibraryManagementSystem.Services
             // Dummy data for demonstration purposes
             _users = new List<User>
             {
-                new User { Id = 1, Username = "john_doe", Password = "d", FullName = "John Doe", Email = "john@example.com", UserType = UserType.Member, MembershipDate = DateTime.Now.AddYears(-2), Fines = 0.0 },
-                new User { Id = 2, Username = "jane_smith", Password = "d", FullName = "Jane Smith", Email = "jane@example.com", UserType = UserType.Librarian, MembershipDate = DateTime.Now.AddYears(-3), Fines = 5.0 },
-                new User { Id = 3, Username = "a", Password = "a", FullName = "Sam Green", Email = "sam@example.com", UserType = UserType.Guest, MembershipDate = DateTime.Now.AddMonths(-6), Fines = 10.0 },
+                new User { Id = 1, Username = "john_doe", Password = "d", FullName = "John Doe", Email = "john@example.com", UserType = UserType.Member, MembershipDate = DateTime.Now.AddYears(-2) },
+                new User { Id = 2, Username = "jane_smith", Password = "d", FullName = "Jane Smith", Email = "jane@example.com", UserType = UserType.Librarian, MembershipDate = DateTime.Now.AddYears(-3) },
+                new User { Id = 3, Username = "a", Password = "a", FullName = "Sam Green", Email = "sam@example.com", UserType = UserType.Guest, MembershipDate = DateTime.Now.AddMonths(-6) },
                 // Add more users as needed
             };
 
-            _fines = new List<Fine>
-            {
-                new Fine { Id = 1, UserId = 1, Amount = 5.0, DateIssued = DateTime.Now.AddDays(-30), DatePaid = null }
-                // Add more fines as needed
-            };
+            // Add fines to users
+            _users[0].Fines.Add(new Fine { Id = 1, UserId = 1, Amount = 5.0, DateIssued = DateTime.Now.AddDays(-30), DatePaid = null });
+            _users[1].Fines.Add(new Fine { Id = 2, UserId = 2, Amount = 5.0, DateIssued = DateTime.Now.AddDays(-15), DatePaid = null });
+            _users[2].Fines.Add(new Fine { Id = 3, UserId = 3, Amount = 10.0, DateIssued = DateTime.Now.AddDays(-10), DatePaid = null });
 
             _finePayRequests = new List<FinePayRequest>();
             _loanRequests = new List<LoanRequest>();
@@ -76,7 +74,7 @@ namespace LibraryManagementSystem.Services
         public List<Fine> GetFines()
         {
             // Retrieve fines for the current user
-            return _fines.Where(f => f.UserId == _currentUser.Id).ToList();
+            return _currentUser?.Fines ?? new List<Fine>();
         }
 
         public void Logout()
@@ -120,7 +118,8 @@ namespace LibraryManagementSystem.Services
 
         public void ApproveFinePayRequest(FinePayRequest request)
         {
-            var fine = _fines.FirstOrDefault(f => f.Id == request.FineId);
+            var user = _users.FirstOrDefault(u => u.Id == request.UserId);
+            var fine = user?.Fines.FirstOrDefault(f => f.Id == request.FineId);
             if (fine != null)
             {
                 fine.DatePaid = DateTime.Now;

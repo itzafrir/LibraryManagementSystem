@@ -1,6 +1,7 @@
 ﻿using LibraryManagementSystem.Utilities.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LibraryManagementSystem.Models
 {
@@ -17,7 +18,7 @@ namespace LibraryManagementSystem.Models
         public DateTime MembershipDate { get; set; }
         public List<Loan> CurrentLoans { get; set; }
         public List<LoanRequest> LoanRequests { get; set; }
-        public double Fines { get; set; }
+        public List<Fine> Fines { get; set; }
 
         // Constructor to initialize lists
         public User()
@@ -31,9 +32,9 @@ namespace LibraryManagementSystem.Models
             PhoneNumber = "OMER";
             UserType = UserType.Assistant;
             MembershipDate = DateTime.Now;
-            Fines = 0;
             CurrentLoans = new List<Loan>();
             LoanRequests = new List<LoanRequest>();
+            Fines = new List<Fine>();
         }
 
         // Method to request a loan
@@ -65,13 +66,22 @@ namespace LibraryManagementSystem.Models
         // Method to pay fines
         public void PayFine(double amount)
         {
-            Fines -= amount;
+            var unpaidFine = Fines.FirstOrDefault(f => f.DatePaid == null);
+            if (unpaidFine != null)
+            {
+                unpaidFine.DatePaid = DateTime.Now;
+                unpaidFine.Amount -= amount;
+                if (unpaidFine.Amount <= 0)
+                {
+                    Fines.Remove(unpaidFine);
+                }
+            }
         }
 
         // Method to get user profile details
         public string GetProfileDetails()
         {
-            return $"Username: {Username}, Full Name: {FullName}, Email: {Email}, Address: {Address}, Phone Number: {PhoneNumber}, User Type: {UserType}, Membership Date: {MembershipDate.ToShortDateString()}, Fines: {Fines}";
+            return $"Username: {Username}, Full Name: {FullName}, Email: {Email}, Address: {Address}, Phone Number: {PhoneNumber}, User Type: {UserType}, Membership Date: {MembershipDate.ToShortDateString()}, Fines: {Fines.Sum(f => f.Amount)}";
         }
     }
 }
