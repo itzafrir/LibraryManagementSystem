@@ -1,8 +1,8 @@
 ﻿using System;
-using LibraryManagementSystem.Models;
-using LibraryManagementSystem.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Repositories;
 using LibraryManagementSystem.Utilities.Enums;
 
 namespace LibraryManagementSystem.Services
@@ -11,11 +11,15 @@ namespace LibraryManagementSystem.Services
     {
         private readonly IRepository<Item> _itemRepository;
         private readonly IRepository<Loan> _loanRepository;
+        private readonly IRepository<LoanRequest> _loanRequestRepository;
+        private readonly UserService _userService;
 
-        public ItemService(IRepository<Item> itemRepository, IRepository<Loan> loanRepository)
+        public ItemService(IRepository<Item> itemRepository, IRepository<Loan> loanRepository, IRepository<LoanRequest> loanRequestRepository, UserService userService)
         {
             _itemRepository = itemRepository;
             _loanRepository = loanRepository;
+            _loanRequestRepository = loanRequestRepository;
+            _userService = userService;
         }
 
         public IEnumerable<Item> GetAllItems()
@@ -36,21 +40,36 @@ namespace LibraryManagementSystem.Services
 
         public void LoanItem(User user, Item item)
         {
-            var loan = new Loan
+            if (item.AvailableCopies > 0)
             {
-                ItemId = item.Id,
-                UserId = user.Id,
-                LoanDate = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(14),
-                LoanStatus = LoanStatus.Active
-            };
-            _loanRepository.Add(loan);
+                item.AvailableCopies--;
+                var loan = new Loan
+                {
+                    ItemId = item.Id,
+                    UserId = user.Id,
+                    LoanDate = DateTime.Now,
+                    DueDate = DateTime.Now.AddDays(14),
+                    LoanStatus = LoanStatus.Active
+                };
+                _loanRepository.Add(loan);
+                _itemRepository.Update(item);
+            }
+            else
+            {
+                ReserveItem(user, item);
+            }
         }
 
         public void ReturnItem(Loan loan)
         {
+            var item = _itemRepository.GetById(loan.ItemId);
             loan.ReturnLoan();
             _loanRepository.Update(loan);
+
+            item.AvailableCopies++;
+            _itemRepository.Update(item);
+
+            ProcessLoanRequests(item);
         }
 
         public void ReserveItem(User user, Item item)
@@ -61,7 +80,21 @@ namespace LibraryManagementSystem.Services
                 UserId = user.Id,
                 RequestDate = DateTime.Now
             };
-            // Add logic to handle reservations
+            _loanRequestRepository.Add(loanRequest);
+        }
+
+        private void ProcessLoanRequests(Item item)
+        {
+            var loanRequests = _loanRequestRepository.GetAll().Where(lr => lr.ItemId == item.Id).OrderBy(lr => lr.RequestDate).ToList();
+
+            while (item.AvailableCopies > 0 && loanRequests.Count > 0)
+            {
+                var loanRequest = loanRequests.First();
+                var user = _userService.GetUserById(loanRequest.UserId);
+                LoanItem(user, item);
+                _loanRequestRepository.Delete(loanRequest.Id);
+                loanRequests.RemoveAt(0);
+            }
         }
     }
 }

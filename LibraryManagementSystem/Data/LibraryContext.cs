@@ -1,37 +1,45 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using LibraryManagementSystem.Models;
-using Microsoft.Extensions.Logging;
 
 namespace LibraryManagementSystem.Data
 {
     public class LibraryContext : DbContext
     {
-        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
-        {
-
-        }
-
-        // Parameterless constructor needed for design-time tools
-        public LibraryContext()
-        {
-        }
-
         public DbSet<Item> Items { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Loan> Loans { get; set; }
-        public DbSet<Fine> Fines { get; set; }
+        public DbSet<LoanRequest> LoanRequests { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
-        // Add a DbSet for fine payment requests
-        public DbSet<FinePayRequest> FinePayRequests { get; set; } // Add this line
+        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite(@"C:\Users\ItayTzafrir\source\repos\LibraryManagementSystem\LibraryManagementSystem\library.db")
-                    .LogTo(Console.WriteLine, LogLevel.Information);
+                optionsBuilder.UseSqlite("Data Source=library.db");
             }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Item>().HasKey(i => i.Id);
+            modelBuilder.Entity<Loan>().HasKey(l => l.Id);
+            modelBuilder.Entity<LoanRequest>().HasKey(lr => lr.Id);
+            modelBuilder.Entity<User>().HasKey(u => u.Id);
+            modelBuilder.Entity<Review>().HasKey(r => r.Id);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Item)
+                .WithMany(i => i.Reviews)
+                .HasForeignKey(r => r.ItemId);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId);
         }
     }
 }

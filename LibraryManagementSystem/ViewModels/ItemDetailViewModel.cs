@@ -74,6 +74,11 @@ namespace LibraryManagementSystem.ViewModels
             private set => SetProperty(ref _canAddReview, value);
         }
 
+        public string RatingAndReviewCount
+        {
+            get => $"{SelectedItem.AverageRating:F1} ({SelectedItem.Reviews.Count} reviews)";
+        }
+
         private bool CanExecuteAddReview()
         {
             var currentUser = _userService.GetCurrentUser();
@@ -90,16 +95,35 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (_userService.IsUserLoggedIn() && !string.IsNullOrWhiteSpace(NewReviewText) && NewReviewRating > 0)
             {
-                var review = new Review(_userService.GetCurrentUser().Id, NewReviewRating, NewReviewText);
+                var review = new Review(_userService.GetCurrentUser().Id, SelectedItem.Id, NewReviewRating, NewReviewText);
                 SelectedItem.AddReview(review);
+
                 OnPropertyChanged(nameof(SelectedItem.Reviews));
+                OnPropertyChanged(nameof(SelectedItem.AverageRating));
+                OnPropertyChanged(nameof(RatingAndReviewCount)); // Notify change
                 NewReviewText = string.Empty;
                 NewReviewRating = 0;
                 UpdateCanAddReview();
+                MessageBox.Show("Review added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
                 MessageBox.Show("Please provide a rating and review text.");
+            }
+        }
+
+
+        private void LoanItem()
+        {
+            try
+            {
+                _itemService.LoanItem(_userService.GetCurrentUser(), SelectedItem);
+                OnPropertyChanged(nameof(SelectedItem));
+                MessageBox.Show("Item loaned successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -112,11 +136,6 @@ namespace LibraryManagementSystem.ViewModels
         {
             SelectedItem = memento.SelectedItem;
             OnPropertyChanged(nameof(SelectedItem));
-        }
-
-        private void LoanItem()
-        {
-            MessageBox.Show("Item loaned successfully.", "Success");
         }
 
         private void NavigateHome()

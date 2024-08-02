@@ -7,6 +7,8 @@
         <StackPanel Margin="10">
             <TextBlock Text="{Binding SelectedItem.Title}" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
             <TextBlock Text="{Binding SelectedItem.Description}" FontSize="14" Margin="0,0,0,10"/>
+            <TextBlock Text="{Binding RatingAndReviewCount}" FontSize="14" Margin="0,0,0,10"/>
+            <TextBlock Text="{Binding SelectedItem.ItemType}" FontSize="14" Margin="0,0,0,10"/>
 
             <ContentControl Content="{Binding SelectedItem}">
                 <ContentControl.Resources>
@@ -36,15 +38,16 @@
             <!-- Add Review Section -->
             <TextBlock Text="Add a Review:" FontSize="18" FontWeight="Bold" Margin="10,10,0,10"/>
             <StackPanel Orientation="Horizontal" Margin="10,0,10,10">
-                <ComboBox Width="100" SelectedItem="{Binding NewReviewRating}" Margin="5">
-                    <ComboBoxItem Content="1"/>
-                    <ComboBoxItem Content="2"/>
-                    <ComboBoxItem Content="3"/>
-                    <ComboBoxItem Content="4"/>
-                    <ComboBoxItem Content="5"/>
+                <ComboBox Width="100" SelectedValue="{Binding NewReviewRating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedValuePath="Content" Margin="5">
+                    <ComboBoxItem Content="1" />
+                    <ComboBoxItem Content="2" />
+                    <ComboBoxItem Content="3" />
+                    <ComboBoxItem Content="4" />
+                    <ComboBoxItem Content="5" />
                 </ComboBox>
-                <TextBox Width="400" Text="{Binding NewReviewText}" Margin="5"/>
-                <Button Content="Add Review" Width="100" Command="{Binding AddReviewCommand}" Margin="5" IsEnabled="True"/>
+                <TextBox Width="400" Text="{Binding NewReviewText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                <Button Content="Add Review" Width="100" Command="{Binding AddReviewCommand}" Margin="5" IsEnabled="{Binding CanAddReview}"/>
             </StackPanel>
         </StackPanel>
     </Grid>

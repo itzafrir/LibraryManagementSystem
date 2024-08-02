@@ -97,7 +97,10 @@ namespace LibraryManagementSystem.Services
         {
             return _currentUser != null;
         }
-
+        public User GetUserById(int userId)
+        {
+            return _users?.FirstOrDefault(u => u.Id == userId);
+        }
         public void CreateFinePayRequest(Fine fine)
         {
             var request = new FinePayRequest

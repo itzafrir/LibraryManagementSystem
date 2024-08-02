@@ -23,6 +23,8 @@ namespace LibraryManagementSystem
                     Publisher = "Charles Scribner's Sons",
                     Description = "A novel set in the Roaring Twenties.",
                     Author = "F. Scott Fitzgerald",
+                    TotalCopies = 5,
+                    AvailableCopies = 5
                 },
                 new CD
                 {
@@ -34,6 +36,21 @@ namespace LibraryManagementSystem
                     Publisher = "Apple Records",
                     Description = "The Beatles' eleventh studio album.",
                     Artist = "The Beatles",
+                    TotalCopies = 3,
+                    AvailableCopies = 3
+                },
+                new CD
+                {
+                    Title = "Rubber Soul",
+                    ISBN = "B0025KVLU9",
+                    ItemType = ItemType.CD,
+                    Rating = 4.8,
+                    PublicationDate = new DateTime(1965, 12, 3),
+                    Publisher = "Apple Records",
+                    Description = "The Beatles' sixth studio album.",
+                    Artist = "The Beatles",
+                    TotalCopies = 4,
+                    AvailableCopies = 4
                 },
                 new EBook
                 {
@@ -44,7 +61,9 @@ namespace LibraryManagementSystem
                     PublicationDate = new DateTime(1949, 6, 8),
                     Publisher = "Secker & Warburg",
                     Description = "A dystopian social science fiction novel and cautionary tale.",
-                    Author = "George Orwell"
+                    Author = "George Orwell",
+                    TotalCopies = 10,
+                    AvailableCopies = 10
                 },
             };
 
@@ -115,6 +134,10 @@ namespace LibraryManagementSystem
                 if (!loanRepository.GetAll().Any(l => l.ItemId == loan.ItemId && l.UserId == loan.UserId && l.LoanDate == loan.LoanDate))
                 {
                     loanRepository.Add(loan);
+
+                    var item = itemRepository.GetById(loan.ItemId);
+                    item.AvailableCopies--;
+                    itemRepository.Update(item);
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Services;
 using LibraryManagementSystem.ViewModels;
@@ -18,7 +19,16 @@ namespace LibraryManagementSystem.Views
 
         private void OnRequestClose(object sender, EventArgs e)
         {
-            Close(); // Ensure this is called
+            Close();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            if (comboBox != null && comboBox.SelectedValue != null)
+            {
+                ((ItemDetailViewModel)DataContext).NewReviewRating = int.Parse(comboBox.SelectedValue.ToString());
+            }
         }
     }
 }
