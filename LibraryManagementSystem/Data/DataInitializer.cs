@@ -9,8 +9,14 @@ namespace LibraryManagementSystem
 {
     public static class DataInitializer
     {
-        public static void Initialize(IRepository<Item> itemRepository, IRepository<User> userRepository, IRepository<Loan> loanRepository)
+        public static void Initialize(
+            IRepository<Item> itemRepository,
+            IRepository<User> userRepository,
+            IRepository<Loan> loanRepository,
+            IRepository<Review> reviewRepository,
+            IRepository<Fine> fineRepository)
         {
+            // Seed items
             var items = new List<Item>
             {
                 new Book
@@ -39,19 +45,6 @@ namespace LibraryManagementSystem
                     TotalCopies = 3,
                     AvailableCopies = 3
                 },
-                new CD
-                {
-                    Title = "Rubber Soul",
-                    ISBN = "B0025KVLU9",
-                    ItemType = ItemType.CD,
-                    Rating = 4.8,
-                    PublicationDate = new DateTime(1965, 12, 3),
-                    Publisher = "Apple Records",
-                    Description = "The Beatles' sixth studio album.",
-                    Artist = "The Beatles",
-                    TotalCopies = 4,
-                    AvailableCopies = 4
-                },
                 new EBook
                 {
                     Title = "1984",
@@ -75,6 +68,7 @@ namespace LibraryManagementSystem
                 }
             }
 
+            // Seed users
             var users = new List<User>
             {
                 new User
@@ -109,6 +103,7 @@ namespace LibraryManagementSystem
                 }
             }
 
+            // Seed loans
             var loans = new List<Loan>
             {
                 new Loan
@@ -138,6 +133,62 @@ namespace LibraryManagementSystem
                     var item = itemRepository.GetById(loan.ItemId);
                     item.AvailableCopies--;
                     itemRepository.Update(item);
+                }
+            }
+
+            // Seed reviews
+            var reviews = new List<Review>
+            {
+                new Review
+                {
+                    ItemId = itemRepository.GetAll().First(i => i.Title == "The Great Gatsby").Id,
+                    UserId = userRepository.GetAll().First(u => u.Username == "john_doe").Id,
+                    Rating = 5,
+                    Text = "Amazing book!",
+                    ReviewDate = DateTime.Now.AddDays(-2)
+                },
+                new Review
+                {
+                    ItemId = itemRepository.GetAll().First(i => i.Title == "1984").Id,
+                    UserId = userRepository.GetAll().First(u => u.Username == "jane_smith").Id,
+                    Rating = 4,
+                    Text = "Very thought-provoking.",
+                    ReviewDate = DateTime.Now.AddDays(-1)
+                },
+            };
+
+            foreach (var review in reviews)
+            {
+                if (!reviewRepository.GetAll().Any(r => r.ItemId == review.ItemId && r.UserId == review.UserId && r.ReviewDate == review.ReviewDate))
+                {
+                    reviewRepository.Add(review);
+                }
+            }
+
+            // Seed fines
+            var fines = new List<Fine>
+            {
+                new Fine
+                {
+                    UserId = userRepository.GetAll().First(u => u.Username == "john_doe").Id,
+                    Amount = 10.0,
+                    DateIssued = DateTime.Now.AddDays(-30),
+                    DatePaid = null
+                },
+                new Fine
+                {
+                    UserId = userRepository.GetAll().First(u => u.Username == "jane_smith").Id,
+                    Amount = 5.0,
+                    DateIssued = DateTime.Now.AddDays(-15),
+                    DatePaid = DateTime.Now.AddDays(-5)
+                }
+            };
+
+            foreach (var fine in fines)
+            {
+                if (!fineRepository.GetAll().Any(f => f.UserId == fine.UserId && f.DateIssued == fine.DateIssued))
+                {
+                    fineRepository.Add(fine);
                 }
             }
         }

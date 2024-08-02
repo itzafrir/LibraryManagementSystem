@@ -97,7 +97,6 @@ namespace LibraryManagementSystem.ViewModels
             {
                 var review = new Review(_userService.GetCurrentUser().Id, SelectedItem.Id, NewReviewRating, NewReviewText);
                 SelectedItem.AddReview(review);
-
                 OnPropertyChanged(nameof(SelectedItem.Reviews));
                 OnPropertyChanged(nameof(SelectedItem.AverageRating));
                 OnPropertyChanged(nameof(RatingAndReviewCount)); // Notify change
