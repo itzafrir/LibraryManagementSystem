@@ -2,8 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Admin Panel" Height="600" Width="800">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <Grid>
         <StackPanel Margin="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="{Binding GreetingMessage}" FontSize="14" FontWeight="Bold" Margin="0,0,10,0"/>
+                <Button Content="Logout" Command="{Binding LogoutCommand}" IsEnabled="{Binding IsLogoutButtonEnabled}" Margin="5"/>
+            </StackPanel>
+
             <TextBlock Text="Admin Panel" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" />
 
             <!-- Item Management Section -->
@@ -11,25 +16,23 @@
                 <StackPanel>
                     <TextBox Width="200" Margin="5" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" SelectedText="Search Items"/>
                     <Button Content="Search" Width="100" Command="{Binding SearchCommand}" Margin="5" />
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="150">
-                        <TabControl>
-                            <TabItem Header="Books">
-                                <DataGrid ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
-                            </TabItem>
-                            <TabItem Header="CDs">
-                                <DataGrid ItemsSource="{Binding CDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
-                            </TabItem>
-                            <TabItem Header="EBooks">
-                                <DataGrid ItemsSource="{Binding EBooks}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
-                            </TabItem>
-                            <TabItem Header="DVDs">
-                                <DataGrid ItemsSource="{Binding DVDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
-                            </TabItem>
-                            <TabItem Header="Magazines">
-                                <DataGrid ItemsSource="{Binding Magazines}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
-                            </TabItem>
-                        </TabControl>
-                    </ScrollViewer>
+                    <TabControl>
+                        <TabItem Header="Books">
+                            <DataGrid ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                        <TabItem Header="CDs">
+                            <DataGrid ItemsSource="{Binding CDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                        <TabItem Header="EBooks">
+                            <DataGrid ItemsSource="{Binding EBooks}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                        <TabItem Header="DVDs">
+                            <DataGrid ItemsSource="{Binding DVDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                        <TabItem Header="Magazines">
+                            <DataGrid ItemsSource="{Binding Magazines}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                        </TabItem>
+                    </TabControl>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
                         <Button Content="Add" Command="{Binding AddItemCommand}" Margin="5" />
                         <Button Content="Update" Command="{Binding UpdateItemCommand}" Margin="5" />
@@ -44,8 +47,8 @@
                 <StackPanel>
                     <TextBox Width="200" Margin="5" Text="{Binding SearchUserTerm, UpdateSourceTrigger=PropertyChanged}" SelectedText="Search Users"/>
                     <Button Content="Search" Width="100" Command="{Binding SearchUserCommand}" Margin="5" />
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="100">
-                        <ListBox ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" DisplayMemberPath="Username" Margin="5" />
+                    <ScrollViewer Height="200" VerticalScrollBarVisibility="Auto" Margin="5">
+                        <ListBox ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" DisplayMemberPath="Username"/>
                     </ScrollViewer>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
                         <Button Content="Add" Command="{Binding AddUserCommand}" Margin="5" />
@@ -58,8 +61,8 @@
             <!-- Fine Payment Management Section -->
             <GroupBox Header="Fine Payment Management" Margin="0,0,0,10">
                 <StackPanel>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="100">
-                        <ListBox ItemsSource="{Binding FinePayRequests}" SelectedItem="{Binding SelectedFinePayRequest}" DisplayMemberPath="GetRequestDetails" Margin="5" />
+                    <ScrollViewer Height="200" VerticalScrollBarVisibility="Auto" Margin="5">
+                        <ListBox ItemsSource="{Binding FinePayRequests}" SelectedItem="{Binding SelectedFinePayRequest}" DisplayMemberPath="GetRequestDetails"/>
                     </ScrollViewer>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
                         <Button Content="Approve" Command="{Binding ApproveFinePayRequestCommand}" Margin="5" />
@@ -71,5 +74,5 @@
             <!-- Home Button -->
             <Button Content="Home" Command="{Binding NavigateHomeCommand}" Width="100" HorizontalAlignment="Center" Margin="10"/>
         </StackPanel>
-    </ScrollViewer>
+    </Grid>
 </Window>

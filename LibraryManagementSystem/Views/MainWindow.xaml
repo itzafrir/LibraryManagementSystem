@@ -6,11 +6,16 @@
         mc:Ignorable="d"
         Title="Library Management System" Height="450" Width="800">
     <Grid>
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Margin="10">
+            <TextBlock Text="{Binding GreetingMessage}" FontSize="14" FontWeight="Bold" Margin="0,0,10,0"/>
+            <Button Content="Logout" Command="{Binding LogoutCommand}" IsEnabled="{Binding IsLogoutButtonEnabled}" Margin="5"/>
+        </StackPanel>
+
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="Welcome to the Library Management System" FontSize="20" Margin="0,0,0,20"/>
             <Button Content="Search Items" Width="200" Command="{Binding NavigateToCatalogCommand}"/>
             <Button Content="My Profile" Width="200" Command="{Binding NavigateToProfileCommand}"/>
-            <Button Content="Login" Width="200" Command="{Binding NavigateToLoginCommand}"/>
+            <Button Content="Login" Width="200" Command="{Binding NavigateToLoginCommand}" IsEnabled="{Binding IsLoginButtonEnabled}"/>
             <Button Content="Admin" Width="200" Command="{Binding NavigateToAdminCommand}" Visibility="{Binding IsAdminVisible}"/>
         </StackPanel>
     </Grid>

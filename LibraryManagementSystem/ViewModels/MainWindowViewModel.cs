@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Services;
 using System;
+using System.Windows;
 using LibraryManagementSystem.Utilities.Enums;
 using LibraryManagementSystem.Views;
 
@@ -16,6 +17,7 @@ namespace LibraryManagementSystem.ViewModels
         public IRelayCommand NavigateToProfileCommand { get; }
         public IRelayCommand NavigateToLoginCommand { get; }
         public IRelayCommand NavigateToAdminCommand { get; }
+        public IRelayCommand LogoutCommand { get; }
 
         public event EventHandler RequestClose;
 
@@ -26,8 +28,52 @@ namespace LibraryManagementSystem.ViewModels
 
             NavigateToCatalogCommand = new RelayCommand(NavigateToCatalog);
             NavigateToProfileCommand = new RelayCommand(NavigateToProfile);
-            NavigateToLoginCommand = new RelayCommand(() => NavigateToLogin(NavigateToMain));
+            NavigateToLoginCommand = new RelayCommand(() => NavigateToLogin(NavigateToMain), CanExecuteLogin);
             NavigateToAdminCommand = new RelayCommand(NavigateToAdmin, CanNavigateToAdmin);
+            LogoutCommand = new RelayCommand(Logout, CanExecuteLogout);
+
+            UpdateGreetingMessage();
+        }
+
+        public string GreetingMessage
+        {
+            get => _userService.IsUserLoggedIn() ? $"Hello, {_userService.GetCurrentUser().FullName}" : "Hello, Guest";
+        }
+
+        public bool IsLoginButtonEnabled
+        {
+            get => !_userService.IsUserLoggedIn();
+        }
+
+        public bool IsLogoutButtonEnabled
+        {
+            get => _userService.IsUserLoggedIn();
+        }
+
+        private bool CanExecuteLogout()
+        {
+            return _userService.IsUserLoggedIn();
+        }
+
+        private bool CanExecuteLogin()
+        {
+            return !_userService.IsUserLoggedIn();
+        }
+
+        private void Logout()
+        {
+            _userService.Logout();
+            UpdateGreetingMessage();
+            MessageBox.Show("Logged out successfully.", "Logout", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void UpdateGreetingMessage()
+        {
+            OnPropertyChanged(nameof(GreetingMessage));
+            OnPropertyChanged(nameof(IsLoginButtonEnabled));
+            OnPropertyChanged(nameof(IsLogoutButtonEnabled));
+            LogoutCommand.NotifyCanExecuteChanged();
+            NavigateToLoginCommand.NotifyCanExecuteChanged();
         }
 
         private void NavigateToCatalog()

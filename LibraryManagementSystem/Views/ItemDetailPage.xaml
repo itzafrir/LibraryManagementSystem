@@ -1,14 +1,15 @@
 ﻿<Window x:Class="LibraryManagementSystem.Views.ItemDetailPage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:models="clr-namespace:LibraryManagementSystem.Models"
         Title="Item Details" Height="600" Width="800">
     <Grid>
         <StackPanel Margin="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="{Binding GreetingMessage}" FontSize="14" FontWeight="Bold" Margin="0,0,10,0"/>
+                <Button Content="Logout" Command="{Binding LogoutCommand}" IsEnabled="{Binding IsLogoutButtonEnabled}" Margin="5"/>
+            </StackPanel>
             <TextBlock Text="{Binding SelectedItem.Title}" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
             <TextBlock Text="{Binding SelectedItem.Description}" FontSize="14" Margin="0,0,0,10"/>
-            <TextBlock Text="{Binding RatingAndReviewCount}" FontSize="14" Margin="0,0,0,10"/>
-            <TextBlock Text="{Binding SelectedItem.ItemType}" FontSize="14" Margin="0,0,0,10"/>
 
             <ContentControl Content="{Binding SelectedItem}">
                 <ContentControl.Resources>
@@ -19,34 +20,35 @@
             <Button Content="Loan Item" Width="100" Command="{Binding LoanItemCommand}" Margin="5"/>
             <Button Content="Go Back to Catalog" Width="150" Command="{Binding GoBackToCatalogCommand}" Margin="5"/>
             <Button Content="Home" Width="100" Command="{Binding NavigateHomeCommand}" Margin="5"/>
-            <Button Content="Login" Width="100" Command="{Binding NavigateToLoginCommand}" Margin="5"/>
+            <Button Content="Login" Width="100" Command="{Binding NavigateToLoginCommand}" Margin="5" IsEnabled="{Binding IsLoginButtonEnabled}"/>
 
             <!-- Reviews Section -->
             <TextBlock Text="Reviews:" FontSize="18" FontWeight="Bold" Margin="10,20,0,10"/>
-            <ListBox ItemsSource="{Binding SelectedItem.Reviews}" Margin="10,0,10,10">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Margin="0,0,0,10">
-                            <TextBlock Text="{Binding Rating, StringFormat='Rating: {0} stars'}" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
-                            <TextBlock Text="{Binding ReviewDate, StringFormat='Reviewed on {0:d}'}" FontStyle="Italic"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <ScrollViewer Height="200" VerticalScrollBarVisibility="Auto" Margin="10,0,10,10">
+                <ListBox ItemsSource="{Binding SelectedItem.Reviews}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,10">
+                                <TextBlock Text="{Binding Rating, StringFormat='Rating: {0} stars'}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding ReviewDate, StringFormat='Reviewed on {0:d}'}" FontStyle="Italic"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
 
             <!-- Add Review Section -->
             <TextBlock Text="Add a Review:" FontSize="18" FontWeight="Bold" Margin="10,10,0,10"/>
             <StackPanel Orientation="Horizontal" Margin="10,0,10,10">
-                <ComboBox Width="100" SelectedValue="{Binding NewReviewRating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedValuePath="Content" Margin="5">
-                    <ComboBoxItem Content="1" />
-                    <ComboBoxItem Content="2" />
-                    <ComboBoxItem Content="3" />
-                    <ComboBoxItem Content="4" />
-                    <ComboBoxItem Content="5" />
+                <ComboBox Width="100" SelectedItem="{Binding NewReviewRating}" Margin="5">
+                    <ComboBoxItem Content="1"/>
+                    <ComboBoxItem Content="2"/>
+                    <ComboBoxItem Content="3"/>
+                    <ComboBoxItem Content="4"/>
+                    <ComboBoxItem Content="5"/>
                 </ComboBox>
-                <TextBox Width="400" Text="{Binding NewReviewText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+                <TextBox Width="400" Text="{Binding NewReviewText}" Margin="5"/>
                 <Button Content="Add Review" Width="100" Command="{Binding AddReviewCommand}" Margin="5" IsEnabled="{Binding CanAddReview}"/>
             </StackPanel>
         </StackPanel>

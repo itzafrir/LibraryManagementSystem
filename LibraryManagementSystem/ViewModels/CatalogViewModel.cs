@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using LibraryManagementSystem.Utilities.Enums;
 using LibraryManagementSystem.Views;
+using System.Windows.Input;
+using System.Windows;
 
 namespace LibraryManagementSystem.ViewModels
 {
@@ -20,6 +22,7 @@ namespace LibraryManagementSystem.ViewModels
         private ItemType? _selectedItemType;
 
         public ObservableCollection<Item> Items { get; }
+        public ObservableCollection<ItemType> ItemTypes { get; }
 
         public Item SelectedItem
         {
@@ -39,12 +42,11 @@ namespace LibraryManagementSystem.ViewModels
             set => SetProperty(ref _selectedItemType, value);
         }
 
-        public ObservableCollection<ItemType> ItemTypes { get; }
-
         public IRelayCommand SearchCommand { get; }
         public IRelayCommand ViewItemDetailsCommand { get; }
         public IRelayCommand NavigateHomeCommand { get; }
         public IRelayCommand NavigateToLoginCommand { get; }
+        public IRelayCommand LogoutCommand { get; }
 
         public event EventHandler RequestClose;
 
@@ -58,7 +60,51 @@ namespace LibraryManagementSystem.ViewModels
             SearchCommand = new RelayCommand(SearchItems);
             ViewItemDetailsCommand = new RelayCommand(ViewItemDetails);
             NavigateHomeCommand = new RelayCommand(NavigateHome);
-            NavigateToLoginCommand = new RelayCommand(NavigateToLogin); 
+            NavigateToLoginCommand = new RelayCommand(NavigateToLogin, CanExecuteLogin);
+            LogoutCommand = new RelayCommand(Logout, CanExecuteLogout);
+
+            UpdateGreetingMessage();
+        }
+
+        public string GreetingMessage
+        {
+            get => _userService.IsUserLoggedIn() ? $"Hello, {_userService.GetCurrentUser().FullName}" : "Hello, Guest";
+        }
+
+        public bool IsLoginButtonEnabled
+        {
+            get => !_userService.IsUserLoggedIn();
+        }
+
+        public bool IsLogoutButtonEnabled
+        {
+            get => _userService.IsUserLoggedIn();
+        }
+
+        private bool CanExecuteLogout()
+        {
+            return _userService.IsUserLoggedIn();
+        }
+
+        private bool CanExecuteLogin()
+        {
+            return !_userService.IsUserLoggedIn();
+        }
+
+        private void Logout()
+        {
+            _userService.Logout();
+            UpdateGreetingMessage();
+            MessageBox.Show("Logged out successfully.", "Logout", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void UpdateGreetingMessage()
+        {
+            OnPropertyChanged(nameof(GreetingMessage));
+            OnPropertyChanged(nameof(IsLoginButtonEnabled));
+            OnPropertyChanged(nameof(IsLogoutButtonEnabled));
+            LogoutCommand.NotifyCanExecuteChanged();
+            NavigateToLoginCommand.NotifyCanExecuteChanged();
         }
 
         public CatalogViewModelMemento CreateMemento()
@@ -95,7 +141,6 @@ namespace LibraryManagementSystem.ViewModels
                 {
                     DataContext = new ItemDetailViewModel(SelectedItem, _itemService, _userService, this)
                 };
-                // Subscribe to the RequestClose event here
                 ((ItemDetailViewModel)itemDetailPage.DataContext).RequestClose += (_, __) => itemDetailPage.Close();
                 itemDetailPage.Show();
                 RequestClose?.Invoke(this, EventArgs.Empty);
@@ -108,6 +153,7 @@ namespace LibraryManagementSystem.ViewModels
             mainWindow.Show();
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
+
         private void NavigateToLogin()
         {
             var memento = CreateMemento();
@@ -119,6 +165,7 @@ namespace LibraryManagementSystem.ViewModels
             loginWindow.Show();
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
+
         private void GoBackToCatalog(CatalogViewModelMemento memento)
         {
             var catalogPage = new CatalogPage(_itemService, _userService)

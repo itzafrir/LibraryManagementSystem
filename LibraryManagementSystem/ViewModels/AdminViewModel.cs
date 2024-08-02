@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Services;
 using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using LibraryManagementSystem.Models;
 
@@ -25,6 +26,7 @@ namespace LibraryManagementSystem.ViewModels
         public ICommand ApproveFinePayRequestCommand { get; }
         public ICommand RejectFinePayRequestCommand { get; }
         public ICommand NavigateHomeCommand { get; }
+        public ICommand LogoutCommand { get; }
 
         public event EventHandler RequestClose;
 
@@ -39,6 +41,42 @@ namespace LibraryManagementSystem.ViewModels
             ApproveFinePayRequestCommand = new RelayCommand(ApproveFinePayRequest);
             RejectFinePayRequestCommand = new RelayCommand(RejectFinePayRequest);
             NavigateHomeCommand = new RelayCommand(NavigateHome);
+            LogoutCommand = new RelayCommand(Logout, CanExecuteLogout);
+
+            UpdateGreetingMessage();
+        }
+
+        public string GreetingMessage
+        {
+            get => _userService.IsUserLoggedIn() ? $"Hello, {_userService.GetCurrentUser().FullName}" : "Hello, Guest";
+        }
+
+        public bool IsLoginButtonEnabled
+        {
+            get => !_userService.IsUserLoggedIn();
+        }
+
+        public bool IsLogoutButtonEnabled
+        {
+            get => _userService.IsUserLoggedIn();
+        }
+
+        private bool CanExecuteLogout()
+        {
+            return _userService.IsUserLoggedIn();
+        }
+
+        private void Logout()
+        {
+            _userService.Logout();
+            NavigateHome();
+        }
+
+        private void UpdateGreetingMessage()
+        {
+            OnPropertyChanged(nameof(GreetingMessage));
+            OnPropertyChanged(nameof(IsLoginButtonEnabled));
+            OnPropertyChanged(nameof(IsLogoutButtonEnabled));
         }
 
         private void ApproveFinePayRequest()
