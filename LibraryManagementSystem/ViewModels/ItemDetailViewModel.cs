@@ -95,30 +95,30 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (_userService.IsUserLoggedIn() && !string.IsNullOrWhiteSpace(NewReviewText) && NewReviewRating > 0)
             {
-                var review = new Review(_userService.GetCurrentUser().Id, SelectedItem.Id, NewReviewRating, NewReviewText);
-                _itemService.AddReview(SelectedItem, review); // Add review using ItemService
-                SelectedItem.AddReview(review);
+                try
+                {
+                    var review = new Review(_userService.GetCurrentUser().Id, SelectedItem.Id, NewReviewRating, NewReviewText);
+                    _itemService.AddReview(SelectedItem, review); // This will now check for duplicates
 
-                // Update database
-                _itemService.UpdateItem(SelectedItem);
-
-                OnPropertyChanged(nameof(SelectedItem.Reviews));
-                OnPropertyChanged(nameof(SelectedItem.AverageRating));
-                OnPropertyChanged(nameof(RatingAndReviewCount)); // Notify change
-
-                NewReviewText = string.Empty;
-                NewReviewRating = 0;
-                UpdateCanAddReview();
-
-                MessageBox.Show("Review added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // Only update the UI if the review was successfully added
+                    OnPropertyChanged(nameof(SelectedItem.Reviews));
+                    OnPropertyChanged(nameof(SelectedItem.AverageRating));
+                    OnPropertyChanged(nameof(RatingAndReviewCount));
+                    NewReviewText = string.Empty;
+                    NewReviewRating = 0;
+                    UpdateCanAddReview();
+                    MessageBox.Show("Review added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
                 MessageBox.Show("Please provide a rating and review text.");
             }
         }
-
-
 
         private void LoanItem()
         {

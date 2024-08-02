@@ -1,6 +1,7 @@
 ﻿using LibraryManagementSystem.Utilities.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace LibraryManagementSystem.Models
@@ -15,7 +16,7 @@ namespace LibraryManagementSystem.Models
         public DateTime PublicationDate { get; set; }
         public string Publisher { get; set; }
         public string Description { get; set; }
-        public List<Review> Reviews { get; set; }
+        public ObservableCollection<Review> Reviews { get; set; }
         public int TotalCopies { get; set; } // Total number of copies
         public int AvailableCopies { get; set; } // Number of available copies
 
@@ -31,7 +32,7 @@ namespace LibraryManagementSystem.Models
 
         public Item()
         {
-            Reviews = new List<Review>();
+            Reviews = new ObservableCollection<Review>();
         }
 
         // Virtual method to get the creator of the item

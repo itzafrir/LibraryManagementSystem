@@ -11,7 +11,7 @@ namespace LibraryManagementSystem.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Fine> Fines { get; set; }
-        public DbSet<FinePayRequest> FinePayRequests { get; set; } // Add this line
+        public DbSet<FinePayRequest> FinePayRequests { get; set; }
 
         public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
         {
@@ -33,7 +33,7 @@ namespace LibraryManagementSystem.Data
             modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<Review>().HasKey(r => r.Id);
             modelBuilder.Entity<Fine>().HasKey(f => f.Id);
-            modelBuilder.Entity<FinePayRequest>().HasKey(fpr => fpr.Id); // Ensure the primary key is correctly defined
+            modelBuilder.Entity<FinePayRequest>().HasKey(fpr => fpr.Id);
 
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Item)
@@ -45,6 +45,10 @@ namespace LibraryManagementSystem.Data
                 .WithMany()
                 .HasForeignKey(r => r.UserId);
 
+            modelBuilder.Entity<Review>()
+                .HasIndex(r => new { r.UserId, r.ItemId })
+                .IsUnique(); // Add unique constraint on UserId and ItemId
+
             modelBuilder.Entity<Fine>()
                 .HasOne(f => f.User)
                 .WithMany(u => u.Fines)
@@ -54,7 +58,7 @@ namespace LibraryManagementSystem.Data
                 .HasOne(fpr => fpr.User)
                 .WithMany()
                 .HasForeignKey(fpr => fpr.UserId)
-                .OnDelete(DeleteBehavior.Cascade); // Ensure the correct delete behavior is set
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

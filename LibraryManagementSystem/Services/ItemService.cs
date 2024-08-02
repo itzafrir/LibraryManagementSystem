@@ -101,9 +101,16 @@ namespace LibraryManagementSystem.Services
 
         public void AddReview(Item item, Review review)
         {
-            _reviewRepository.Add(review);
-            item.Reviews.Add(review);
-            _itemRepository.Update(item);
+            // Check if the review already exists
+            if (!_reviewRepository.GetAll().Any(r => r.ItemId == review.ItemId && r.UserId == review.UserId))
+            {
+                _reviewRepository.Add(review);
+                _itemRepository.Update(item); // Update the item in the database
+            }
+            else
+            {
+                throw new InvalidOperationException("This review already exists.");
+            }
         }
 
         public void UpdateItem(Item item)
