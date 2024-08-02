@@ -12,13 +12,15 @@ namespace LibraryManagementSystem.Services
         private readonly IRepository<Item> _itemRepository;
         private readonly IRepository<Loan> _loanRepository;
         private readonly IRepository<LoanRequest> _loanRequestRepository;
+        private readonly IRepository<Review> _reviewRepository;
         private readonly UserService _userService;
 
-        public ItemService(IRepository<Item> itemRepository, IRepository<Loan> loanRepository, IRepository<LoanRequest> loanRequestRepository, UserService userService)
+        public ItemService(IRepository<Item> itemRepository, IRepository<Loan> loanRepository, IRepository<LoanRequest> loanRequestRepository, IRepository<Review> reviewRepository, UserService userService)
         {
             _itemRepository = itemRepository;
             _loanRepository = loanRepository;
             _loanRequestRepository = loanRequestRepository;
+            _reviewRepository = reviewRepository;
             _userService = userService;
         }
 
@@ -95,6 +97,18 @@ namespace LibraryManagementSystem.Services
                 _loanRequestRepository.Delete(loanRequest.Id);
                 loanRequests.RemoveAt(0);
             }
+        }
+
+        public void AddReview(Item item, Review review)
+        {
+            _reviewRepository.Add(review);
+            item.Reviews.Add(review);
+            _itemRepository.Update(item);
+        }
+
+        public void UpdateItem(Item item)
+        {
+            _itemRepository.Update(item);
         }
     }
 }
