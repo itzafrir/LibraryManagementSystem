@@ -19,9 +19,9 @@ public partial class ProfileViewModel : ObservableObject
         private set => SetProperty(ref _userProfile, value);
     }
 
-    public ObservableCollection<Loan> CurrentLoans { get; }
-    public ObservableCollection<LoanRequest> LoanRequests { get; }
-    public ObservableCollection<Fine> Fines { get; }
+    public ObservableCollection<Loan> CurrentLoans { get; private set; }
+    public ObservableCollection<LoanRequest> LoanRequests { get; private set; }
+    public ObservableCollection<Fine> Fines { get; private set; }
 
     public ICommand LogoutCommand { get; }
     public ICommand GoBackCommand { get; }
@@ -35,14 +35,24 @@ public partial class ProfileViewModel : ObservableObject
         _onGoBack = onGoBack;
         _onLogout = onLogout;
 
+        LogoutCommand = new RelayCommand(Logout);
+        GoBackCommand = new RelayCommand(GoBack);
+        PayFineCommand = new RelayCommand<Fine>(PayFine);
+
+        LoadUserProfile();
+    }
+
+    private void LoadUserProfile()
+    {
         UserProfile = _userService.GetCurrentUser();
         CurrentLoans = new ObservableCollection<Loan>(_userService.GetCurrentLoans());
         LoanRequests = new ObservableCollection<LoanRequest>(_userService.GetLoanRequests());
         Fines = new ObservableCollection<Fine>(_userService.GetFines());
 
-        LogoutCommand = new RelayCommand(Logout);
-        GoBackCommand = new RelayCommand(GoBack);
-        PayFineCommand = new RelayCommand<Fine>(PayFine);
+        // Notify UI that collections have been updated
+        OnPropertyChanged(nameof(CurrentLoans));
+        OnPropertyChanged(nameof(LoanRequests));
+        OnPropertyChanged(nameof(Fines));
     }
 
     private void Logout()
