@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories;
 using LibraryManagementSystem.Utilities.Enums;
@@ -42,6 +43,18 @@ namespace LibraryManagementSystem.Services
 
         public void LoanItem(User user, Item item)
         {
+            if (user == null)
+            {
+                MessageBox.Show("User must be logged in to loan an item.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (user.CurrentLoans.Any(l => l.ItemId == item.Id && l.LoanStatus == LoanStatus.Active))
+            {
+                MessageBox.Show("User already has an active loan for this item.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (item.AvailableCopies > 0)
             {
                 item.AvailableCopies--;
@@ -56,10 +69,12 @@ namespace LibraryManagementSystem.Services
                 _loanRepository.Add(loan);
                 _itemRepository.Update(item);
                 _userService.AddLoan(user, loan); // Add loan to user's current loans
+                MessageBox.Show("Item loaned successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
                 ReserveItem(user, item);
+                MessageBox.Show("No available copies. A loan request was placed successfully.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

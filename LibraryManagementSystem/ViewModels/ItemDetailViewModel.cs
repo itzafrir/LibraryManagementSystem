@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using LibraryManagementSystem.Utilities;
+using LibraryManagementSystem.Utilities.Enums;
 using LibraryManagementSystem.Views;
 
 namespace LibraryManagementSystem.ViewModels
@@ -145,9 +146,21 @@ namespace LibraryManagementSystem.ViewModels
         {
             try
             {
-                _itemService.LoanItem(_userService.GetCurrentUser(), SelectedItem);
+                var currentUser = _userService.GetCurrentUser();
+                if (currentUser == null)
+                {
+                    MessageBox.Show("You must be logged in to loan an item.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (currentUser.CurrentLoans.Any(l => l.ItemId == SelectedItem.Id && l.LoanStatus == LoanStatus.Active))
+                {
+                    MessageBox.Show("User already has an active loan for this item.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                _itemService.LoanItem(currentUser, SelectedItem);
                 OnPropertyChanged(nameof(SelectedItem));
-                MessageBox.Show("Item loaned successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
