@@ -55,6 +55,7 @@ namespace LibraryManagementSystem.Services
                 };
                 _loanRepository.Add(loan);
                 _itemRepository.Update(item);
+                _userService.AddLoan(user, loan); // Add loan to user's current loans
             }
             else
             {
@@ -101,7 +102,6 @@ namespace LibraryManagementSystem.Services
 
         public void AddReview(Item item, Review review)
         {
-            // Check if the review already exists
             if (!_reviewRepository.GetAll().Any(r => r.ItemId == review.ItemId && r.UserId == review.UserId))
             {
                 _reviewRepository.Add(review);

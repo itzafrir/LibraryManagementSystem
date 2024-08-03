@@ -80,7 +80,11 @@ namespace LibraryManagementSystem.Services
             }
             return null;
         }
-
+        public void AddLoan(User user, Loan loan)
+        {
+            user.CurrentLoans.Add(loan);
+            _userRepository.Update(user);
+        }
         public bool IsUserLoggedIn()
         {
             return _currentUser != null;
@@ -120,7 +124,6 @@ namespace LibraryManagementSystem.Services
                 _userRepository.Update(user);
             }
         }
-
         public void RejectFinePayRequest(FinePayRequest request)
         {
             request.Status = FinePayRequestStatus.Rejected;
