@@ -40,7 +40,7 @@
                         <DataGridTemplateColumn Header="Actions">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="Return" Command="{Binding DataContext.ReturnItemCommand, RelativeSource={RelativeSource AncestorType=TabItem}}" CommandParameter="{Binding }" />
+                                    <Button Content="Return" Command="{Binding DataContext.ReturnItemCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -51,19 +51,19 @@
                 <DataGrid ItemsSource="{Binding LoanRequests}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Item Name" Binding="{Binding Item.Title}" />
-                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                        <DataGridTextColumn Header="Request Date" Binding="{Binding RequestDate, StringFormat=yyyy-MM-dd}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
             <TabItem Header="Fines">
                 <DataGrid ItemsSource="{Binding Fines}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Item Name" Binding="{Binding Item.Title}" />
-                        <DataGridTextColumn Header="Total Fine" Binding="{Binding Amount, StringFormat=C}" />
+                        <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=C}" />
+                        <DataGridTextColumn Header="Date Issued" Binding="{Binding DateIssued, StringFormat=yyyy-MM-dd}" />
                         <DataGridTemplateColumn Header="Actions">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="Pay" Command="{Binding DataContext.PayFineCommand, RelativeSource={RelativeSource AncestorType=TabItem}}" CommandParameter="{Binding}" />
+                                    <Button Content="Pay" Command="{Binding DataContext.PayFineCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

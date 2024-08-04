@@ -9,6 +9,12 @@ namespace LibraryManagementSystem.Models
         public int UserId { get; set; }
         public DateTime RequestDate { get; set; }
 
+        // Navigation properties
+        public virtual Item Item { get; set; }
+        public virtual User User { get; set; }
+
+        // Computed property
+        public string Title => Item?.Title;
         // Method to get the request details
         public string GetRequestDetails()
         {
