@@ -1,41 +1,87 @@
 ﻿<Window x:Class="LibraryManagementSystem.Views.AddUpdateItemWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:utilities="clr-namespace:LibraryManagementSystem.Utilities.Enums"
-        Title="Add/Update Item" Height="400" Width="600">
+        xmlns:models="clr-namespace:LibraryManagementSystem.Models"
+        Title="Add/Update Item" Height="450" Width="400">
     <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
-
-        <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" Margin="5"/>
-
-        <TextBlock Text="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="5"/>
-
-        <TextBlock Text="Item Type:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-        <ComboBox SelectedItem="{Binding SelectedItemType, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="5">
-            <ComboBoxItem Content="Book" Tag="{x:Static utilities:ItemType.Book}"/>
-            <ComboBoxItem Content="CD" Tag="{x:Static utilities:ItemType.CD}"/>
-            <ComboBoxItem Content="EBook" Tag="{x:Static utilities:ItemType.EBook}"/>
-            <ComboBoxItem Content="DVD" Tag="{x:Static utilities:ItemType.DVD}"/>
-            <ComboBoxItem Content="Magazine" Tag="{x:Static utilities:ItemType.Magazine}"/>
-        </ComboBox>
-
-        <TextBlock Text="Available Copies:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding Item.AvailableCopies, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="5"/>
-
-        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="5"/>
-            <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Margin="5"/>
+        <StackPanel>
+            <ComboBox ItemsSource="{Binding ItemTypes}" 
+                      SelectedItem="{Binding SelectedItemType}" 
+                      IsEnabled="{Binding IsItemTypeSelectionEnabled}" 
+                      DisplayMemberPath="ItemType" />
+            <ContentControl Content="{Binding Item}">
+                <ContentControl.Resources>
+                    <!-- Templates for different item types -->
+                    <DataTemplate DataType="{x:Type models:Book}">
+                        <StackPanel>
+                            <!-- Book properties -->
+                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
+                            <TextBox Text="{Binding Author}" SelectedText="Author"/>
+                            <TextBox Text="{Binding Genre}" SelectedText="Genre"/>
+                            <TextBox Text="{Binding PageCount}" SelectedText="Page Count"/>
+                            <TextBox Text="{Binding Language}" SelectedText="Language"/>
+                            <TextBox Text="{Binding Format}" SelectedText="Format"/>
+                            <TextBox Text="{Binding Dimensions}" SelectedText="Dimensions"/>
+                            <TextBox Text="{Binding Series}" SelectedText="Series"/>
+                            <TextBox Text="{Binding Edition}" SelectedText="Edition"/>
+                            <TextBox Text="{Binding Keywords}" SelectedText="Keywords"/>
+                        </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type models:CD}">
+                        <StackPanel>
+                            <!-- CD properties -->
+                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
+                            <TextBox Text="{Binding Artist}" SelectedText="Artist"/>
+                            <TextBox Text="{Binding Genre}" SelectedText="Genre"/>
+                            <TextBox Text="{Binding Duration}" SelectedText="Duration"/>
+                            <TextBox Text="{Binding TrackCount}" SelectedText="Track Count"/>
+                            <TextBox Text="{Binding Label}" SelectedText="Label"/>
+                            <TextBox Text="{Binding ReleaseDate}" SelectedText="Release Date"/>
+                            <TextBox Text="{Binding Tracks}" SelectedText="Tracks"/>
+                        </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type models:EBook}">
+                        <StackPanel>
+                            <!-- EBook properties -->
+                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
+                            <TextBox Text="{Binding Author}" SelectedText="Author"/>
+                            <TextBox Text="{Binding FileFormat}" SelectedText="File Format"/>
+                            <TextBox Text="{Binding FileSize}" SelectedText="File Size"/>
+                            <TextBox Text="{Binding DownloadLink}" SelectedText="Download Link"/>
+                            <TextBox Text="{Binding Keywords}" SelectedText="Keywords"/>
+                        </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type models:DVD}">
+                        <StackPanel>
+                            <!-- DVD properties -->
+                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
+                            <TextBox Text="{Binding Director}" SelectedText="Director"/>
+                            <TextBox Text="{Binding Genre}" SelectedText="Genre"/>
+                            <TextBox Text="{Binding Duration}" SelectedText="Duration"/>
+                            <TextBox Text="{Binding Language}" SelectedText="Language"/>
+                            <TextBox Text="{Binding Studio}" SelectedText="Studio"/>
+                            <TextBox Text="{Binding ReleaseDate}" SelectedText="Release Date"/>
+                            <TextBox Text="{Binding Subtitles}" SelectedText="Subtitles"/>
+                            <TextBox Text="{Binding Cast}" SelectedText="Cast"/>
+                        </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type models:Magazine}">
+                        <StackPanel>
+                            <!-- Magazine properties -->
+                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
+                            <TextBox Text="{Binding Editor}" SelectedText="Editor"/>
+                            <TextBox Text="{Binding IssueNumber}" SelectedText="Issue Number"/>
+                            <TextBox Text="{Binding Genre}" SelectedText="Genre"/>
+                            <TextBox Text="{Binding Frequency}" SelectedText="Frequency"/>
+                            <TextBox Text="{Binding Articles}" SelectedText="Articles"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ContentControl.Resources>
+            </ContentControl>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="5"/>
+                <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Margin="5"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

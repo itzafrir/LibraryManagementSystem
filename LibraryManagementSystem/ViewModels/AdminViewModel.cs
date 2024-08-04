@@ -214,11 +214,31 @@ namespace LibraryManagementSystem.ViewModels
 
         private void RefreshItems()
         {
-            Books = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.Book));
-            CDs = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.CD));
-            EBooks = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.EBook));
-            DVDs = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.DVD));
-            Magazines = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.Magazine));
+            Books.Clear();
+            foreach (var book in _itemService.GetItemsByType(ItemType.Book))
+            {
+                Books.Add(book);
+            }
+            CDs.Clear();
+            foreach (var cd in _itemService.GetItemsByType(ItemType.CD))
+            {
+                CDs.Add(cd);
+            }
+            EBooks.Clear();
+            foreach (var ebook in _itemService.GetItemsByType(ItemType.EBook))
+            {
+                EBooks.Add(ebook);
+            }
+            DVDs.Clear();
+            foreach (var dvd in _itemService.GetItemsByType(ItemType.DVD))
+            {
+                DVDs.Add(dvd);
+            }
+            Magazines.Clear();
+            foreach (var magazine in _itemService.GetItemsByType(ItemType.Magazine))
+            {
+                Magazines.Add(magazine);
+            }
         }
 
         public string GreetingMessage
@@ -277,5 +297,20 @@ namespace LibraryManagementSystem.ViewModels
             _navigateHome?.Invoke();
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
+        private void AddItem()
+        {
+            var addItemWindow = new AddUpdateItemWindow(null, _itemService);
+            addItemWindow.ShowDialog();
+        }
+
+        private void UpdateItem()
+        {
+            if (SelectedItem != null)
+            {
+                var updateItemWindow = new AddUpdateItemWindow(SelectedItem, _itemService);
+                updateItemWindow.ShowDialog();
+            }
+        }
+
     }
 }
