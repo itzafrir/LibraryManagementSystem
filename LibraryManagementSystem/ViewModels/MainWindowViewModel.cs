@@ -91,9 +91,9 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (_userService.IsUserLoggedIn())
             {
-                var profilePage = new ProfilePage(_userService, NavigateToMain, NavigateToMain)
+                var profilePage = new ProfilePage(_userService,_itemService, NavigateToMain, NavigateToMain)
                 {
-                    DataContext = new ProfileViewModel(_userService, NavigateToMain, NavigateToMain)
+                    DataContext = new ProfileViewModel(_userService, _itemService,NavigateToMain, NavigateToMain)
                 };
                 ((ProfileViewModel)profilePage.DataContext).RequestClose += (_, __) => profilePage.Close();
                 profilePage.Show();

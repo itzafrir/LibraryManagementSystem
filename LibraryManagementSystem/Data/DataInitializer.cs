@@ -1,4 +1,5 @@
-﻿using LibraryManagementSystem.Models;
+﻿using System;
+using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +9,7 @@ namespace LibraryManagementSystem.Data
 {
     public static class DataInitializer
     {
-        public static void Initialize(IRepository<Item> itemRepository, IRepository<User> userRepository, IRepository<Loan> loanRepository, IRepository<Review> reviewRepository, IRepository<Fine> fineRepository)
+        public static void Initialize(IRepository<Item> itemRepository, IRepository<User> userRepository, IRepository<Loan> loanRepository, IRepository<Review> reviewRepository, IRepository<Fine> fineRepository, IRepository<LoanRequest> loanRequestRepository)
         {
             // Ensure users are loaded from repository
             var users = userRepository.GetAll().ToList();
@@ -28,6 +29,22 @@ namespace LibraryManagementSystem.Data
             //foreach (var fine in fines)
             //{
             //    fineRepository.Delete(fine.Id);
+            //}
+
+            // Create a fake loan request
+            //var user1 = users.FirstOrDefault();  // Select the first user from the database
+            //var item1 = items.FirstOrDefault();  // Select the first item from the database
+
+            //if (user1 != null && item1 != null)
+            //{
+            //    var loanRequest = new LoanRequest
+            //    {
+            //        UserId = user1.Id,
+            //        ItemId = item1.Id,
+            //        RequestDate = DateTime.Now
+            //    };
+
+            //    loanRequestRepository.Add(loanRequest);
             //}
 
             // Update users to remove current loans and fines

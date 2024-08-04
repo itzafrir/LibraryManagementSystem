@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,6 +11,7 @@ using LibraryManagementSystem.Services;
 public partial class ProfileViewModel : ObservableObject
 {
     private readonly UserService _userService;
+    private readonly ItemService _itemService;
     private readonly Action _onGoBack;
     private readonly Action _onLogout;
     private User _userProfile;
@@ -19,40 +22,33 @@ public partial class ProfileViewModel : ObservableObject
         private set => SetProperty(ref _userProfile, value);
     }
 
-    public ObservableCollection<Loan> CurrentLoans { get; private set; }
-    public ObservableCollection<LoanRequest> LoanRequests { get; private set; }
-    public ObservableCollection<Fine> Fines { get; private set; }
+    public ObservableCollection<Loan> CurrentLoans { get; }
+    public ObservableCollection<LoanRequest> LoanRequests { get; }
+    public ObservableCollection<Fine> Fines { get; }
 
     public ICommand LogoutCommand { get; }
     public ICommand GoBackCommand { get; }
     public ICommand PayFineCommand { get; }
+    public ICommand ReturnItemCommand { get; }
 
     public event EventHandler RequestClose;
 
-    public ProfileViewModel(UserService userService, Action onGoBack, Action onLogout)
+    public ProfileViewModel(UserService userService, ItemService itemService, Action onGoBack, Action onLogout)
     {
         _userService = userService;
+        _itemService = itemService;
         _onGoBack = onGoBack;
         _onLogout = onLogout;
 
-        LogoutCommand = new RelayCommand(Logout);
-        GoBackCommand = new RelayCommand(GoBack);
-        PayFineCommand = new RelayCommand<Fine>(PayFine);
-
-        LoadUserProfile();
-    }
-
-    private void LoadUserProfile()
-    {
         UserProfile = _userService.GetCurrentUser();
         CurrentLoans = new ObservableCollection<Loan>(_userService.GetCurrentLoans());
         LoanRequests = new ObservableCollection<LoanRequest>(_userService.GetLoanRequests());
         Fines = new ObservableCollection<Fine>(_userService.GetFines());
 
-        // Notify UI that collections have been updated
-        OnPropertyChanged(nameof(CurrentLoans));
-        OnPropertyChanged(nameof(LoanRequests));
-        OnPropertyChanged(nameof(Fines));
+        LogoutCommand = new RelayCommand(Logout);
+        GoBackCommand = new RelayCommand(GoBack);
+        PayFineCommand = new RelayCommand<Fine>(PayFine);
+        ReturnItemCommand = new RelayCommand<Loan>(ReturnItem);
     }
 
     private void Logout()
@@ -74,6 +70,24 @@ public partial class ProfileViewModel : ObservableObject
         {
             _userService.CreateFinePayRequest(fine);
             Fines.Remove(fine);
+        }
+    }
+
+    private void ReturnItem(Loan loan)
+    {
+        if (loan != null)
+        {
+            _userService.ReturnLoan(loan);
+            CurrentLoans.Remove(loan);
+
+            // Check if there are open loan requests for this item
+            var openRequests = _userService.GetLoanRequestsForItem(loan.ItemId).ToList();
+            if (openRequests.Any())
+            {
+                MessageBox.Show($"There are {openRequests.Count} open loan requests for this item.", "Loan Requests Pending", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            MessageBox.Show("Item returned successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

@@ -7,10 +7,10 @@ namespace LibraryManagementSystem.Views
 {
     public partial class ProfilePage : Window
     {
-        public ProfilePage(UserService userService, Action onGoBack, Action onLogout)
+        public ProfilePage(UserService userService, ItemService itemService,Action onGoBack, Action onLogout)
         {
             InitializeComponent();
-            var viewModel = new ProfileViewModel(userService, onGoBack, onLogout);
+            var viewModel = new ProfileViewModel(userService, itemService, onGoBack, onLogout);
             viewModel.RequestClose += OnRequestClose;
             DataContext = viewModel;
         }

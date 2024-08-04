@@ -37,13 +37,20 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Item Name" Binding="{Binding Item.Title}" />
                         <DataGridTextColumn Header="Due Date" Binding="{Binding DueDate, StringFormat=yyyy-MM-dd}" />
+                        <DataGridTemplateColumn Header="Actions">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Return" Command="{Binding DataContext.ReturnItemCommand, RelativeSource={RelativeSource AncestorType=TabItem}}" CommandParameter="{Binding }" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
             <TabItem Header="Orders">
                 <DataGrid ItemsSource="{Binding LoanRequests}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Item Name" Binding="{Binding Title}" />
+                        <DataGridTextColumn Header="Item Name" Binding="{Binding Item.Title}" />
                         <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
                     </DataGrid.Columns>
                 </DataGrid>
@@ -56,7 +63,7 @@
                         <DataGridTemplateColumn Header="Actions">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="Pay" Command="{Binding DataContext.PayFineCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                    <Button Content="Pay" Command="{Binding DataContext.PayFineCommand, RelativeSource={RelativeSource AncestorType=TabItem}}" CommandParameter="{Binding}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

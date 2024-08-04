@@ -183,5 +183,9 @@ namespace LibraryManagementSystem.Services
             var user = _userRepository.GetAll().FirstOrDefault(u => u.Username == username && u.Password == password);
             return user != null;
         }
+        public List<LoanRequest> GetLoanRequestsForItem(int itemId)
+        {
+            return _loanRequestRepository.GetAll().Where(lr => lr.ItemId == itemId).ToList();
+        }
     }
 }

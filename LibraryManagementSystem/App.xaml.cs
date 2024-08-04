@@ -33,8 +33,9 @@ namespace LibraryManagementSystem
             var loanRepository = _serviceProvider.GetRequiredService<IRepository<Loan>>();
             var reviewRepository = _serviceProvider.GetRequiredService<IRepository<Review>>();
             var fineRepository = _serviceProvider.GetRequiredService<IRepository<Fine>>();
+            var loanRequestRepository = _serviceProvider.GetRequiredService<IRepository<LoanRequest>>();
 
-            DataInitializer.Initialize(itemRepository, userRepository, loanRepository, reviewRepository,fineRepository);
+            DataInitializer.Initialize(itemRepository, userRepository, loanRepository, reviewRepository, fineRepository, loanRequestRepository);
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
@@ -59,6 +60,7 @@ namespace LibraryManagementSystem
             services.AddSingleton<IRepository<Loan>, Repository<Loan>>();
             services.AddSingleton<IRepository<Review>, Repository<Review>>();
             services.AddSingleton<IRepository<Fine>, Repository<Fine>>();
+            services.AddSingleton<IRepository<LoanRequest>, Repository<LoanRequest>>();
         }
     }
 }
