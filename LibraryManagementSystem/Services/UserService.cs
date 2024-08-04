@@ -200,7 +200,27 @@ namespace LibraryManagementSystem.Services
         {
             return _userRepository.GetById(userId);
         }
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _userRepository.GetAll();
+        }
+        public void AddUser(User user)
+        {
+            _userRepository.Add(user);
+        }
 
+        public void UpdateUser(User user)
+        {
+            _userRepository.Update(user);
+        }
+        public void DeleteUser(int userId)
+        {
+            var user = _userRepository.GetById(userId);
+            if (user != null)
+            {
+                _userRepository.Delete(user.Id);
+            }
+        }
         public bool ValidateUser(string username, string password)
         {
             var user = _userRepository.GetAll().FirstOrDefault(u => u.Username == username && u.Password == password);
@@ -209,6 +229,10 @@ namespace LibraryManagementSystem.Services
         public List<LoanRequest> GetLoanRequestsForItem(int itemId)
         {
             return _loanRequestRepository.GetAll().Where(lr => lr.ItemId == itemId).ToList();
+        }
+        public IEnumerable<User> SearchUsers(string searchTerm)
+        {
+            return _userRepository.GetAll().Where(u => u.Username.Contains(searchTerm) || u.FullName.Contains(searchTerm));
         }
     }
 }

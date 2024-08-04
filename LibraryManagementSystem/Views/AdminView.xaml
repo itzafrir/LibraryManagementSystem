@@ -47,8 +47,7 @@
                     <StackPanel>
                         <TextBox Width="200" Margin="5" Text="{Binding SearchUserTerm, UpdateSourceTrigger=PropertyChanged}" SelectedText="Search Users"/>
                         <Button Content="Search" Width="100" Command="{Binding SearchUserCommand}" Margin="5" />
-                        <ScrollViewer Height="16
-                                      0" VerticalScrollBarVisibility="Auto" Margin="5">
+                        <ScrollViewer Height="160" VerticalScrollBarVisibility="Auto" Margin="5">
                             <ListBox ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" DisplayMemberPath="Username"/>
                         </ScrollViewer>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">

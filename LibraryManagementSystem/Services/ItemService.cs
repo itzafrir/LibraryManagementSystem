@@ -1,9 +1,9 @@
-﻿using System;
+﻿using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using LibraryManagementSystem.Models;
-using LibraryManagementSystem.Repositories;
 using LibraryManagementSystem.Utilities.Enums;
 
 namespace LibraryManagementSystem.Services
@@ -45,18 +45,11 @@ namespace LibraryManagementSystem.Services
         {
             if (user == null)
             {
-                MessageBox.Show("User must be logged in to loan an item.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                throw new ArgumentNullException(nameof(user));
             }
 
-            if (item.AvailableCopies > 0)
+            if (item.AvailableCopies > 0 && !user.CurrentLoans.Any(l => l.ItemId == item.Id))
             {
-                if (_loanRepository.GetAll().Any(l => l.UserId == user.Id && l.ItemId == item.Id && l.LoanStatus == LoanStatus.Active))
-                {
-                    MessageBox.Show("User already has a copy of this item.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
                 item.AvailableCopies--;
                 var loan = new Loan
                 {
@@ -68,16 +61,26 @@ namespace LibraryManagementSystem.Services
                 };
                 _loanRepository.Add(loan);
                 _itemRepository.Update(item);
-
-                MessageBox.Show("Item loaned successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                user.CurrentLoans.Add(loan);
             }
             else
             {
                 ReserveItem(user, item);
-                MessageBox.Show("No available copies. Loan request has been placed successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("No available copies. Loan request has been placed successfully.", "Success",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
+        public void ReserveItem(User user, Item item)
+        {
+            var loanRequest = new LoanRequest
+            {
+                ItemId = item.Id,
+                UserId = user.Id,
+                RequestDate = DateTime.Now
+            };
+            _loanRequestRepository.Add(loanRequest);
+            user.LoanRequests.Add(loanRequest);
+        }
         public void ReturnItem(Loan loan)
         {
             var item = _itemRepository.GetById(loan.ItemId);
@@ -90,15 +93,22 @@ namespace LibraryManagementSystem.Services
             ProcessLoanRequests(item);
         }
 
-        public void ReserveItem(User user, Item item)
+        public void AddItem(Item item)
         {
-            var loanRequest = new LoanRequest
+            _itemRepository.Add(item);
+        }
+        public void UpdateItem(Item item)
+        {
+            _itemRepository.Update(item);
+        }
+
+        public void DeleteItem(int itemId)
+        {
+            var item = _itemRepository.GetById(itemId);
+            if (item != null)
             {
-                ItemId = item.Id,
-                UserId = user.Id,
-                RequestDate = DateTime.Now
-            };
-            _loanRequestRepository.Add(loanRequest);
+                _itemRepository.Delete(item.Id);
+            }
         }
 
         private void ProcessLoanRequests(Item item)
@@ -117,19 +127,8 @@ namespace LibraryManagementSystem.Services
 
         public void AddReview(Item item, Review review)
         {
-            if (!_reviewRepository.GetAll().Any(r => r.ItemId == review.ItemId && r.UserId == review.UserId))
-            {
-                _reviewRepository.Add(review);
-                _itemRepository.Update(item); // Update the item in the database
-            }
-            else
-            {
-                throw new InvalidOperationException("This review already exists.");
-            }
-        }
-
-        public void UpdateItem(Item item)
-        {
+            _reviewRepository.Add(review);
+            item.Reviews.Add(review);
             _itemRepository.Update(item);
         }
     }

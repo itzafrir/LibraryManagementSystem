@@ -1,12 +1,41 @@
 ﻿<Window x:Class="LibraryManagementSystem.Views.AddUpdateItemWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LibraryManagementSystem.Views"
-        mc:Ignorable="d"
-        Title="AddUpdateItemWindow" Height="450" Width="800">
-    <Grid>
-        
+        xmlns:utilities="clr-namespace:LibraryManagementSystem.Utilities.Enums"
+        Title="Add/Update Item" Height="400" Width="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Item Type:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox SelectedItem="{Binding SelectedItemType, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="5">
+            <ComboBoxItem Content="Book" Tag="{x:Static utilities:ItemType.Book}"/>
+            <ComboBoxItem Content="CD" Tag="{x:Static utilities:ItemType.CD}"/>
+            <ComboBoxItem Content="EBook" Tag="{x:Static utilities:ItemType.EBook}"/>
+            <ComboBoxItem Content="DVD" Tag="{x:Static utilities:ItemType.DVD}"/>
+            <ComboBoxItem Content="Magazine" Tag="{x:Static utilities:ItemType.Magazine}"/>
+        </ComboBox>
+
+        <TextBlock Text="Available Copies:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding Item.AvailableCopies, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="5"/>
+
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="5"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Margin="5"/>
+        </StackPanel>
     </Grid>
 </Window>
