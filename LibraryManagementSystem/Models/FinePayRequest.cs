@@ -9,7 +9,6 @@ namespace LibraryManagementSystem.Models
         public int FineId { get; set; }
         public int UserId { get; set; }
         public DateTime RequestDate { get; set; }
-        public FinePayRequestStatus Status { get; set; } // Enum for status
 
         // Navigation properties
         public virtual Fine Fine { get; set; }
@@ -17,7 +16,7 @@ namespace LibraryManagementSystem.Models
 
         public string GetRequestDetails()
         {
-            return $"Request ID: {Id}, Fine ID: {FineId}, User ID: {UserId}, Request Date: {RequestDate.ToShortDateString()}, Status: {Status}";
+            return $"Request ID: {Id}, Fine ID: {FineId}, User ID: {UserId}, Request Date: {RequestDate.ToShortDateString()}";
         }
     }
 }

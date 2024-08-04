@@ -22,7 +22,7 @@ namespace LibraryManagementSystem.Views
         }
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (DataContext is ViewModels.LoginViewModel loginViewModel)
+            if (DataContext is LoginViewModel loginViewModel)
             {
                 loginViewModel.Password = ((PasswordBox)sender).Password;
             }

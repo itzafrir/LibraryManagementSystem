@@ -1,4 +1,5 @@
 ﻿using System;
+using LibraryManagementSystem.Utilities.Enums;
 
 namespace LibraryManagementSystem.Models
 {
@@ -9,7 +10,7 @@ namespace LibraryManagementSystem.Models
         public double Amount { get; set; }
         public DateTime DateIssued { get; set; }
         public DateTime? DatePaid { get; set; }
-
+        public FineStatus Status { get; set; }
         // Navigation properties
         public virtual User User { get; set; }
 

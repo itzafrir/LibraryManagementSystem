@@ -49,14 +49,14 @@ namespace LibraryManagementSystem.Services
                 return;
             }
 
-            if (user.CurrentLoans.Any(l => l.ItemId == item.Id && l.LoanStatus == LoanStatus.Active))
-            {
-                MessageBox.Show("User already has an active loan for this item.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             if (item.AvailableCopies > 0)
             {
+                if (_loanRepository.GetAll().Any(l => l.UserId == user.Id && l.ItemId == item.Id && l.LoanStatus == LoanStatus.Active))
+                {
+                    MessageBox.Show("User already has a copy of this item.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 item.AvailableCopies--;
                 var loan = new Loan
                 {
@@ -68,13 +68,13 @@ namespace LibraryManagementSystem.Services
                 };
                 _loanRepository.Add(loan);
                 _itemRepository.Update(item);
-                _userService.AddLoan(user, loan); // Add loan to user's current loans
+
                 MessageBox.Show("Item loaned successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
                 ReserveItem(user, item);
-                MessageBox.Show("No available copies. A loan request was placed successfully.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("No available copies. Loan request has been placed successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
