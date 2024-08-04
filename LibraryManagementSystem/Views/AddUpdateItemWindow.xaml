@@ -8,7 +8,8 @@
             <ComboBox ItemsSource="{Binding ItemTypes}" 
                       SelectedItem="{Binding SelectedItemType}" 
                       IsEnabled="{Binding IsItemTypeSelectionEnabled}" 
-                      DisplayMemberPath="ItemType" />
+                      SelectedValue="{Binding SelectedItemType}"
+                      />
             <ContentControl Content="{Binding Item}">
                 <ContentControl.Resources>
                     <!-- Templates for different item types -->
