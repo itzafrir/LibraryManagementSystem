@@ -17,27 +17,66 @@
                     <StackPanel>
                         <TextBox Width="200" Margin="5" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" SelectedText="Search Items"/>
                         <Button Content="Search" Width="100" Command="{Binding SearchCommand}" Margin="5" />
-                        <TabControl>
+                        <TabControl SelectedItem="{Binding SelectedTab, Mode=TwoWay}">
                             <TabItem Header="Books">
-                                <DataGrid ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                                <DataGrid ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
+                                        <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="150"/>
+                                        <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="100"/>
+                                        <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" Width="80"/>
+                                        <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </TabItem>
                             <TabItem Header="CDs">
-                                <DataGrid ItemsSource="{Binding CDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                                <DataGrid ItemsSource="{Binding CDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
+                                        <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" Width="150"/>
+                                        <DataGridTextColumn Header="Genre" Binding="{Binding Genre}" Width="100"/>
+                                        <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="80"/>
+                                        <DataGridTextColumn Header="Release Date" Binding="{Binding ReleaseDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </TabItem>
                             <TabItem Header="EBooks">
-                                <DataGrid ItemsSource="{Binding EBooks}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                                <DataGrid ItemsSource="{Binding EBooks}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
+                                        <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="150"/>
+                                        <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="100"/>
+                                        <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" Width="80"/>
+                                        <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </TabItem>
                             <TabItem Header="DVDs">
-                                <DataGrid ItemsSource="{Binding DVDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                                <DataGrid ItemsSource="{Binding DVDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
+                                        <DataGridTextColumn Header="Director" Binding="{Binding Director}" Width="150"/>
+                                        <DataGridTextColumn Header="Genre" Binding="{Binding Genre}" Width="100"/>
+                                        <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="80"/>
+                                        <DataGridTextColumn Header="Release Date" Binding="{Binding ReleaseDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </TabItem>
                             <TabItem Header="Magazines">
-                                <DataGrid ItemsSource="{Binding Magazines}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="True" />
+                                <DataGrid ItemsSource="{Binding Magazines}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
+                                        <DataGridTextColumn Header="Publisher" Binding="{Binding Publisher}" Width="150"/>
+                                        <DataGridTextColumn Header="Issue" Binding="{Binding Issue}" Width="100"/>
+                                        <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </TabItem>
                         </TabControl>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
                             <Button Content="Add" Command="{Binding AddItemCommand}" Margin="5" />
-                            <Button Content="Update" Command="{Binding UpdateItemCommand}" Margin="5" />
-                            <Button Content="Delete" Command="{Binding DeleteItemCommand}" Margin="5" />
+                            <Button Content="Update" Command="{Binding UpdateItemCommand}" Margin="5" IsEnabled="{Binding IsItemSelected}" />
+                            <Button Content="Delete" Command="{Binding DeleteItemCommand}" Margin="5" IsEnabled="{Binding IsItemSelected}" />
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
@@ -49,13 +88,13 @@
                         <Button Content="Search" Width="100" Command="{Binding SearchUserCommand}" Margin="5" />
                         <DataGrid ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" AutoGenerateColumns="False" Height="200">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" Width="50"/>
-                                <DataGridTextColumn Header="Username" Binding="{Binding Username}" IsReadOnly="True" Width="100"/>
-                                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" IsReadOnly="True" Width="150"/>
-                                <DataGridTextColumn Header="Email" Binding="{Binding Email}" IsReadOnly="True" Width="150"/>
-                                <DataGridTextColumn Header="Phone" Binding="{Binding PhoneNumber}" IsReadOnly="True" Width="100"/>
-                                <DataGridTextColumn Header="User Type" Binding="{Binding UserType}" IsReadOnly="True" Width="100"/>
-                                <DataGridTextColumn Header="Membership Date" Binding="{Binding MembershipDate, StringFormat=\{0:dd/MM/yyyy\}}" IsReadOnly="True" Width="100"/>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="100" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="150" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="150" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Phone" Binding="{Binding PhoneNumber}" Width="100" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="User Type" Binding="{Binding UserType}" Width="100" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Membership Date" Binding="{Binding MembershipDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="100" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">

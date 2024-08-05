@@ -1,0 +1,56 @@
+﻿<Window x:Class="LibraryManagementSystem.Views.CDView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CD" Height="550" Width="450">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding CD.Title}" Grid.Row="0" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Artist:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding CD.Artist}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Genre:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding CD.Genre}" Grid.Row="2" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Duration:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding CD.Duration}" Grid.Row="3" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Track Count:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding CD.TrackCount}" Grid.Row="4" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Label:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding CD.Label}" Grid.Row="5" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Release Date:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <DatePicker SelectedDate="{Binding CD.ReleaseDate}" Grid.Row="6" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Publisher:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding CD.Publisher}" Grid.Row="7" Grid.Column="1" Margin="5"/>
+
+        <TextBlock Text="Description:" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding CD.Description}" Grid.Row="8" Grid.Column="1" Margin="5"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Save" Command="{Binding SaveCommand}" Margin="5"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>

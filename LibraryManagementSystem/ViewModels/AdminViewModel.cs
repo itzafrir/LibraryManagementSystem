@@ -19,6 +19,8 @@ namespace LibraryManagementSystem.ViewModels
 
         private FinePayRequest _selectedFinePayRequest;
         private User _selectedUser;
+        private Item _selectedItem;
+        private string _selectedTab;
 
         public ObservableCollection<FinePayRequest> FinePayRequests { get; }
         public ObservableCollection<Item> Books { get; private set; }
@@ -34,7 +36,17 @@ namespace LibraryManagementSystem.ViewModels
             set => SetProperty(ref _selectedFinePayRequest, value);
         }
 
-        public Item SelectedItem { get; set; }
+        public Item SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                SetProperty(ref _selectedItem, value);
+                OnPropertyChanged(nameof(IsItemSelected));
+                ((RelayCommand)UpdateItemCommand).NotifyCanExecuteChanged();
+                ((RelayCommand)DeleteItemCommand).NotifyCanExecuteChanged();
+            }
+        }
 
         public User SelectedUser
         {
@@ -48,10 +60,17 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
+        public string SelectedTab
+        {
+            get => ConvertSelectedTab();
+            set => SetProperty(ref _selectedTab, value);
+        }
+
         public string SearchTerm { get; set; }
         public string SearchUserTerm { get; set; }
 
         public bool IsUserSelected => SelectedUser != null;
+        public bool IsItemSelected => SelectedItem != null;
 
         public ICommand SearchCommand { get; }
         public ICommand AddItemCommand { get; }
@@ -83,9 +102,9 @@ namespace LibraryManagementSystem.ViewModels
             FinePayRequests = new ObservableCollection<FinePayRequest>(_userService.GetFinePayRequests());
 
             SearchCommand = new RelayCommand(SearchItems);
-            AddItemCommand = new RelayCommand(OpenAddItemWindow);
-            UpdateItemCommand = new RelayCommand(OpenUpdateItemWindow);
-            DeleteItemCommand = new RelayCommand(DeleteItem);
+            AddItemCommand = new RelayCommand(AddItem);
+            UpdateItemCommand = new RelayCommand(UpdateItem, () => IsItemSelected);
+            DeleteItemCommand = new RelayCommand(DeleteItem, () => IsItemSelected);
             SearchUserCommand = new RelayCommand(SearchUsers);
             AddUserCommand = new RelayCommand(OpenAddUserWindow);
             EditUserCommand = new RelayCommand(OpenEditUserWindow, CanEditOrDeleteUser);
@@ -131,20 +150,60 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
-        private void OpenAddItemWindow()
+        private void AddItem()
         {
-            var addItemWindow = new AddUpdateItemWindow(null, _itemService);
-            addItemWindow.ShowDialog();
-            RefreshItems();
+            switch (SelectedTab)
+            {
+                case "Books":
+                    var bookWindow = new BookView { DataContext = new BookViewModel(new Book(), _itemService, () => RefreshItems(ItemType.Book)) };
+                    bookWindow.ShowDialog();
+                    break;
+                case "CDs":
+                    var cdWindow = new CDView { DataContext = new CDViewModel(new CD(), _itemService, () => RefreshItems(ItemType.CD)) };
+                    cdWindow.ShowDialog();
+                    break;
+                //case "EBooks":
+                //    var eBookWindow = new EBookView { DataContext = new EBookViewModel(new EBook(), _itemService, () => RefreshItems(ItemType.EBook)) };
+                //    eBookWindow.ShowDialog();
+                //    break;
+                //case "DVDs":
+                //    var dvdWindow = new DVDView { DataContext = new DVDViewModel(new DVD(), _itemService, () => RefreshItems(ItemType.DVD)) };
+                //    dvdWindow.ShowDialog();
+                //    break;
+                //case "Magazines":
+                //    var magazineWindow = new MagazineView { DataContext = new MagazineViewModel(new Magazine(), _itemService, () => RefreshItems(ItemType.Magazine)) };
+                //    magazineWindow.ShowDialog();
+                //    break;
+            }
         }
 
-        private void OpenUpdateItemWindow()
+        private void UpdateItem()
         {
             if (SelectedItem != null)
             {
-                var updateItemWindow = new AddUpdateItemWindow(SelectedItem, _itemService);
-                updateItemWindow.ShowDialog();
-                RefreshItems();
+                switch (SelectedItem)
+                {
+                    case Book book:
+                        var bookWindow = new BookView { DataContext = new BookViewModel(book, _itemService, () => RefreshItems(ItemType.Book)) };
+                        bookWindow.ShowDialog();
+                        break;
+                    case CD cd:
+                        var cdWindow = new CDView { DataContext = new CDViewModel(cd, _itemService, () => RefreshItems(ItemType.CD)) };
+                        cdWindow.ShowDialog();
+                        break;
+                    //case EBook eBook:
+                    //    var eBookWindow = new EBookView { DataContext = new EBookViewModel(eBook, _itemService, () => RefreshItems(ItemType.EBook)) };
+                    //    eBookWindow.ShowDialog();
+                    //    break;
+                    //case DVD dvd:
+                    //    var dvdWindow = new DVDView { DataContext = new DVDViewModel(dvd, _itemService, () => RefreshItems(ItemType.DVD)) };
+                    //    dvdWindow.ShowDialog();
+                    //    break;
+                    //case Magazine magazine:
+                    //    var magazineWindow = new MagazineView { DataContext = new MagazineViewModel(magazine, _itemService, () => RefreshItems(ItemType.Magazine)) };
+                    //    magazineWindow.ShowDialog();
+                    //    break;
+                }
             }
         }
 
@@ -152,25 +211,29 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (SelectedItem != null)
             {
-                _itemService.DeleteItem(SelectedItem.Id);
-
-                switch (SelectedItem.ItemType)
+                var result = MessageBox.Show("Are you sure you want to delete this item?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
                 {
-                    case ItemType.Book:
-                        Books.Remove(SelectedItem);
-                        break;
-                    case ItemType.CD:
-                        CDs.Remove(SelectedItem);
-                        break;
-                    case ItemType.EBook:
-                        EBooks.Remove(SelectedItem);
-                        break;
-                    case ItemType.DVD:
-                        DVDs.Remove(SelectedItem);
-                        break;
-                    case ItemType.Magazine:
-                        Magazines.Remove(SelectedItem);
-                        break;
+                    _itemService.DeleteItem(SelectedItem.Id);
+
+                    switch (SelectedItem.ItemType)
+                    {
+                        case ItemType.Book:
+                            Books.Remove(SelectedItem);
+                            break;
+                        case ItemType.CD:
+                            CDs.Remove(SelectedItem);
+                            break;
+                        case ItemType.EBook:
+                            EBooks.Remove(SelectedItem);
+                            break;
+                        case ItemType.DVD:
+                            DVDs.Remove(SelectedItem);
+                            break;
+                        case ItemType.Magazine:
+                            Magazines.Remove(SelectedItem);
+                            break;
+                    }
                 }
             }
         }
@@ -189,7 +252,7 @@ namespace LibraryManagementSystem.ViewModels
 
         private void OpenAddUserWindow()
         {
-            var addUserWindow = new AddUpdateUserWindow(null, _userService);
+            var addUserWindow = new AddUpdateUserWindow(new User(), _userService);
             addUserWindow.ShowDialog();
             RefreshUsers();
         }
@@ -225,33 +288,45 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
-
-        private void RefreshItems()
+        private void RefreshItems(ItemType itemType)
         {
-            Books.Clear();
-            foreach (var book in _itemService.GetItemsByType(ItemType.Book))
+            switch (itemType)
             {
-                Books.Add(book);
-            }
-            CDs.Clear();
-            foreach (var cd in _itemService.GetItemsByType(ItemType.CD))
-            {
-                CDs.Add(cd);
-            }
-            EBooks.Clear();
-            foreach (var ebook in _itemService.GetItemsByType(ItemType.EBook))
-            {
-                EBooks.Add(ebook);
-            }
-            DVDs.Clear();
-            foreach (var dvd in _itemService.GetItemsByType(ItemType.DVD))
-            {
-                DVDs.Add(dvd);
-            }
-            Magazines.Clear();
-            foreach (var magazine in _itemService.GetItemsByType(ItemType.Magazine))
-            {
-                Magazines.Add(magazine);
+                case ItemType.Book:
+                    Books.Clear();
+                    foreach (var book in _itemService.GetItemsByType(ItemType.Book))
+                    {
+                        Books.Add(book);
+                    }
+                    break;
+                case ItemType.CD:
+                    CDs.Clear();
+                    foreach (var cd in _itemService.GetItemsByType(ItemType.CD))
+                    {
+                        CDs.Add(cd);
+                    }
+                    break;
+                case ItemType.EBook:
+                    EBooks.Clear();
+                    foreach (var ebook in _itemService.GetItemsByType(ItemType.EBook))
+                    {
+                        EBooks.Add(ebook);
+                    }
+                    break;
+                case ItemType.DVD:
+                    DVDs.Clear();
+                    foreach (var dvd in _itemService.GetItemsByType(ItemType.DVD))
+                    {
+                        DVDs.Add(dvd);
+                    }
+                    break;
+                case ItemType.Magazine:
+                    Magazines.Clear();
+                    foreach (var magazine in _itemService.GetItemsByType(ItemType.Magazine))
+                    {
+                        Magazines.Add(magazine);
+                    }
+                    break;
             }
         }
 
@@ -324,6 +399,35 @@ namespace LibraryManagementSystem.ViewModels
         {
             _navigateHome?.Invoke();
             RequestClose?.Invoke(this, EventArgs.Empty);
+        }
+        private string ConvertSelectedTab()
+        {
+            if (_selectedTab == null)
+            {
+                return "";
+            }
+            if (_selectedTab.Contains("Books") && !_selectedTab.Contains("EBooks") )
+            {
+                return "Books";
+            }
+            if (_selectedTab.Contains("CDs"))
+            {
+                return "CDs";
+            }
+            if (_selectedTab.Contains("DVD"))
+            {
+                return "DVD";
+            }
+            if (_selectedTab.Contains("EBooks"))
+            {
+                return "EBooks";
+            }
+            if (_selectedTab.Contains("Magazine"))
+            {
+                return "Magazine";
+            }
+
+            return "";
         }
     }
 }
