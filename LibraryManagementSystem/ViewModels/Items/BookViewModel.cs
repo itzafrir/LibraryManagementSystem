@@ -10,20 +10,20 @@ namespace LibraryManagementSystem.ViewModels
     public class BookViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
-        private readonly Action _closeWindow;
+        private readonly Action _closeAction;
 
         public Book Book { get; }
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public BookViewModel(Book book, ItemService itemService, Action closeWindow)
+        public BookViewModel(Book book, ItemService itemService, Action closeAction)
         {
             Book = book ?? new Book();
-            _itemService = itemService ?? throw new ArgumentNullException(nameof(itemService));
-            _closeWindow = closeWindow ?? throw new ArgumentNullException(nameof(closeWindow));
+            _itemService = itemService;
+            _closeAction = closeAction;
 
-            SaveCommand = new RelayCommand(Save, CanSave);
+            SaveCommand = new RelayCommand(Save);
             CancelCommand = new RelayCommand(Cancel);
         }
 
@@ -37,18 +37,13 @@ namespace LibraryManagementSystem.ViewModels
             {
                 _itemService.UpdateItem(Book);
             }
-            _closeWindow();
+
+            _closeAction();
         }
 
         private void Cancel()
         {
-            _closeWindow();
-        }
-
-        private bool CanSave()
-        {
-            return !string.IsNullOrWhiteSpace(Book.Title) &&
-                   !string.IsNullOrWhiteSpace(Book.Author);
+            _closeAction();
         }
     }
 }

@@ -21,54 +21,54 @@
                             <TabItem Header="Books">
                                 <DataGrid ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
-                                        <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="150"/>
-                                        <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="100"/>
-                                        <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" Width="80"/>
-                                        <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" IsReadOnly="True" Width="200"/>
+                                        <DataGridTextColumn Header="Author" Binding="{Binding Author}" IsReadOnly="True" Width="150"/>
+                                        <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" IsReadOnly="True" Width="100"/>
+                                        <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" IsReadOnly="True" Width="80"/>
+                                        <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" IsReadOnly="True" Width="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </TabItem>
                             <TabItem Header="CDs">
                                 <DataGrid ItemsSource="{Binding CDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
-                                        <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" Width="150"/>
-                                        <DataGridTextColumn Header="Genre" Binding="{Binding Genre}" Width="100"/>
-                                        <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="80"/>
-                                        <DataGridTextColumn Header="Release Date" Binding="{Binding ReleaseDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" IsReadOnly="True" Width="200"/>
+                                        <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" IsReadOnly="True" Width="150"/>
+                                        <DataGridTextColumn Header="Genre" Binding="{Binding Genre}" IsReadOnly="True" Width="100"/>
+                                        <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" IsReadOnly="True" Width="80"/>
+                                        <DataGridTextColumn Header="Release Date" Binding="{Binding ReleaseDate, StringFormat=\{0:dd/MM/yyyy\}}" IsReadOnly="True" Width="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </TabItem>
                             <TabItem Header="EBooks">
                                 <DataGrid ItemsSource="{Binding EBooks}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
-                                        <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="150"/>
-                                        <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="100"/>
-                                        <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" Width="80"/>
-                                        <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" IsReadOnly="True" Width="200"/>
+                                        <DataGridTextColumn Header="Author" Binding="{Binding Author}" IsReadOnly="True" Width="150"/>
+                                        <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" IsReadOnly="True" Width="100"/>
+                                        <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" IsReadOnly="True" Width="80"/>
+                                        <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" IsReadOnly="True" Width="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </TabItem>
                             <TabItem Header="DVDs">
                                 <DataGrid ItemsSource="{Binding DVDs}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
-                                        <DataGridTextColumn Header="Director" Binding="{Binding Director}" Width="150"/>
-                                        <DataGridTextColumn Header="Genre" Binding="{Binding Genre}" Width="100"/>
-                                        <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="80"/>
-                                        <DataGridTextColumn Header="Release Date" Binding="{Binding ReleaseDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" IsReadOnly="True" Width="200"/>
+                                        <DataGridTextColumn Header="Director" Binding="{Binding Director}" IsReadOnly="True" Width="150"/>
+                                        <DataGridTextColumn Header="Genre" Binding="{Binding Genre}" IsReadOnly="True" Width="100"/>
+                                        <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" IsReadOnly="True" Width="80"/>
+                                        <DataGridTextColumn Header="Release Date" Binding="{Binding ReleaseDate, StringFormat=\{0:dd/MM/yyyy\}}" IsReadOnly="True" Width="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </TabItem>
                             <TabItem Header="Magazines">
                                 <DataGrid ItemsSource="{Binding Magazines}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="200"/>
-                                        <DataGridTextColumn Header="Publisher" Binding="{Binding Publisher}" Width="150"/>
-                                        <DataGridTextColumn Header="Issue" Binding="{Binding Issue}" Width="100"/>
-                                        <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
+                                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" IsReadOnly="True" Width="200"/>
+                                        <DataGridTextColumn Header="Publisher" Binding="{Binding Publisher}" IsReadOnly="True" Width="150"/>
+                                        <DataGridTextColumn Header="Issue" Binding="{Binding Issue}" IsReadOnly="True" Width="100"/>
+                                        <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" IsReadOnly="True" Width="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </TabItem>
