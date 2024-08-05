@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Utilities.Enums;
 using LibraryManagementSystem.Views;
 
@@ -18,23 +18,40 @@ namespace LibraryManagementSystem.ViewModels
         private readonly Action _navigateHome;
 
         private FinePayRequest _selectedFinePayRequest;
-        public ObservableCollection<FinePayRequest> FinePayRequests { get; }
-        public FinePayRequest SelectedFinePayRequest
-        {
-            get => _selectedFinePayRequest;
-            set => SetProperty(ref _selectedFinePayRequest, value);
-        }
+        private User _selectedUser;
 
+        public ObservableCollection<FinePayRequest> FinePayRequests { get; }
         public ObservableCollection<Item> Books { get; private set; }
         public ObservableCollection<Item> CDs { get; private set; }
         public ObservableCollection<Item> EBooks { get; private set; }
         public ObservableCollection<Item> DVDs { get; private set; }
         public ObservableCollection<Item> Magazines { get; private set; }
         public ObservableCollection<User> Users { get; private set; }
+
+        public FinePayRequest SelectedFinePayRequest
+        {
+            get => _selectedFinePayRequest;
+            set => SetProperty(ref _selectedFinePayRequest, value);
+        }
+
         public Item SelectedItem { get; set; }
-        public User SelectedUser { get; set; }
+
+        public User SelectedUser
+        {
+            get => _selectedUser;
+            set
+            {
+                SetProperty(ref _selectedUser, value);
+                OnPropertyChanged(nameof(IsUserSelected));
+                ((RelayCommand)EditUserCommand).NotifyCanExecuteChanged();
+                ((RelayCommand)DeleteUserCommand).NotifyCanExecuteChanged();
+            }
+        }
+
         public string SearchTerm { get; set; }
         public string SearchUserTerm { get; set; }
+
+        public bool IsUserSelected => SelectedUser != null;
 
         public ICommand SearchCommand { get; }
         public ICommand AddItemCommand { get; }
@@ -42,9 +59,8 @@ namespace LibraryManagementSystem.ViewModels
         public ICommand DeleteItemCommand { get; }
         public ICommand SearchUserCommand { get; }
         public ICommand AddUserCommand { get; }
-        public ICommand UpdateUserCommand { get; }
+        public ICommand EditUserCommand { get; }
         public ICommand DeleteUserCommand { get; }
-
         public ICommand ApproveFinePayRequestCommand { get; }
         public ICommand RejectFinePayRequestCommand { get; }
         public ICommand NavigateHomeCommand { get; }
@@ -71,10 +87,9 @@ namespace LibraryManagementSystem.ViewModels
             UpdateItemCommand = new RelayCommand(OpenUpdateItemWindow);
             DeleteItemCommand = new RelayCommand(DeleteItem);
             SearchUserCommand = new RelayCommand(SearchUsers);
-            AddUserCommand = new RelayCommand(AddUser);
-            UpdateUserCommand = new RelayCommand(UpdateUser);
-            DeleteUserCommand = new RelayCommand(DeleteUser);
-
+            AddUserCommand = new RelayCommand(OpenAddUserWindow);
+            EditUserCommand = new RelayCommand(OpenEditUserWindow, CanEditOrDeleteUser);
+            DeleteUserCommand = new RelayCommand(DeleteUser, CanEditOrDeleteUser);
             ApproveFinePayRequestCommand = new RelayCommand(ApproveFinePayRequest);
             RejectFinePayRequestCommand = new RelayCommand(RejectFinePayRequest);
             NavigateHomeCommand = new RelayCommand(NavigateHome);
@@ -85,17 +100,14 @@ namespace LibraryManagementSystem.ViewModels
 
         private void SearchItems()
         {
-            // Clear existing items
             Books.Clear();
             CDs.Clear();
             EBooks.Clear();
             DVDs.Clear();
             Magazines.Clear();
 
-            // Fetch search results
             var searchResults = _itemService.SearchItems(SearchTerm);
 
-            // Add results to appropriate collections
             foreach (var item in searchResults)
             {
                 switch (item.ItemType)
@@ -140,9 +152,8 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (SelectedItem != null)
             {
-                // Delete item from the database
                 _itemService.DeleteItem(SelectedItem.Id);
-                // Remove item from the local collection
+
                 switch (SelectedItem.ItemType)
                 {
                     case ItemType.Book:
@@ -166,38 +177,30 @@ namespace LibraryManagementSystem.ViewModels
 
         private void SearchUsers()
         {
-            // Clear existing users
             Users.Clear();
 
-            // Fetch search results
             var searchResults = _userService.SearchUsers(SearchUserTerm);
 
-            // Add results to the local collection
             foreach (var user in searchResults)
             {
                 Users.Add(user);
             }
         }
 
-        private void AddUser()
+        private void OpenAddUserWindow()
         {
-            if (SelectedUser != null)
-            {
-                // Add user to the database
-                _userService.AddUser(SelectedUser);
-                // Add user to the local collection
-                Users.Add(SelectedUser);
-            }
+            var addUserWindow = new AddUpdateUserWindow(null, _userService);
+            addUserWindow.ShowDialog();
+            RefreshUsers();
         }
 
-        private void UpdateUser()
+        private void OpenEditUserWindow()
         {
             if (SelectedUser != null)
             {
-                // Update user in the database
-                _userService.UpdateUser(SelectedUser);
-                // Refresh the local collection
-                SearchUsers();
+                var editUserWindow = new AddUpdateUserWindow(SelectedUser, _userService);
+                editUserWindow.ShowDialog();
+                RefreshUsers();
             }
         }
 
@@ -205,12 +208,23 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (SelectedUser != null)
             {
-                // Delete user from the database
-                _userService.DeleteUser(SelectedUser.Id);
-                // Remove user from the local collection
-                Users.Remove(SelectedUser);
+                var result = MessageBox.Show("Are you sure you want to delete this user?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        _userService.DeleteUser(SelectedUser.Id);
+                        Users.Remove(SelectedUser);
+                        SelectedUser = null; // Unselect the user after deletion
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
             }
         }
+
 
         private void RefreshItems()
         {
@@ -239,6 +253,20 @@ namespace LibraryManagementSystem.ViewModels
             {
                 Magazines.Add(magazine);
             }
+        }
+
+        private void RefreshUsers()
+        {
+            Users.Clear();
+            foreach (var user in _userService.GetAllUsers())
+            {
+                Users.Add(user);
+            }
+        }
+
+        private bool CanEditOrDeleteUser()
+        {
+            return SelectedUser != null;
         }
 
         public string GreetingMessage
@@ -297,20 +325,5 @@ namespace LibraryManagementSystem.ViewModels
             _navigateHome?.Invoke();
             RequestClose?.Invoke(this, EventArgs.Empty);
         }
-        private void AddItem()
-        {
-            var addItemWindow = new AddUpdateItemWindow(null, _itemService);
-            addItemWindow.ShowDialog();
-        }
-
-        private void UpdateItem()
-        {
-            if (SelectedItem != null)
-            {
-                var updateItemWindow = new AddUpdateItemWindow(SelectedItem, _itemService);
-                updateItemWindow.ShowDialog();
-            }
-        }
-
     }
 }

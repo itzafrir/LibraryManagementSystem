@@ -1,85 +1,152 @@
 ﻿using LibraryManagementSystem.Utilities.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace LibraryManagementSystem.Models
 {
-    public class User
+    public class User : INotifyPropertyChanged
     {
+        private int _id;
+        private string _username;
+        private string _password;
+        private string _fullName;
+        private string _email;
+        private string _address;
+        private string _phoneNumber;
+        private UserType _userType;
+        private DateTime _membershipDate;
+        private List<Loan> _currentLoans;
+        private List<LoanRequest> _loanRequests;
+        private List<Fine> _fines;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Address { get; set; }
-        public string PhoneNumber { get; set; }
-        public UserType UserType { get; set; }
-        public DateTime MembershipDate { get; set; }
-        public List<Loan> CurrentLoans { get; set; }
-        public List<LoanRequest> LoanRequests { get; set; }
-        public List<Fine> Fines { get; set; }
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
+        }
+        public string Username
+        {
+            get => _username;
+            set
+            {
+                _username = value;
+                OnPropertyChanged(nameof(Username));
+            }
+        }
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                _password = value;
+                OnPropertyChanged(nameof(Password));
+            }
+        }
+        public string FullName
+        {
+            get => _fullName;
+            set
+            {
+                _fullName = value;
+                OnPropertyChanged(nameof(FullName));
+            }
+        }
+        public string Email
+        {
+            get => _email;
+            set
+            {
+                _email = value;
+                OnPropertyChanged(nameof(Email));
+            }
+        }
+        public string Address
+        {
+            get => _address;
+            set
+            {
+                _address = value;
+                OnPropertyChanged(nameof(Address));
+            }
+        }
+        public string PhoneNumber
+        {
+            get => _phoneNumber;
+            set
+            {
+                _phoneNumber = value;
+                OnPropertyChanged(nameof(PhoneNumber));
+            }
+        }
+        public UserType UserType
+        {
+            get => _userType;
+            set
+            {
+                _userType = value;
+                OnPropertyChanged(nameof(UserType));
+            }
+        }
+        public DateTime MembershipDate
+        {
+            get => _membershipDate;
+            set
+            {
+                _membershipDate = value;
+                OnPropertyChanged(nameof(MembershipDate));
+            }
+        }
+        public List<Loan> CurrentLoans
+        {
+            get => _currentLoans;
+            set
+            {
+                _currentLoans = value;
+                OnPropertyChanged(nameof(CurrentLoans));
+            }
+        }
+        public List<LoanRequest> LoanRequests
+        {
+            get => _loanRequests;
+            set
+            {
+                _loanRequests = value;
+                OnPropertyChanged(nameof(LoanRequests));
+            }
+        }
+        public List<Fine> Fines
+        {
+            get => _fines;
+            set
+            {
+                _fines = value;
+                OnPropertyChanged(nameof(Fines));
+            }
+        }
 
-        // Constructor to initialize lists
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public User()
         {
-            Id = 0;
-            FullName = "OMER";
-            Username = "OMER";
-            Password = "OMER";
-            Email = "OMER";
-            Address = "OMER";
-            PhoneNumber = "OMER";
-            UserType = UserType.Assistant;
             MembershipDate = DateTime.Now;
             CurrentLoans = new List<Loan>();
             LoanRequests = new List<LoanRequest>();
             Fines = new List<Fine>();
-        }
-
-        // Method to request a loan
-        public void RequestLoan(Item item)
-        {
-            LoanRequest loanRequest = new LoanRequest
-            {
-                ItemId = item.Id,
-                UserId = this.Id,
-                RequestDate = DateTime.Now
-            };
-
-            LoanRequests.Add(loanRequest);
-        }
-
-        // Method to add a loan
-        public void AddLoan(Loan loan)
-        {
-            CurrentLoans.Add(loan);
-        }
-
-        // Method to return a loan
-        public void ReturnLoan(Loan loan)
-        {
-            loan.ReturnLoan();
-            CurrentLoans.Remove(loan);
-        }
-
-        // Method to pay fines
-        public void PayFine(double amount)
-        {
-            var unpaidFine = Fines.FirstOrDefault(f => f.DatePaid == null);
-            if (unpaidFine != null)
-            {
-                unpaidFine.DatePaid = DateTime.Now;
-                unpaidFine.Amount -= amount;
-                if (unpaidFine.Amount <= 0)
-                {
-                    Fines.Remove(unpaidFine);
-                }
-            }
         }
 
         // Method to get user profile details
@@ -88,4 +155,5 @@ namespace LibraryManagementSystem.Models
             return $"Username: {Username}, Full Name: {FullName}, Email: {Email}, Address: {Address}, Phone Number: {PhoneNumber}, User Type: {UserType}, Membership Date: {MembershipDate.ToShortDateString()}, Fines: {Fines.Sum(f => f.Amount)}";
         }
     }
+
 }

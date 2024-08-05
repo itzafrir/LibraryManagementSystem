@@ -62,6 +62,7 @@ namespace LibraryManagementSystem.Services
                 _loanRepository.Add(loan);
                 _itemRepository.Update(item);
                 user.CurrentLoans.Add(loan);
+                MessageBox.Show("Item Loaned", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {

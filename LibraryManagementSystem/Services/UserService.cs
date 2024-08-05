@@ -3,6 +3,7 @@ using System.Linq;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories;
 using System;
+using System.Windows;
 using LibraryManagementSystem.Utilities.Enums;
 
 namespace LibraryManagementSystem.Services
@@ -113,12 +114,12 @@ namespace LibraryManagementSystem.Services
             fine.Status = FineStatus.Pending;
             _fineRepository.Update(fine);
         }
+
         public void CalculateFines()
         {
             var overdueLoans = _loanRepository.GetAll().Where(l => l.UserId == _currentUser.Id && l.IsOverdue());
             foreach (var loan in overdueLoans)
             {
-                // Check if there is already an unpaid fine for this loan
                 var existingFine = _fineRepository.GetAll().FirstOrDefault(f => f.UserId == loan.UserId && f.ItemId == loan.ItemId && f.Status == FineStatus.Unpaid);
                 if (existingFine == null)
                 {
@@ -137,6 +138,7 @@ namespace LibraryManagementSystem.Services
                 }
             }
         }
+
         public void RequestLoan(Item item)
         {
             if (_currentUser == null)
@@ -200,10 +202,12 @@ namespace LibraryManagementSystem.Services
         {
             return _userRepository.GetById(userId);
         }
+
         public IEnumerable<User> GetAllUsers()
         {
             return _userRepository.GetAll();
         }
+
         public void AddUser(User user)
         {
             _userRepository.Add(user);
@@ -213,23 +217,62 @@ namespace LibraryManagementSystem.Services
         {
             _userRepository.Update(user);
         }
+
         public void DeleteUser(int userId)
         {
             var user = _userRepository.GetById(userId);
             if (user != null)
             {
-                _userRepository.Delete(user.Id);
+                // Check for active loans
+                var activeLoans = _loanRepository.GetAll().Where(l => l.UserId == userId && l.LoanStatus == LoanStatus.Active);
+                if (activeLoans.Any())
+                {
+                    throw new InvalidOperationException("Cannot delete user with active loans.");
+                }
+
+                // Check for pending loan requests
+                var pendingLoanRequests = _loanRequestRepository.GetAll().Where(lr => lr.UserId == userId);
+                if (pendingLoanRequests.Any())
+                {
+                    foreach (var request in pendingLoanRequests)
+                    {
+                        _loanRequestRepository.Delete(request.Id);
+                    }
+                }
+
+                // Check for outstanding fines
+                var outstandingFines = _fineRepository.GetAll().Where(f => f.UserId == userId && f.Status != FineStatus.Paid);
+                if (outstandingFines.Any())
+                {
+                    throw new InvalidOperationException("Cannot delete user with outstanding fines.");
+                }
+
+                // Check for pending fine payment requests
+                var pendingFinePayRequests = _finePayRequestRepository.GetAll().Where(fpr => fpr.UserId == userId);
+                if (pendingFinePayRequests.Any())
+                {
+                    foreach (var request in pendingFinePayRequests)
+                    {
+                        _finePayRequestRepository.Delete(request.Id);
+                    }
+                }
+
+                // Finally, delete the user
+                _userRepository.Delete(userId);
             }
         }
+
         public bool ValidateUser(string username, string password)
         {
             var user = _userRepository.GetAll().FirstOrDefault(u => u.Username == username && u.Password == password);
             return user != null;
         }
+
         public List<LoanRequest> GetLoanRequestsForItem(int itemId)
         {
             return _loanRequestRepository.GetAll().Where(lr => lr.ItemId == itemId).ToList();
         }
+
         public IEnumerable<User> SearchUsers(string searchTerm)
         {
             return _userRepository.GetAll().Where(u => u.Username.Contains(searchTerm) || u.FullName.Contains(searchTerm));
