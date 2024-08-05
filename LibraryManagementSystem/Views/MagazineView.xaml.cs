@@ -5,30 +5,30 @@ using LibraryManagementSystem.Services;
 
 namespace LibraryManagementSystem.Views
 {
-    public partial class CDView : Window
+    public partial class MagazineView : Window
     {
         private readonly ItemService _itemService;
-        private CD _cd;
+        private Magazine _magazine;
 
-        public CDView(CD cd, ItemService itemService)
+        public MagazineView(Magazine magazine, ItemService itemService)
         {
             InitializeComponent();
             _itemService = itemService;
-            _cd = cd;
-            DataContext = _cd;
+            _magazine = magazine;
+            DataContext = _magazine;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (IsValid())
             {
-                if (_cd.Id == 0)
+                if (_magazine.Id == 0)
                 {
-                    _itemService.AddItem(_cd);
+                    _itemService.AddItem(_magazine);
                 }
                 else
                 {
-                    _itemService.UpdateItem(_cd);
+                    _itemService.UpdateItem(_magazine);
                 }
                 Close();
             }
@@ -45,15 +45,14 @@ namespace LibraryManagementSystem.Views
 
         private bool IsValid()
         {
-            return !string.IsNullOrWhiteSpace(_cd.Title) &&
-                   !string.IsNullOrWhiteSpace(_cd.Artist) &&
-                   !string.IsNullOrWhiteSpace(_cd.Genre) &&
-                   _cd.TrackCount > 0 &&
-                   !string.IsNullOrWhiteSpace(_cd.Label) &&
-                   _cd.ReleaseDate != default &&
-                   _cd.TotalCopies > 0 &&
-                   _cd.AvailableCopies >= 0 &&
-                   _cd.TotalCopies >= _cd.AvailableCopies;
+            return !string.IsNullOrWhiteSpace(_magazine.Title) &&
+                   !string.IsNullOrWhiteSpace(_magazine.Editor) &&
+                   _magazine.IssueNumber > 0 &&
+                   !string.IsNullOrWhiteSpace(_magazine.Genre) &&
+                   !string.IsNullOrWhiteSpace(_magazine.Frequency) &&
+                   _magazine.TotalCopies > 0 &&
+                   _magazine.AvailableCopies >= 0 &&
+                   _magazine.TotalCopies >= _magazine.AvailableCopies;
         }
     }
 }

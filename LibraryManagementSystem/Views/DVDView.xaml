@@ -1,7 +1,7 @@
-﻿<Window x:Class="LibraryManagementSystem.Views.CDView"
+﻿<Window x:Class="LibraryManagementSystem.Views.DVDView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="CD" Height="600" Width="450">
+        Title="DVD" Height="600" Width="450">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -28,8 +28,8 @@
         <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
         <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="Artist:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding Artist}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Director:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding Director}" Grid.Row="1" Grid.Column="1" Margin="5"/>
 
         <TextBlock Text="Genre:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
         <TextBox Text="{Binding Genre}" Grid.Row="2" Grid.Column="1" Margin="5"/>
@@ -37,11 +37,11 @@
         <TextBlock Text="Duration:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
         <TextBox Text="{Binding Duration}" Grid.Row="3" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="Track Count:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding TrackCount}" Grid.Row="4" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Language:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding Language}" Grid.Row="4" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="Label:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding Label}" Grid.Row="5" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Studio:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding Studio}" Grid.Row="5" Grid.Column="1" Margin="5"/>
 
         <TextBlock Text="Release Date:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
         <DatePicker SelectedDate="{Binding ReleaseDate}" Grid.Row="6" Grid.Column="1" Margin="5"/>

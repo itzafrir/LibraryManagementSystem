@@ -8,21 +8,21 @@ using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
-    public class CDViewModel : ObservableObject
+    public class DVDViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
-        private CD _cd;
+        private DVD _dvd;
 
-        public CD CD
+        public DVD DVD
         {
-            get => _cd;
-            set => SetProperty(ref _cd, value);
+            get => _dvd;
+            set => SetProperty(ref _dvd, value);
         }
 
-        public CDViewModel(CD cd, ItemService itemService)
+        public DVDViewModel(DVD dvd, ItemService itemService)
         {
             _itemService = itemService;
-            _cd = cd;
+            _dvd = dvd;
             SaveCommand = new RelayCommand(Save);
             CancelCommand = new RelayCommand(Cancel);
         }
@@ -34,13 +34,13 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (IsValid())
             {
-                if (_cd.Id == 0)
+                if (_dvd.Id == 0)
                 {
-                    _itemService.AddItem(_cd);
+                    _itemService.AddItem(_dvd);
                 }
                 else
                 {
-                    _itemService.UpdateItem(_cd);
+                    _itemService.UpdateItem(_dvd);
                 }
                 CloseAction();
             }
@@ -57,15 +57,16 @@ namespace LibraryManagementSystem.ViewModels
 
         private bool IsValid()
         {
-            return !string.IsNullOrWhiteSpace(_cd.Title) &&
-                   !string.IsNullOrWhiteSpace(_cd.Artist) &&
-                   !string.IsNullOrWhiteSpace(_cd.Genre) &&
-                   _cd.Duration != default &&
-                   !string.IsNullOrWhiteSpace(_cd.Label) &&
-                   _cd.ReleaseDate != default &&
-                   _cd.TotalCopies > 0 &&
-                   _cd.AvailableCopies >= 0 &&
-                   _cd.TotalCopies >= _cd.AvailableCopies;
+            return !string.IsNullOrWhiteSpace(_dvd.Title) &&
+                   !string.IsNullOrWhiteSpace(_dvd.Director) &&
+                   !string.IsNullOrWhiteSpace(_dvd.Genre) &&
+                   _dvd.Duration != default &&
+                   !string.IsNullOrWhiteSpace(_dvd.Language) &&
+                   !string.IsNullOrWhiteSpace(_dvd.Studio) &&
+                   _dvd.ReleaseDate != default &&
+                   _dvd.TotalCopies > 0 &&
+                   _dvd.AvailableCopies >= 0 &&
+                   _dvd.TotalCopies >= _dvd.AvailableCopies;
         }
 
         private void ShowValidationError()

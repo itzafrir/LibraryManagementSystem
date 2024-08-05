@@ -8,21 +8,21 @@ using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
-    public class CDViewModel : ObservableObject
+    public class MagazineViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
-        private CD _cd;
+        private Magazine _magazine;
 
-        public CD CD
+        public Magazine Magazine
         {
-            get => _cd;
-            set => SetProperty(ref _cd, value);
+            get => _magazine;
+            set => SetProperty(ref _magazine, value);
         }
 
-        public CDViewModel(CD cd, ItemService itemService)
+        public MagazineViewModel(Magazine magazine, ItemService itemService)
         {
             _itemService = itemService;
-            _cd = cd;
+            _magazine = magazine;
             SaveCommand = new RelayCommand(Save);
             CancelCommand = new RelayCommand(Cancel);
         }
@@ -34,13 +34,13 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (IsValid())
             {
-                if (_cd.Id == 0)
+                if (_magazine.Id == 0)
                 {
-                    _itemService.AddItem(_cd);
+                    _itemService.AddItem(_magazine);
                 }
                 else
                 {
-                    _itemService.UpdateItem(_cd);
+                    _itemService.UpdateItem(_magazine);
                 }
                 CloseAction();
             }
@@ -57,15 +57,14 @@ namespace LibraryManagementSystem.ViewModels
 
         private bool IsValid()
         {
-            return !string.IsNullOrWhiteSpace(_cd.Title) &&
-                   !string.IsNullOrWhiteSpace(_cd.Artist) &&
-                   !string.IsNullOrWhiteSpace(_cd.Genre) &&
-                   _cd.Duration != default &&
-                   !string.IsNullOrWhiteSpace(_cd.Label) &&
-                   _cd.ReleaseDate != default &&
-                   _cd.TotalCopies > 0 &&
-                   _cd.AvailableCopies >= 0 &&
-                   _cd.TotalCopies >= _cd.AvailableCopies;
+            return !string.IsNullOrWhiteSpace(_magazine.Title) &&
+                   !string.IsNullOrWhiteSpace(_magazine.Editor) &&
+                   _magazine.IssueNumber > 0 &&
+                   !string.IsNullOrWhiteSpace(_magazine.Genre) &&
+                   !string.IsNullOrWhiteSpace(_magazine.Frequency) &&
+                   _magazine.TotalCopies > 0 &&
+                   _magazine.AvailableCopies >= 0 &&
+                   _magazine.TotalCopies >= _magazine.AvailableCopies;
         }
 
         private void ShowValidationError()

@@ -5,30 +5,30 @@ using LibraryManagementSystem.Services;
 
 namespace LibraryManagementSystem.Views
 {
-    public partial class CDView : Window
+    public partial class DVDView : Window
     {
         private readonly ItemService _itemService;
-        private CD _cd;
+        private DVD _dvd;
 
-        public CDView(CD cd, ItemService itemService)
+        public DVDView(DVD dvd, ItemService itemService)
         {
             InitializeComponent();
             _itemService = itemService;
-            _cd = cd;
-            DataContext = _cd;
+            _dvd = dvd;
+            DataContext = _dvd;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (IsValid())
             {
-                if (_cd.Id == 0)
+                if (_dvd.Id == 0)
                 {
-                    _itemService.AddItem(_cd);
+                    _itemService.AddItem(_dvd);
                 }
                 else
                 {
-                    _itemService.UpdateItem(_cd);
+                    _itemService.UpdateItem(_dvd);
                 }
                 Close();
             }
@@ -45,15 +45,16 @@ namespace LibraryManagementSystem.Views
 
         private bool IsValid()
         {
-            return !string.IsNullOrWhiteSpace(_cd.Title) &&
-                   !string.IsNullOrWhiteSpace(_cd.Artist) &&
-                   !string.IsNullOrWhiteSpace(_cd.Genre) &&
-                   _cd.TrackCount > 0 &&
-                   !string.IsNullOrWhiteSpace(_cd.Label) &&
-                   _cd.ReleaseDate != default &&
-                   _cd.TotalCopies > 0 &&
-                   _cd.AvailableCopies >= 0 &&
-                   _cd.TotalCopies >= _cd.AvailableCopies;
+            return !string.IsNullOrWhiteSpace(_dvd.Title) &&
+                   !string.IsNullOrWhiteSpace(_dvd.Director) &&
+                   !string.IsNullOrWhiteSpace(_dvd.Genre) &&
+                   _dvd.Duration != default &&
+                   !string.IsNullOrWhiteSpace(_dvd.Language) &&
+                   !string.IsNullOrWhiteSpace(_dvd.Studio) &&
+                   _dvd.ReleaseDate != default &&
+                   _dvd.TotalCopies > 0 &&
+                   _dvd.AvailableCopies >= 0 &&
+                   _dvd.TotalCopies >= _dvd.AvailableCopies;
         }
     }
 }

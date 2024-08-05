@@ -97,8 +97,8 @@ namespace LibraryManagementSystem.Services
         public void AddItem(Item item)
         {
             item.GenerateISBN();
-            int itemCount = _itemRepository.GetAll().Count();
-            item.Id = itemCount++;
+            //int itemCount = _itemRepository.GetAll().Count();
+            //item.Id = ++itemCount;
             _itemRepository.Add(item);
         }
         public void UpdateItem(Item item)

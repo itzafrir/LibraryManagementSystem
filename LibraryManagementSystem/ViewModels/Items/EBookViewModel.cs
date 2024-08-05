@@ -8,21 +8,21 @@ using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
-    public class CDViewModel : ObservableObject
+    public class EBookViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
-        private CD _cd;
+        private EBook _eBook;
 
-        public CD CD
+        public EBook EBook
         {
-            get => _cd;
-            set => SetProperty(ref _cd, value);
+            get => _eBook;
+            set => SetProperty(ref _eBook, value);
         }
 
-        public CDViewModel(CD cd, ItemService itemService)
+        public EBookViewModel(EBook eBook, ItemService itemService)
         {
             _itemService = itemService;
-            _cd = cd;
+            _eBook = eBook;
             SaveCommand = new RelayCommand(Save);
             CancelCommand = new RelayCommand(Cancel);
         }
@@ -34,13 +34,13 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (IsValid())
             {
-                if (_cd.Id == 0)
+                if (_eBook.Id == 0)
                 {
-                    _itemService.AddItem(_cd);
+                    _itemService.AddItem(_eBook);
                 }
                 else
                 {
-                    _itemService.UpdateItem(_cd);
+                    _itemService.UpdateItem(_eBook);
                 }
                 CloseAction();
             }
@@ -57,15 +57,14 @@ namespace LibraryManagementSystem.ViewModels
 
         private bool IsValid()
         {
-            return !string.IsNullOrWhiteSpace(_cd.Title) &&
-                   !string.IsNullOrWhiteSpace(_cd.Artist) &&
-                   !string.IsNullOrWhiteSpace(_cd.Genre) &&
-                   _cd.Duration != default &&
-                   !string.IsNullOrWhiteSpace(_cd.Label) &&
-                   _cd.ReleaseDate != default &&
-                   _cd.TotalCopies > 0 &&
-                   _cd.AvailableCopies >= 0 &&
-                   _cd.TotalCopies >= _cd.AvailableCopies;
+            return !string.IsNullOrWhiteSpace(_eBook.Title) &&
+                   !string.IsNullOrWhiteSpace(_eBook.Author) &&
+                   !string.IsNullOrWhiteSpace(_eBook.FileFormat) &&
+                   _eBook.FileSize > 0 &&
+                   !string.IsNullOrWhiteSpace(_eBook.DownloadLink) &&
+                   _eBook.TotalCopies > 0 &&
+                   _eBook.AvailableCopies >= 0 &&
+                   _eBook.TotalCopies >= _eBook.AvailableCopies;
         }
 
         private void ShowValidationError()

@@ -156,26 +156,26 @@ namespace LibraryManagementSystem.ViewModels
                         bookWindow.ShowDialog();
                         RefreshItems(ItemType.Book);
                         break;
-                    //case ItemType.CD:
-                    //    var cdWindow = new CDView(new CD(), _itemService);
-                    //    cdWindow.ShowDialog();
-                    //    RefreshItems(ItemType.CD);
-                    //    break;
-                    //case ItemType.EBook:
-                    //    var eBookWindow = new EBookView(new EBook(), _itemService);
-                    //    eBookWindow.ShowDialog();
-                    //    RefreshItems(ItemType.EBook);
-                    //    break;
-                    //case ItemType.DVD:
-                    //    var dvdWindow = new DVDView(new DVD(), _itemService);
-                    //    dvdWindow.ShowDialog();
-                    //    RefreshItems(ItemType.DVD);
-                    //    break;
-                    //case ItemType.Magazine:
-                    //    var magazineWindow = new MagazineView(new Magazine(), _itemService);
-                    //    magazineWindow.ShowDialog();
-                    //    RefreshItems(ItemType.Magazine);
-                    //    break;
+                    case ItemType.CD:
+                        var cdWindow = new CDView(new CD(), _itemService);
+                        cdWindow.ShowDialog();
+                        RefreshItems(ItemType.CD);
+                        break;
+                    case ItemType.EBook:
+                        var eBookWindow = new EBookView(new EBook(), _itemService);
+                        eBookWindow.ShowDialog();
+                        RefreshItems(ItemType.EBook);
+                        break;
+                    case ItemType.DVD:
+                        var dvdWindow = new DVDView(new DVD(), _itemService);
+                        dvdWindow.ShowDialog();
+                        RefreshItems(ItemType.DVD);
+                        break;
+                    case ItemType.Magazine:
+                        var magazineWindow = new MagazineView(new Magazine(), _itemService);
+                        magazineWindow.ShowDialog();
+                        RefreshItems(ItemType.Magazine);
+                        break;
                 }
             }
         }
@@ -191,26 +191,26 @@ namespace LibraryManagementSystem.ViewModels
                         bookWindow.ShowDialog();
                         RefreshItems(ItemType.Book);
                         break;
-                    //case ItemType.CD:
-                    //    var cdWindow = new CDView((CD)SelectedItem, _itemService);
-                    //    cdWindow.ShowDialog();
-                    //    RefreshItems(ItemType.CD);
-                    //    break;
-                    //case ItemType.EBook:
-                    //    var eBookWindow = new EBookView((EBook)SelectedItem, _itemService);
-                    //    eBookWindow.ShowDialog();
-                    //    RefreshItems(ItemType.EBook);
-                    //    break;
-                    //case ItemType.DVD:
-                    //    var dvdWindow = new DVDView((DVD)SelectedItem, _itemService);
-                    //    dvdWindow.ShowDialog();
-                    //    RefreshItems(ItemType.DVD);
-                    //    break;
-                    //case ItemType.Magazine:
-                    //    var magazineWindow = new MagazineView((Magazine)SelectedItem, _itemService);
-                    //    magazineWindow.ShowDialog();
-                    //    RefreshItems(ItemType.Magazine);
-                    //    break;
+                    case ItemType.CD:
+                        var cdWindow = new CDView((CD)SelectedItem, _itemService);
+                        cdWindow.ShowDialog();
+                        RefreshItems(ItemType.CD);
+                        break;
+                    case ItemType.EBook:
+                        var eBookWindow = new EBookView((EBook)SelectedItem, _itemService);
+                        eBookWindow.ShowDialog();
+                        RefreshItems(ItemType.EBook);
+                        break;
+                    case ItemType.DVD:
+                        var dvdWindow = new DVDView((DVD)SelectedItem, _itemService);
+                        dvdWindow.ShowDialog();
+                        RefreshItems(ItemType.DVD);
+                        break;
+                    case ItemType.Magazine:
+                        var magazineWindow = new MagazineView((Magazine)SelectedItem, _itemService);
+                        magazineWindow.ShowDialog();
+                        RefreshItems(ItemType.Magazine);
+                        break;
                 }
             }
         }
