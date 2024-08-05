@@ -47,13 +47,21 @@
                     <StackPanel>
                         <TextBox Width="200" Margin="5" Text="{Binding SearchUserTerm, UpdateSourceTrigger=PropertyChanged}" SelectedText="Search Users"/>
                         <Button Content="Search" Width="100" Command="{Binding SearchUserCommand}" Margin="5" />
-                        <ScrollViewer Height="160" VerticalScrollBarVisibility="Auto" Margin="5">
-                            <ListBox ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" DisplayMemberPath="Username"/>
-                        </ScrollViewer>
+                        <DataGrid ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" AutoGenerateColumns="False" Height="200">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                                <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="100"/>
+                                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="150"/>
+                                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="150"/>
+                                <DataGridTextColumn Header="Phone" Binding="{Binding PhoneNumber}" Width="100"/>
+                                <DataGridTextColumn Header="User Type" Binding="{Binding UserType}" Width="100"/>
+                                <DataGridTextColumn Header="Membership Date" Binding="{Binding MembershipDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
                             <Button Content="Add" Command="{Binding AddUserCommand}" Margin="5" />
-                            <Button Content="Update" Command="{Binding UpdateUserCommand}" Margin="5" />
-                            <Button Content="Delete" Command="{Binding DeleteUserCommand}" Margin="5" />
+                            <Button Content="Edit" Command="{Binding EditUserCommand}" Margin="5" IsEnabled="{Binding IsUserSelected}" />
+                            <Button Content="Delete" Command="{Binding DeleteUserCommand}" Margin="5" IsEnabled="{Binding IsUserSelected}" />
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>

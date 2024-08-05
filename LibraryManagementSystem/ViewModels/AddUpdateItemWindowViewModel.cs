@@ -32,16 +32,25 @@ namespace LibraryManagementSystem.ViewModels
         public AddUpdateItemWindowViewModel(ItemService itemService, Item item, Action onSave)
         {
             _itemService = itemService;
-            _item = item ?? new Item();
-            _selectedItemType = item?.ItemType ?? ItemType.Book; // Default to Book if adding a new item
             _onSave = onSave;
 
             ItemTypes = new ObservableCollection<ItemType>(Enum.GetValues(typeof(ItemType)).Cast<ItemType>());
 
+            if (item != null && item.Id > 0)
+            {
+                // Fetch the item from the database
+                _item = _itemService.GetItemById(item.Id);
+                _selectedItemType = _item.ItemType;
+            }
+            else
+            {
+                _item = new Item();
+                _selectedItemType = ItemType.Book;
+                UpdateItemTemplate();
+            }
+
             SaveCommand = new RelayCommand(Save);
             CancelCommand = new RelayCommand(Cancel);
-
-            UpdateItemTemplate();
         }
 
         private void Save()
@@ -77,96 +86,30 @@ namespace LibraryManagementSystem.ViewModels
 
         private void UpdateItemTemplate()
         {
+            Item newItem;
             switch (_selectedItemType)
             {
                 case ItemType.Book:
-                    if (_item is not Book)
-                    {
-                        var book = _item as Book ?? new Book();
-                        _item = new Book
-                        {
-                            Title = _item.Title,
-                            Author = book.Author,
-                            Genre = book.Genre,
-                            PageCount = book.PageCount,
-                            Language = book.Language,
-                            Format = book.Format,
-                            Dimensions = book.Dimensions,
-                            Series = book.Series,
-                            Edition = book.Edition,
-                            Keywords = book.Keywords
-                        };
-                    }
+                    newItem = _item is Book book ? book : new Book { Id = _item.Id, Title = _item.Title };
                     break;
                 case ItemType.CD:
-                    if (_item is not CD)
-                    {
-                        var cd = _item as CD ?? new CD();
-                        _item = new CD
-                        {
-                            Title = _item.Title,
-                            Artist = cd.Artist,
-                            Genre = cd.Genre,
-                            Duration = cd.Duration,
-                            TrackCount = cd.TrackCount,
-                            Label = cd.Label,
-                            ReleaseDate = cd.ReleaseDate,
-                            Tracks = cd.Tracks
-                        };
-                    }
+                    newItem = _item is CD cd ? cd : new CD { Id = _item.Id, Title = _item.Title };
                     break;
                 case ItemType.EBook:
-                    if (_item is not EBook)
-                    {
-                        var ebook = _item as EBook ?? new EBook();
-                        _item = new EBook
-                        {
-                            Title = _item.Title,
-                            Author = ebook.Author,
-                            FileFormat = ebook.FileFormat,
-                            FileSize = ebook.FileSize,
-                            DownloadLink = ebook.DownloadLink,
-                            Keywords = ebook.Keywords
-                        };
-                    }
+                    newItem = _item is EBook eBook ? eBook : new EBook { Id = _item.Id, Title = _item.Title };
                     break;
                 case ItemType.DVD:
-                    if (_item is not DVD)
-                    {
-                        var dvd = _item as DVD ?? new DVD();
-                        _item = new DVD
-                        {
-                            Title = _item.Title,
-                            Director = dvd.Director,
-                            Genre = dvd.Genre,
-                            Duration = dvd.Duration,
-                            Language = dvd.Language,
-                            Studio = dvd.Studio,
-                            ReleaseDate = dvd.ReleaseDate,
-                            Subtitles = dvd.Subtitles,
-                            Cast = dvd.Cast
-                        };
-                    }
+                    newItem = _item is DVD dvd ? dvd : new DVD { Id = _item.Id, Title = _item.Title };
                     break;
                 case ItemType.Magazine:
-                    if (_item is not Magazine)
-                    {
-                        var magazine = _item as Magazine ?? new Magazine();
-                        _item = new Magazine
-                        {
-                            Title = _item.Title,
-                            Editor = magazine.Editor,
-                            IssueNumber = magazine.IssueNumber,
-                            Genre = magazine.Genre,
-                            Frequency = magazine.Frequency,
-                            Articles = magazine.Articles
-                        };
-                    }
+                    newItem = _item is Magazine magazine ? magazine : new Magazine { Id = _item.Id, Title = _item.Title };
                     break;
                 default:
-                    _item = new Item();
+                    newItem = new Item { Id = _item.Id, Title = _item.Title };
                     break;
             }
+
+            _item = newItem;
             OnPropertyChanged(nameof(Item));
         }
     }

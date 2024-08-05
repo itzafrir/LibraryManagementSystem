@@ -7,74 +7,111 @@
         <StackPanel>
             <ComboBox ItemsSource="{Binding ItemTypes}" 
                       SelectedItem="{Binding SelectedItemType}" 
-                      IsEnabled="{Binding IsItemTypeSelectionEnabled}" 
-                      SelectedValue="{Binding SelectedItemType}"
-                      />
+                      IsEnabled="{Binding IsItemTypeSelectionEnabled}" />
             <ContentControl Content="{Binding Item}">
                 <ContentControl.Resources>
                     <!-- Templates for different item types -->
                     <DataTemplate DataType="{x:Type models:Book}">
                         <StackPanel>
                             <!-- Book properties -->
-                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
-                            <TextBox Text="{Binding Author}" SelectedText="Author"/>
-                            <TextBox Text="{Binding Genre}" SelectedText="Genre"/>
-                            <TextBox Text="{Binding PageCount}" SelectedText="Page Count"/>
-                            <TextBox Text="{Binding Language}" SelectedText="Language"/>
-                            <TextBox Text="{Binding Format}" SelectedText="Format"/>
-                            <TextBox Text="{Binding Dimensions}" SelectedText="Dimensions"/>
-                            <TextBox Text="{Binding Series}" SelectedText="Series"/>
-                            <TextBox Text="{Binding Edition}" SelectedText="Edition"/>
-                            <TextBox Text="{Binding Keywords}" SelectedText="Keywords"/>
+                            <TextBlock Text="Title:" />
+                            <TextBox Text="{Binding Title}" />
+                            <TextBlock Text="Author:" />
+                            <TextBox Text="{Binding Author}" />
+                            <TextBlock Text="Genre:" />
+                            <TextBox Text="{Binding Genre}" />
+                            <TextBlock Text="Page Count:" />
+                            <TextBox Text="{Binding PageCount}" />
+                            <TextBlock Text="Language:" />
+                            <TextBox Text="{Binding Language}" />
+                            <TextBlock Text="Format:" />
+                            <TextBox Text="{Binding Format}" />
+                            <TextBlock Text="Dimensions:" />
+                            <TextBox Text="{Binding Dimensions}" />
+                            <TextBlock Text="Series:" />
+                            <TextBox Text="{Binding Series}" />
+                            <TextBlock Text="Edition:" />
+                            <TextBox Text="{Binding Edition}" />
+                            <TextBlock Text="Keywords:" />
+                            <TextBox Text="{Binding Keywords}" />
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type models:CD}">
                         <StackPanel>
                             <!-- CD properties -->
-                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
-                            <TextBox Text="{Binding Artist}" SelectedText="Artist"/>
-                            <TextBox Text="{Binding Genre}" SelectedText="Genre"/>
-                            <TextBox Text="{Binding Duration}" SelectedText="Duration"/>
-                            <TextBox Text="{Binding TrackCount}" SelectedText="Track Count"/>
-                            <TextBox Text="{Binding Label}" SelectedText="Label"/>
-                            <TextBox Text="{Binding ReleaseDate}" SelectedText="Release Date"/>
-                            <TextBox Text="{Binding Tracks}" SelectedText="Tracks"/>
+                            <TextBlock Text="Title:" />
+                            <TextBox Text="{Binding Title}" />
+                            <TextBlock Text="Artist:" />
+                            <TextBox Text="{Binding Artist}" />
+                            <TextBlock Text="Genre:" />
+                            <TextBox Text="{Binding Genre}" />
+                            <TextBlock Text="Duration:" />
+                            <TextBox Text="{Binding Duration}" />
+                            <TextBlock Text="Track Count:" />
+                            <TextBox Text="{Binding TrackCount}" />
+                            <TextBlock Text="Label:" />
+                            <TextBox Text="{Binding Label}" />
+                            <TextBlock Text="Release Date:" />
+                            <TextBox Text="{Binding ReleaseDate}" />
+                            <TextBlock Text="Tracks:" />
+                            <TextBox Text="{Binding Tracks}" />
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type models:EBook}">
                         <StackPanel>
                             <!-- EBook properties -->
-                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
-                            <TextBox Text="{Binding Author}" SelectedText="Author"/>
-                            <TextBox Text="{Binding FileFormat}" SelectedText="File Format"/>
-                            <TextBox Text="{Binding FileSize}" SelectedText="File Size"/>
-                            <TextBox Text="{Binding DownloadLink}" SelectedText="Download Link"/>
-                            <TextBox Text="{Binding Keywords}" SelectedText="Keywords"/>
+                            <TextBlock Text="Title:" />
+                            <TextBox Text="{Binding Title}" />
+                            <TextBlock Text="Author:" />
+                            <TextBox Text="{Binding Author}" />
+                            <TextBlock Text="File Format:" />
+                            <TextBox Text="{Binding FileFormat}" />
+                            <TextBlock Text="File Size:" />
+                            <TextBox Text="{Binding FileSize}" />
+                            <TextBlock Text="Download Link:" />
+                            <TextBox Text="{Binding DownloadLink}" />
+                            <TextBlock Text="Keywords:" />
+                            <TextBox Text="{Binding Keywords}" />
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type models:DVD}">
                         <StackPanel>
                             <!-- DVD properties -->
-                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
-                            <TextBox Text="{Binding Director}" SelectedText="Director"/>
-                            <TextBox Text="{Binding Genre}" SelectedText="Genre"/>
-                            <TextBox Text="{Binding Duration}" SelectedText="Duration"/>
-                            <TextBox Text="{Binding Language}" SelectedText="Language"/>
-                            <TextBox Text="{Binding Studio}" SelectedText="Studio"/>
-                            <TextBox Text="{Binding ReleaseDate}" SelectedText="Release Date"/>
-                            <TextBox Text="{Binding Subtitles}" SelectedText="Subtitles"/>
-                            <TextBox Text="{Binding Cast}" SelectedText="Cast"/>
+                            <TextBlock Text="Title:" />
+                            <TextBox Text="{Binding Title}" />
+                            <TextBlock Text="Director:" />
+                            <TextBox Text="{Binding Director}" />
+                            <TextBlock Text="Genre:" />
+                            <TextBox Text="{Binding Genre}" />
+                            <TextBlock Text="Duration:" />
+                            <TextBox Text="{Binding Duration}" />
+                            <TextBlock Text="Language:" />
+                            <TextBox Text="{Binding Language}" />
+                            <TextBlock Text="Studio:" />
+                            <TextBox Text="{Binding Studio}" />
+                            <TextBlock Text="Release Date:" />
+                            <TextBox Text="{Binding ReleaseDate}" />
+                            <TextBlock Text="Subtitles:" />
+                            <TextBox Text="{Binding Subtitles}" />
+                            <TextBlock Text="Cast:" />
+                            <TextBox Text="{Binding Cast}" />
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type models:Magazine}">
                         <StackPanel>
                             <!-- Magazine properties -->
-                            <TextBox Text="{Binding Title}" SelectedText="Title"/>
-                            <TextBox Text="{Binding Editor}" SelectedText="Editor"/>
-                            <TextBox Text="{Binding IssueNumber}" SelectedText="Issue Number"/>
-                            <TextBox Text="{Binding Genre}" SelectedText="Genre"/>
-                            <TextBox Text="{Binding Frequency}" SelectedText="Frequency"/>
-                            <TextBox Text="{Binding Articles}" SelectedText="Articles"/>
+                            <TextBlock Text="Title:" />
+                            <TextBox Text="{Binding Title}" />
+                            <TextBlock Text="Editor:" />
+                            <TextBox Text="{Binding Editor}" />
+                            <TextBlock Text="Issue Number:" />
+                            <TextBox Text="{Binding IssueNumber}" />
+                            <TextBlock Text="Genre:" />
+                            <TextBox Text="{Binding Genre}" />
+                            <TextBlock Text="Frequency:" />
+                            <TextBox Text="{Binding Frequency}" />
+                            <TextBlock Text="Articles:" />
+                            <TextBox Text="{Binding Articles}" />
                         </StackPanel>
                     </DataTemplate>
                 </ContentControl.Resources>

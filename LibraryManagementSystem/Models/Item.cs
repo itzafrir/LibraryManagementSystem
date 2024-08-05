@@ -61,5 +61,10 @@ namespace LibraryManagementSystem.Models
         {
             Reviews.Add(review);
         }
+
+        public string GenerateISBN()
+        {
+            return "ISBN-" + new Random().Next(1000000, 9999999);
+        }
     }
 }

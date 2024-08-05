@@ -95,6 +95,9 @@ namespace LibraryManagementSystem.Services
 
         public void AddItem(Item item)
         {
+            item.GenerateISBN();
+            int itemCount = _itemRepository.GetAll().Count();
+            item.Id = itemCount++;
             _itemRepository.Add(item);
         }
         public void UpdateItem(Item item)
@@ -110,7 +113,10 @@ namespace LibraryManagementSystem.Services
                 _itemRepository.Delete(item.Id);
             }
         }
-
+        public Item GetItemById(int id)
+        {
+            return _itemRepository.GetById(id);
+        }
         private void ProcessLoanRequests(Item item)
         {
             var loanRequests = _loanRequestRepository.GetAll().Where(lr => lr.ItemId == item.Id).OrderBy(lr => lr.RequestDate).ToList();
@@ -128,7 +134,7 @@ namespace LibraryManagementSystem.Services
         public void AddReview(Item item, Review review)
         {
             _reviewRepository.Add(review);
-            item.Reviews.Add(review);
+            //item.Reviews.Add(review);
             _itemRepository.Update(item);
         }
     }

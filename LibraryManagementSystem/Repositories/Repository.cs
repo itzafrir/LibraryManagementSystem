@@ -42,6 +42,12 @@ namespace LibraryManagementSystem.Repositories
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
+            var trackedEntity = _context.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity.Equals(entity));
+            if (trackedEntity != null)
+            {
+                _context.Entry(trackedEntity.Entity).State = EntityState.Detached;
+            }
+
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
