@@ -16,7 +16,12 @@ namespace LibraryManagementSystem.Services
         private readonly IRepository<Review> _reviewRepository;
         private readonly UserService _userService;
 
-        public ItemService(IRepository<Item> itemRepository, IRepository<Loan> loanRepository, IRepository<LoanRequest> loanRequestRepository, IRepository<Review> reviewRepository, UserService userService)
+        public ItemService(
+            IRepository<Item> itemRepository,
+            IRepository<Loan> loanRepository,
+            IRepository<LoanRequest> loanRequestRepository,
+            IRepository<Review> reviewRepository,
+            UserService userService)
         {
             _itemRepository = itemRepository;
             _loanRepository = loanRepository;
@@ -30,9 +35,9 @@ namespace LibraryManagementSystem.Services
             return _itemRepository.GetAll();
         }
 
-        public IEnumerable<Item> GetItemsByType(ItemType itemType)
+        public IEnumerable<T> GetItemsByType<T>() where T : Item
         {
-            return _itemRepository.GetAll().Where(i => i.ItemType == itemType);
+            return _itemRepository.GetAll().OfType<T>();
         }
 
         public IEnumerable<Item> SearchItems(string searchTerm)
@@ -97,8 +102,6 @@ namespace LibraryManagementSystem.Services
         public void AddItem(Item item)
         {
             item.GenerateISBN();
-            //int itemCount = _itemRepository.GetAll().Count();
-            //item.Id = ++itemCount;
             _itemRepository.Add(item);
         }
         public void UpdateItem(Item item)
@@ -135,7 +138,6 @@ namespace LibraryManagementSystem.Services
         public void AddReview(Item item, Review review)
         {
             _reviewRepository.Add(review);
-            //item.Reviews.Add(review);
             _itemRepository.Update(item);
         }
     }

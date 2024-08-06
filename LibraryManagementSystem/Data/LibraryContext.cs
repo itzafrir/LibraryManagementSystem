@@ -6,6 +6,11 @@ namespace LibraryManagementSystem.Data
     public class LibraryContext : DbContext
     {
         public DbSet<Item> Items { get; set; }
+        public DbSet<Book> Books { get; set; }
+        public DbSet<CD> CDs { get; set; }
+        public DbSet<DVD> DVDs { get; set; }
+        public DbSet<EBook> EBooks { get; set; }
+        public DbSet<Magazine> Magazines { get; set; }
         public DbSet<Loan> Loans { get; set; }
         public DbSet<LoanRequest> LoanRequests { get; set; }
         public DbSet<User> Users { get; set; }
@@ -35,6 +40,14 @@ namespace LibraryManagementSystem.Data
             modelBuilder.Entity<Fine>().HasKey(f => f.Id);
             modelBuilder.Entity<FinePayRequest>().HasKey(fpr => fpr.Id);
 
+            modelBuilder.Entity<Item>()
+                .HasDiscriminator<string>("ItemType")
+                .HasValue<Book>("Book")
+                .HasValue<CD>("CD")
+                .HasValue<DVD>("DVD")
+                .HasValue<EBook>("EBook")
+                .HasValue<Magazine>("Magazine");
+
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Item)
                 .WithMany(i => i.Reviews)
@@ -59,6 +72,14 @@ namespace LibraryManagementSystem.Data
                 .WithMany()
                 .HasForeignKey(fpr => fpr.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Ignore collections that are not entities
+            modelBuilder.Entity<Book>().Ignore(b => b.Keywords);
+            modelBuilder.Entity<CD>().Ignore(c => c.Tracks);
+            modelBuilder.Entity<DVD>().Ignore(d => d.Subtitles);
+            modelBuilder.Entity<DVD>().Ignore(d => d.Cast);
+            modelBuilder.Entity<EBook>().Ignore(e => e.Keywords);
+            modelBuilder.Entity<Magazine>().Ignore(m => m.Articles);
         }
     }
 }

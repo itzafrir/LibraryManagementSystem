@@ -15,7 +15,6 @@ namespace LibraryManagementSystem.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string ISBN { get; set; }
-        public ItemType ItemType { get; set; }
         public double Rating { get; set; }
         public DateTime PublicationDate { get; set; }
         public string Publisher { get; set; }
@@ -54,7 +53,7 @@ namespace LibraryManagementSystem.Models
         // Method to display the item type as a string
         public string GetItemTypeName()
         {
-            return Enum.GetName(typeof(ItemType), ItemType);
+            return GetType().Name;
         }
 
         public void AddReview(Review review)

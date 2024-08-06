@@ -42,7 +42,6 @@ namespace LibraryManagementSystem.Mementos
             Id = item.Id;
             Title = item.Title;
             ISBN = item.ISBN;
-            ItemType = item.ItemType;
             Rating = item.Rating;
             PublicationDate = item.PublicationDate;
             Publisher = item.Publisher;
@@ -54,7 +53,7 @@ namespace LibraryManagementSystem.Mementos
             item.Id = Id;
             item.Title = Title;
             item.ISBN = ISBN;
-            item.ItemType = ItemType;
+            //item.ItemType = ItemType;
             item.Rating = Rating;
             item.PublicationDate = PublicationDate;
             item.Publisher = Publisher;

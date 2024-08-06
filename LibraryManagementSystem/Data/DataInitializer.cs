@@ -1,9 +1,6 @@
-﻿using System;
+﻿using System.Linq;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Repositories;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace LibraryManagementSystem.Data
 {
@@ -11,67 +8,29 @@ namespace LibraryManagementSystem.Data
     {
         public static void Initialize(IRepository<Item> itemRepository, IRepository<User> userRepository, IRepository<Loan> loanRepository, IRepository<Review> reviewRepository, IRepository<Fine> fineRepository, IRepository<LoanRequest> loanRequestRepository)
         {
-            // Ensure users are loaded from repository
+            // Fetch and ensure users are loaded
             var users = userRepository.GetAll().ToList();
+            _ = users.Count; // Ensure data is fetched by accessing Count
 
-            // Ensure items are loaded from repository
+            // Fetch and ensure items are loaded
             var items = itemRepository.GetAll().ToList();
+            _ = items.Count; // Ensure data is fetched by accessing Count
 
-            // Remove all loans and fines
-            // Ensure loans and fines are reset
-            //var loans = loanRepository.GetAll().ToList();
-            //var fines = fineRepository.GetAll().ToList();
-            //foreach (var loan in loans)
-            //{
-            //    loanRepository.Delete(loan.Id);
-            //}
+            // Fetch and ensure loans are loaded
+            var loans = loanRepository.GetAll().ToList();
+            _ = loans.Count; // Ensure data is fetched by accessing Count
 
-            //foreach (var fine in fines)
-            //{
-            //    fineRepository.Delete(fine.Id);
-            //}
+            // Fetch and ensure reviews are loaded
+            var reviews = reviewRepository.GetAll().ToList();
+            _ = reviews.Count; // Ensure data is fetched by accessing Count
 
-            // Create a fake loan request
-            //var user1 = users.FirstOrDefault();  // Select the first user from the database
-            //var item1 = items.FirstOrDefault();  // Select the first item from the database
+            // Fetch and ensure fines are loaded
+            var fines = fineRepository.GetAll().ToList();
+            _ = fines.Count; // Ensure data is fetched by accessing Count
 
-            //if (user1 != null && item1 != null)
-            //{
-            //    var loanRequest = new LoanRequest
-            //    {
-            //        UserId = user1.Id,
-            //        ItemId = item1.Id,
-            //        RequestDate = DateTime.Now
-            //    };
-
-            //    loanRequestRepository.Add(loanRequest);
-            //}
-
-            // Update users to remove current loans and fines
-            foreach (var user in users)
-            {
-                //user.CurrentLoans.Clear();
-                //user.Fines.Clear();
-                userRepository.Update(user);
-            }
-
-            // Associate reviews with items and update itemRepository
-            foreach (var item in items)
-            {
-                item.Reviews = new ObservableCollection<Review>(reviewRepository.GetAll().Where(r => r.ItemId == item.Id).ToList());
-                itemRepository.Update(item);
-            }
-
-            // Update the repositories with the new associations
-            foreach (var item in items)
-            {
-                itemRepository.Update(item);
-            }
-
-            foreach (var user in users)
-            {
-                userRepository.Update(user);
-            }
+            // Fetch and ensure loan requests are loaded
+            var loanRequests = loanRequestRepository.GetAll().ToList();
+            _ = loanRequests.Count; // Ensure data is fetched by accessing Count
         }
     }
 }

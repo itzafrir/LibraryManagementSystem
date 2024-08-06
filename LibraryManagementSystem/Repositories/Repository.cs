@@ -32,8 +32,7 @@ namespace LibraryManagementSystem.Repositories
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            //_dbSet.Add(entity);
-            _context.Set<T>().Add(entity);
+            _dbSet.Add(entity);
             _context.SaveChanges();
         }
 
@@ -42,15 +41,16 @@ namespace LibraryManagementSystem.Repositories
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var trackedEntity = _context.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity.Equals(entity));
-            if (trackedEntity != null)
+            var existingEntity = _dbSet.Find(GetEntityKey(entity));
+            if (existingEntity != null)
             {
-                _context.Entry(trackedEntity.Entity).State = EntityState.Detached;
+                _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                _context.SaveChanges();
             }
-
-            _dbSet.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
+            else
+            {
+                throw new InvalidOperationException("Entity does not exist in the database.");
+            }
         }
 
         public void Delete(int id)
@@ -61,6 +61,14 @@ namespace LibraryManagementSystem.Repositories
 
             _dbSet.Remove(entity);
             _context.SaveChanges();
+        }
+        private object GetEntityKey(T entity)
+        {
+            var key = _context.Model.FindEntityType(typeof(T)).FindPrimaryKey().Properties
+                .Select(p => p.PropertyInfo.GetValue(entity))
+                .Single();
+
+            return key;
         }
     }
 }

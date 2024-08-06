@@ -22,11 +22,11 @@ namespace LibraryManagementSystem.ViewModels
         private Item _selectedItem;
 
         public ObservableCollection<FinePayRequest> FinePayRequests { get; }
-        public ObservableCollection<Item> Books { get; private set; }
-        public ObservableCollection<Item> CDs { get; private set; }
-        public ObservableCollection<Item> EBooks { get; private set; }
-        public ObservableCollection<Item> DVDs { get; private set; }
-        public ObservableCollection<Item> Magazines { get; private set; }
+        public ObservableCollection<Book> Books { get; private set; }
+        public ObservableCollection<CD> CDs { get; private set; }
+        public ObservableCollection<EBook> EBooks { get; private set; }
+        public ObservableCollection<DVD> DVDs { get; private set; }
+        public ObservableCollection<Magazine> Magazines { get; private set; }
         public ObservableCollection<User> Users { get; private set; }
 
         public FinePayRequest SelectedFinePayRequest
@@ -86,11 +86,12 @@ namespace LibraryManagementSystem.ViewModels
             _userService = userService;
             _navigateHome = navigateHome;
 
-            Books = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.Book));
-            CDs = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.CD));
-            EBooks = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.EBook));
-            DVDs = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.DVD));
-            Magazines = new ObservableCollection<Item>(_itemService.GetItemsByType(ItemType.Magazine));
+            Books = new ObservableCollection<Book>(_itemService.GetItemsByType<Book>());
+            CDs = new ObservableCollection<CD>(_itemService.GetItemsByType<CD>());
+            EBooks = new ObservableCollection<EBook>(_itemService.GetItemsByType<EBook>());
+            DVDs = new ObservableCollection<DVD>(_itemService.GetItemsByType<DVD>());
+            Magazines = new ObservableCollection<Magazine>(_itemService.GetItemsByType<Magazine>());
+
             Users = new ObservableCollection<User>(_userService.GetAllUsers());
             FinePayRequests = new ObservableCollection<FinePayRequest>(_userService.GetFinePayRequests());
 
@@ -122,22 +123,22 @@ namespace LibraryManagementSystem.ViewModels
 
             foreach (var item in searchResults)
             {
-                switch (item.ItemType)
+                switch (item)
                 {
-                    case ItemType.Book:
-                        Books.Add(item);
+                    case Book book:
+                        Books.Add(book);
                         break;
-                    case ItemType.CD:
-                        CDs.Add(item);
+                    case CD cd:
+                        CDs.Add(cd);
                         break;
-                    case ItemType.EBook:
-                        EBooks.Add(item);
+                    case EBook ebook:
+                        EBooks.Add(ebook);
                         break;
-                    case ItemType.DVD:
-                        DVDs.Add(item);
+                    case DVD dvd:
+                        DVDs.Add(dvd);
                         break;
-                    case ItemType.Magazine:
-                        Magazines.Add(item);
+                    case Magazine magazine:
+                        Magazines.Add(magazine);
                         break;
                 }
             }
@@ -149,111 +150,95 @@ namespace LibraryManagementSystem.ViewModels
             if (itemTypeSelectionWindow.ShowDialog() == true)
             {
                 var selectedItemType = itemTypeSelectionWindow.SelectedItemType;
+                Window addItemWindow = null;
+
                 switch (selectedItemType)
                 {
                     case ItemType.Book:
-                        var bookWindow = new BookView(new Book(), _itemService);
-                        bookWindow.ShowDialog();
-                        RefreshItems(ItemType.Book);
+                        addItemWindow = new BookView(new Book(), _itemService);
                         break;
                     case ItemType.CD:
-                        var cdWindow = new CDView(new CD(), _itemService);
-                        cdWindow.ShowDialog();
-                        RefreshItems(ItemType.CD);
+                        addItemWindow = new CDView(new CD(), _itemService);
                         break;
                     case ItemType.EBook:
-                        var eBookWindow = new EBookView(new EBook(), _itemService);
-                        eBookWindow.ShowDialog();
-                        RefreshItems(ItemType.EBook);
+                        addItemWindow = new EBookView(new EBook(), _itemService);
                         break;
                     case ItemType.DVD:
-                        var dvdWindow = new DVDView(new DVD(), _itemService);
-                        dvdWindow.ShowDialog();
-                        RefreshItems(ItemType.DVD);
+                        addItemWindow = new DVDView(new DVD(), _itemService);
                         break;
                     case ItemType.Magazine:
-                        var magazineWindow = new MagazineView(new Magazine(), _itemService);
-                        magazineWindow.ShowDialog();
-                        RefreshItems(ItemType.Magazine);
+                        addItemWindow = new MagazineView(new Magazine(), _itemService);
                         break;
+                }
+
+                if (addItemWindow != null)
+                {
+                    addItemWindow.ShowDialog();
+                    RefreshItems();
                 }
             }
         }
+
 
         private void OpenUpdateItemWindow()
         {
             if (SelectedItem != null)
             {
-                switch (SelectedItem.ItemType)
+                Window updateItemWindow = null;
+                switch (SelectedItem)
                 {
-                    case ItemType.Book:
-                        var bookWindow = new BookView((Book)SelectedItem, _itemService);
-                        bookWindow.ShowDialog();
-                        RefreshItems(ItemType.Book);
+                    case Book book:
+                        updateItemWindow = new BookView(book, _itemService);
                         break;
-                    case ItemType.CD:
-                        var cdWindow = new CDView((CD)SelectedItem, _itemService);
-                        cdWindow.ShowDialog();
-                        RefreshItems(ItemType.CD);
+                    case CD cd:
+                        updateItemWindow = new CDView(cd, _itemService);
                         break;
-                    case ItemType.EBook:
-                        var eBookWindow = new EBookView((EBook)SelectedItem, _itemService);
-                        eBookWindow.ShowDialog();
-                        RefreshItems(ItemType.EBook);
+                    case EBook ebook:
+                        updateItemWindow = new EBookView(ebook, _itemService);
                         break;
-                    case ItemType.DVD:
-                        var dvdWindow = new DVDView((DVD)SelectedItem, _itemService);
-                        dvdWindow.ShowDialog();
-                        RefreshItems(ItemType.DVD);
+                    case DVD dvd:
+                        updateItemWindow = new DVDView(dvd, _itemService);
                         break;
-                    case ItemType.Magazine:
-                        var magazineWindow = new MagazineView((Magazine)SelectedItem, _itemService);
-                        magazineWindow.ShowDialog();
-                        RefreshItems(ItemType.Magazine);
+                    case Magazine magazine:
+                        updateItemWindow = new MagazineView(magazine, _itemService);
                         break;
+                }
+
+                if (updateItemWindow != null)
+                {
+                    updateItemWindow.ShowDialog();
+                    RefreshItems();
                 }
             }
         }
 
-        private void RefreshItems(ItemType itemType)
+
+        private void RefreshItems()
         {
-            switch (itemType)
+            Books.Clear();
+            foreach (var book in _itemService.GetItemsByType<Book>())
             {
-                case ItemType.Book:
-                    Books.Clear();
-                    foreach (var book in _itemService.GetItemsByType(ItemType.Book))
-                    {
-                        Books.Add(book);
-                    }
-                    break;
-                case ItemType.CD:
-                    CDs.Clear();
-                    foreach (var cd in _itemService.GetItemsByType(ItemType.CD))
-                    {
-                        CDs.Add(cd);
-                    }
-                    break;
-                case ItemType.EBook:
-                    EBooks.Clear();
-                    foreach (var ebook in _itemService.GetItemsByType(ItemType.EBook))
-                    {
-                        EBooks.Add(ebook);
-                    }
-                    break;
-                case ItemType.DVD:
-                    DVDs.Clear();
-                    foreach (var dvd in _itemService.GetItemsByType(ItemType.DVD))
-                    {
-                        DVDs.Add(dvd);
-                    }
-                    break;
-                case ItemType.Magazine:
-                    Magazines.Clear();
-                    foreach (var magazine in _itemService.GetItemsByType(ItemType.Magazine))
-                    {
-                        Magazines.Add(magazine);
-                    }
-                    break;
+                Books.Add(book);
+            }
+            CDs.Clear();
+            foreach (var cd in _itemService.GetItemsByType<CD>())
+            {
+                CDs.Add(cd);
+            }
+            EBooks.Clear();
+            foreach (var ebook in _itemService.GetItemsByType<EBook>())
+            {
+                EBooks.Add(ebook);
+            }
+            DVDs.Clear();
+            foreach (var dvd in _itemService.GetItemsByType<DVD>())
+            {
+                DVDs.Add(dvd);
+            }
+            Magazines.Clear();
+            foreach (var magazine in _itemService.GetItemsByType<Magazine>())
+            {
+                Magazines.Add(magazine);
             }
         }
 
@@ -266,22 +251,22 @@ namespace LibraryManagementSystem.ViewModels
                 {
                     _itemService.DeleteItem(SelectedItem.Id);
 
-                    switch (SelectedItem.ItemType)
+                    switch (SelectedItem)
                     {
-                        case ItemType.Book:
-                            Books.Remove(SelectedItem);
+                        case Book book:
+                            Books.Remove(book);
                             break;
-                        case ItemType.CD:
-                            CDs.Remove(SelectedItem);
+                        case CD cd:
+                            CDs.Remove(cd);
                             break;
-                        case ItemType.EBook:
-                            EBooks.Remove(SelectedItem);
+                        case EBook ebook:
+                            EBooks.Remove(ebook);
                             break;
-                        case ItemType.DVD:
-                            DVDs.Remove(SelectedItem);
+                        case DVD dvd:
+                            DVDs.Remove(dvd);
                             break;
-                        case ItemType.Magazine:
-                            Magazines.Remove(SelectedItem);
+                        case Magazine magazine:
+                            Magazines.Remove(magazine);
                             break;
                     }
                 }

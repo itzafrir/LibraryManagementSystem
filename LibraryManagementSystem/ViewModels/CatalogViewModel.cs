@@ -124,7 +124,7 @@ namespace LibraryManagementSystem.ViewModels
             Items.Clear();
             var searchResults = _itemService.GetAllItems().Where(item =>
                 (string.IsNullOrEmpty(SearchTerm) || item.Title.Contains(SearchTerm)) &&
-                (!SelectedItemType.HasValue || item.ItemType == SelectedItemType.Value)
+                (!SelectedItemType.HasValue || item.GetItemTypeName() == SelectedItemType.Value.ToString())
             );
 
             foreach (var item in searchResults)

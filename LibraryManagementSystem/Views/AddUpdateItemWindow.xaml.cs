@@ -10,7 +10,7 @@ namespace LibraryManagementSystem.Views
         public AddUpdateItemWindow(Item item, ItemService itemService)
         {
             InitializeComponent();
-            DataContext = new AddUpdateItemWindowViewModel(itemService,item, Close);
+            //DataContext = new AddUpdateItemWindowViewModel(itemService,item, Close);
         }
     }
 }
