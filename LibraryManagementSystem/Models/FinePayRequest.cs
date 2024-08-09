@@ -1,11 +1,15 @@
 ﻿using System;
-using LibraryManagementSystem.Utilities.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryManagementSystem.Models
 {
     public class FinePayRequest
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
         public int FineId { get; set; }
         public int UserId { get; set; }
         public DateTime RequestDate { get; set; }

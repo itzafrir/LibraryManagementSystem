@@ -79,9 +79,7 @@ namespace LibraryManagementSystem.Services
 
         public IEnumerable<FinePayRequest> GetFinePayRequests()
         {
-            return _currentUser != null
-                ? _finePayRequestRepository.GetAll().Where(fpr => fpr.UserId == _currentUser.Id).ToList()
-                : new List<FinePayRequest>();
+            return _finePayRequestRepository.GetAll().ToList();
         }
 
         public void ApproveFinePayRequest(FinePayRequest finePayRequest)
@@ -98,7 +96,14 @@ namespace LibraryManagementSystem.Services
 
         public void RejectFinePayRequest(FinePayRequest finePayRequest)
         {
-            _finePayRequestRepository.Delete(finePayRequest.Id);
+            var fine = _fineRepository.GetById(finePayRequest.FineId);
+            if (fine != null)
+            {
+                fine.DatePaid = DateTime.Now;
+                fine.Status = FineStatus.Unpaid;
+                _fineRepository.Update(fine);
+                _finePayRequestRepository.Delete(finePayRequest.Id);
+            }
         }
 
         public void CreateFinePayRequest(Fine fine)

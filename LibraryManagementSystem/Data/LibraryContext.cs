@@ -73,6 +73,11 @@ namespace LibraryManagementSystem.Data
                 .HasForeignKey(fpr => fpr.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Ensure that each User-Item pair has a unique fine
+            modelBuilder.Entity<Fine>()
+                .HasIndex(f => new { f.UserId, f.ItemId })
+                .IsUnique();
+
             // Ignore collections that are not entities
             modelBuilder.Entity<Book>().Ignore(b => b.Keywords);
             modelBuilder.Entity<CD>().Ignore(c => c.Tracks);

@@ -21,7 +21,7 @@ namespace LibraryManagementSystem.ViewModels
         private User _selectedUser;
         private Item _selectedItem;
 
-        public ObservableCollection<FinePayRequest> FinePayRequests { get; }
+        public ObservableCollection<FinePayRequest> FinePayRequests { get; private set; }
         public ObservableCollection<Book> Books { get; private set; }
         public ObservableCollection<CD> CDs { get; private set; }
         public ObservableCollection<EBook> EBooks { get; private set; }
@@ -322,7 +322,6 @@ namespace LibraryManagementSystem.ViewModels
                 }
             }
         }
-
 
         private void RefreshUsers()
         {

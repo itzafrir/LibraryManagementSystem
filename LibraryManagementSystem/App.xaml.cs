@@ -33,9 +33,10 @@ namespace LibraryManagementSystem
             var loanRepository = _serviceProvider.GetRequiredService<IRepository<Loan>>();
             var reviewRepository = _serviceProvider.GetRequiredService<IRepository<Review>>();
             var fineRepository = _serviceProvider.GetRequiredService<IRepository<Fine>>();
+            var fineRequestRepository = _serviceProvider.GetRequiredService<IRepository<FinePayRequest>>();
             var loanRequestRepository = _serviceProvider.GetRequiredService<IRepository<LoanRequest>>();
 
-            DataInitializer.Initialize(itemRepository, userRepository, loanRepository, reviewRepository, fineRepository, loanRequestRepository);
+            DataInitializer.Initialize(itemRepository, userRepository, loanRepository, reviewRepository, fineRepository, loanRequestRepository,fineRequestRepository);
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
