@@ -138,6 +138,32 @@ namespace LibraryManagementSystem.Models
             _totalCopies = newTotalCopies;
             return true;
         }
+        public string ValidateItemProperties(Item item)
+        {
+            List<string> errors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(item.Title))
+            {
+                errors.Add("Title cannot be empty.");
+            }
+
+            if (!DateTime.TryParse(item.PublicationDate.ToString(), out _))
+            {
+                errors.Add("Publication Date must be a valid date.");
+            }
+
+            if (item.TotalCopies < 1)
+            {
+                errors.Add("Total Copies must be at least 1.");
+            }
+
+            if (item.AvailableCopies > item.TotalCopies)
+            {
+                errors.Add("Available Copies cannot exceed Total Copies.");
+            }
+
+            return string.Join(Environment.NewLine, errors);
+        }
 
     }
 }
