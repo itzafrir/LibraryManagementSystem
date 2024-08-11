@@ -77,17 +77,12 @@ public partial class ProfileViewModel : ObservableObject
     {
         if (loan != null)
         {
-            _userService.ReturnLoan(loan);
+            // Delegate the loan return process to ItemService
+            _itemService.ReturnLoan(loan);
             CurrentLoans.Remove(loan);
-
-            // Check if there are open loan requests for this item
-            var openRequests = _userService.GetLoanRequestsForItem(loan.ItemId).ToList();
-            if (openRequests.Any())
-            {
-                MessageBox.Show($"There are {openRequests.Count} open loan requests for this item.", "Loan Requests Pending", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
 
             MessageBox.Show("Item returned successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
+
 }

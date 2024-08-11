@@ -50,7 +50,7 @@
         <TextBox Text="{Binding TotalCopies}" Grid.Row="7" Grid.Column="1" Margin="5"/>
 
         <TextBlock Text="Available Copies:" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding AvailableCopies}" Grid.Row="8" Grid.Column="1" Margin="5"/>
+        <TextBox Text="{Binding AvailableCopies}" Grid.Row="8" Grid.Column="1" Margin="5" IsReadOnly="True"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
             <Button Content="Save" Click="SaveButton_Click" Margin="5"/>

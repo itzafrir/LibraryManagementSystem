@@ -13,7 +13,7 @@ namespace LibraryManagementSystem.Data
             // Fetch and ensure users are loaded
             var users = userRepository.GetAll().ToList();
             _ = users.Count; // Ensure data is fetched by accessing Count
-
+            
             // Fetch and ensure items are loaded
             var items = itemRepository.GetAll().ToList();
             _ = items.Count; // Ensure data is fetched by accessing Count
@@ -28,11 +28,63 @@ namespace LibraryManagementSystem.Data
 
             // Fetch and ensure fines are loaded
             var fines = fineRepository.GetAll().ToList();
-            _ = fines.Count; // Ensure data is fetched by accessing Count
+            _ = fines.Count; // Ensure data is fetched by accessing CountR
 
             // Fetch and ensure loan requests are loaded
             var loanRequests = loanRequestRepository.GetAll().ToList();
             _ = loanRequests.Count; // Ensure data is fetched by accessing Count
+
+            // Update the third && fourth users to have 0 loans and 0 loan requests
+            if (users.Count >= 4)
+            {
+                var thirdUser = users[2];
+
+                // Remove loans associated with the third user
+                var userLoans = loans.Where(l => l.UserId == thirdUser.Id).ToList();
+                foreach (var loan in userLoans)
+                {
+                    loanRepository.Delete(loan.Id);
+                }
+
+                // Remove loan requests associated with the third user
+                var userLoanRequests = loanRequests.Where(lr => lr.UserId == thirdUser.Id).ToList();
+                foreach (var loanRequest in userLoanRequests)
+                {
+                    loanRequestRepository.Delete(loanRequest.Id);
+                }
+
+                // Clear the user's loan and loan request lists
+                thirdUser.CurrentLoans.Clear();
+                thirdUser.LoanRequests.Clear();
+
+                // Update the user in the repository
+                userRepository.Update(thirdUser);
+
+                thirdUser = users[3];
+
+                // Remove loans associated with the third user
+                userLoans = loans.Where(l => l.UserId == thirdUser.Id).ToList();
+                foreach (var loan in userLoans)
+                {
+                    loanRepository.Delete(loan.Id);
+                }
+
+                // Remove loan requests associated with the third user
+                userLoanRequests = loanRequests.Where(lr => lr.UserId == thirdUser.Id).ToList();
+                foreach (var loanRequest in userLoanRequests)
+                {
+                    loanRequestRepository.Delete(loanRequest.Id);
+                }
+
+                // Clear the user's loan and loan request lists
+                thirdUser.CurrentLoans.Clear();
+                thirdUser.LoanRequests.Clear();
+
+                // Update the user in the repository
+                userRepository.Update(thirdUser);
+
+
+            }
 
             return;
 

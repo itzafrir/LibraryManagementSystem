@@ -161,6 +161,13 @@ namespace LibraryManagementSystem.Services
             _loanRequestRepository.Add(loanRequest);
         }
 
+        public void RemoveLoanRequest(LoanRequest loanRequest)
+        {
+            var user = loanRequest.User;
+            user.LoanRequests.Remove(loanRequest);
+            _userRepository.Update(user);
+        }
+
         public void AddLoan(Loan loan)
         {
             if (_currentUser == null)
@@ -201,6 +208,13 @@ namespace LibraryManagementSystem.Services
                 }
                 _fineRepository.Update(unpaidFine);
             }
+        }
+
+        public void RemoveLoanFromUser(Loan loan)
+        {
+            var user = _userRepository.GetById(loan.UserId);
+            user.CurrentLoans.Remove(loan);
+            _userRepository.Update(user);
         }
 
         public User GetUserById(int userId)

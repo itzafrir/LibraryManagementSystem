@@ -66,7 +66,6 @@ namespace LibraryManagementSystem.Services
                 };
                 _loanRepository.Add(loan);
                 _itemRepository.Update(item);
-                user.CurrentLoans.Add(loan);
                 MessageBox.Show("Item Loaned", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
@@ -76,26 +75,40 @@ namespace LibraryManagementSystem.Services
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+
         public void ReserveItem(User user, Item item)
         {
-            var loanRequest = new LoanRequest
+            if (!user.LoanRequests.Any(l => l.ItemId == item.Id))
             {
-                ItemId = item.Id,
-                UserId = user.Id,
-                RequestDate = DateTime.Now
-            };
-            _loanRequestRepository.Add(loanRequest);
-            user.LoanRequests.Add(loanRequest);
+                var loanRequest = new LoanRequest
+                {
+                    ItemId = item.Id,
+                    UserId = user.Id,
+                    RequestDate = DateTime.Now
+                };
+                _loanRequestRepository.Add(loanRequest);
+                user.LoanRequests.Add(loanRequest);
+            }
+            else
+            {
+                MessageBox.Show("User already has a loan request for this item");
+            }
         }
-        public void ReturnItem(Loan loan)
+        public void ReturnLoan(Loan loan)
         {
-            var item = _itemRepository.GetById(loan.ItemId);
+            // Step 1: Update loan status to Returned
             loan.ReturnLoan();
             _loanRepository.Update(loan);
 
+            // Step 2: Increment the available copies of the item
+            var item = _itemRepository.GetById(loan.ItemId);
             item.AvailableCopies++;
             _itemRepository.Update(item);
 
+            // Step 3: Update the user's current loans by removing the returned loan
+            _userService.RemoveLoanFromUser(loan);
+
+            // Step 4: Process any pending loan requests if copies are now available
             ProcessLoanRequests(item);
         }
 
@@ -107,6 +120,7 @@ namespace LibraryManagementSystem.Services
         public void UpdateItem(Item item)
         {
             _itemRepository.Update(item);
+            ProcessLoanRequests(item);
         }
 
         public void DeleteItem(int itemId)
@@ -123,15 +137,24 @@ namespace LibraryManagementSystem.Services
         }
         private void ProcessLoanRequests(Item item)
         {
-            var loanRequests = _loanRequestRepository.GetAll().Where(lr => lr.ItemId == item.Id).OrderBy(lr => lr.RequestDate).ToList();
+            var loanRequests = _loanRequestRepository.GetAll()
+                .Where(lr => lr.ItemId == item.Id)
+                .OrderBy(lr => lr.RequestDate)
+                .ToList();
 
             while (item.AvailableCopies > 0 && loanRequests.Count > 0)
             {
                 var loanRequest = loanRequests.First();
                 var user = _userService.GetUserById(loanRequest.UserId);
+
+                // Create a new loan for the user
                 LoanItem(user, item);
+
+                // Remove the processed loan request
                 _loanRequestRepository.Delete(loanRequest.Id);
                 loanRequests.RemoveAt(0);
+                //Remove the current loan from the user
+                _userService.RemoveLoanRequest(loanRequest);
             }
         }
 
