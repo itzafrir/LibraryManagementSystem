@@ -1,10 +1,10 @@
-﻿using LibraryManagementSystem.Utilities.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Windows;
 
 namespace LibraryManagementSystem.Models
 {
@@ -13,38 +13,89 @@ namespace LibraryManagementSystem.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string ISBN { get; set; }
-        public double Rating { get; set; }
-        public DateTime PublicationDate { get; set; }
-        public string Publisher { get; set; }
-        public string Description { get; set; }
-        public ObservableCollection<Review> Reviews { get; set; }
-        public int TotalCopies { get; set; } // Total number of copies
-        public int AvailableCopies { get; set; } // Number of available copies
 
+        [Required]
+        public string Title { get; set; }
+
+        public string ISBN { get; set; }
+
+        public double Rating { get; set; }
+
+        [Required]
+        public DateTime PublicationDate { get; set; }
+
+        public string Publisher { get; set; }
+
+        public string Description { get; set; }
+
+        public ObservableCollection<Review> Reviews { get; set; }
+
+        private int _totalCopies;
+        public int TotalCopies
+        {
+            get => _totalCopies;
+            set
+            {
+                int difference = value - _totalCopies;
+
+                if (difference > 0)
+                {
+                    // Adding more copies
+                    AvailableCopies += difference;
+                }
+                else if (difference < 0)
+                {
+                    // Removing copies
+                    if (AvailableCopies + difference < 0)
+                    {
+                        MessageBox.Show("Cannot reduce total copies because it would result in negative number of copies.", "Invalid Operation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                    AvailableCopies += difference; // difference is negative, so it subtracts
+                }
+
+                _totalCopies = value;
+            }
+        }
+
+        private int _availableCopies;
+        public int AvailableCopies
+        {
+            get => _availableCopies;
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Available copies cannot be negative.");
+                }
+                _availableCopies = value;
+            }
+        }
+
+        // Property to calculate the average rating of the item
         public double AverageRating
         {
             get
             {
-                if (Reviews.Count == 0)
+                if (Reviews == null || Reviews.Count == 0)
                     return 0;
                 return Reviews.Average(r => r.Rating);
             }
         }
 
+        // Constructor
         public Item()
         {
             Reviews = new ObservableCollection<Review>();
         }
 
-        // Virtual method to get the creator of the item
+        // Virtual method to get the creator of the item (e.g., author, director)
         public virtual string GetCreator()
         {
             return "Unknown Creator";
         }
 
-        // Method to display item details
+        // Virtual method to display item details
         public virtual string GetDetails()
         {
             return $"{Title}, ISBN: {ISBN}, Rating: {Rating}, Published by: {Publisher} on {PublicationDate.ToShortDateString()}, Description: {Description}, Creator: {GetCreator()}, Total Copies: {TotalCopies}, Available Copies: {AvailableCopies}";
@@ -56,14 +107,21 @@ namespace LibraryManagementSystem.Models
             return GetType().Name;
         }
 
+        // Method to add a review to the item
         public void AddReview(Review review)
         {
-            Reviews.Add(review);
+            if (review != null)
+            {
+                Reviews.Add(review);
+                Rating = AverageRating; // Update the overall rating
+            }
         }
 
+        // Method to generate a random ISBN for the item
         public string GenerateISBN()
         {
-            return "ISBN-" + new Random().Next(1000000, 9999999);
+            ISBN = "ISBN-" + new Random().Next(1000000, 9999999);
+            return ISBN;
         }
     }
 }
