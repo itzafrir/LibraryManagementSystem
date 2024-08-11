@@ -11,69 +11,49 @@ namespace LibraryManagementSystem.ViewModels
     public class DVDViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
-        private DVD _dvd;
+        private readonly Action _closeAction;
 
-        public DVD DVD
-        {
-            get => _dvd;
-            set => SetProperty(ref _dvd, value);
-        }
-
-        public DVDViewModel(DVD dvd, ItemService itemService)
-        {
-            _itemService = itemService;
-            _dvd = dvd;
-            SaveCommand = new RelayCommand(Save);
-            CancelCommand = new RelayCommand(Cancel);
-        }
+        public DVD DVD { get; }
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
+        public DVDViewModel(DVD dvd, ItemService itemService, Action closeAction)
+        {
+            DVD = dvd ?? new DVD();
+            _itemService = itemService;
+            _closeAction = closeAction;
+
+            SaveCommand = new RelayCommand(Save);
+            CancelCommand = new RelayCommand(Cancel);
+        }
+
         private void Save()
         {
-            if (IsValid())
+            bool success = DVD.TrySetTotalCopies(DVD.TotalCopies);
+
+            if (!success)
             {
-                if (_dvd.Id == 0)
-                {
-                    _itemService.AddItem(_dvd);
-                }
-                else
-                {
-                    _itemService.UpdateItem(_dvd);
-                }
-                CloseAction();
+                MessageBox.Show("Cannot reduce total copies because it would result in negative available copies.", "Invalid Operation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return; // Prevent saving if the operation is invalid
+            }
+
+            if (DVD.Id == 0)
+            {
+                DVD.AvailableCopies = DVD.TotalCopies;
+                _itemService.AddItem(DVD);
             }
             else
             {
-                ShowValidationError();
+                _itemService.UpdateItem(DVD);
             }
+
+            _closeAction();
         }
 
         private void Cancel()
         {
-            CloseAction();
+            _closeAction();
         }
-
-        private bool IsValid()
-        {
-            return !string.IsNullOrWhiteSpace(_dvd.Title) &&
-                   !string.IsNullOrWhiteSpace(_dvd.Director) &&
-                   !string.IsNullOrWhiteSpace(_dvd.Genre) &&
-                   _dvd.Duration != default &&
-                   !string.IsNullOrWhiteSpace(_dvd.Language) &&
-                   !string.IsNullOrWhiteSpace(_dvd.Studio) &&
-                   _dvd.ReleaseDate != default &&
-                   _dvd.TotalCopies > 0 &&
-                   _dvd.AvailableCopies >= 0 &&
-                   _dvd.TotalCopies >= _dvd.AvailableCopies;
-        }
-
-        private void ShowValidationError()
-        {
-            MessageBox.Show("Please fill in all fields and ensure that Total Copies is greater than or equal to Available Copies.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
-        public Action CloseAction { get; set; }
     }
 }

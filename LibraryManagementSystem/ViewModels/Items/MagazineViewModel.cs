@@ -11,67 +11,49 @@ namespace LibraryManagementSystem.ViewModels
     public class MagazineViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
-        private Magazine _magazine;
+        private readonly Action _closeAction;
 
-        public Magazine Magazine
-        {
-            get => _magazine;
-            set => SetProperty(ref _magazine, value);
-        }
-
-        public MagazineViewModel(Magazine magazine, ItemService itemService)
-        {
-            _itemService = itemService;
-            _magazine = magazine;
-            SaveCommand = new RelayCommand(Save);
-            CancelCommand = new RelayCommand(Cancel);
-        }
+        public Magazine Magazine{ get; }
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
+        public MagazineViewModel(Magazine magazine, ItemService itemService, Action closeAction)
+        {
+            Magazine = magazine ?? new Magazine();
+            _itemService = itemService;
+            _closeAction = closeAction;
+
+            SaveCommand = new RelayCommand(Save);
+            CancelCommand = new RelayCommand(Cancel);
+        }
+
         private void Save()
         {
-            if (IsValid())
+            bool success = Magazine.TrySetTotalCopies(Magazine.TotalCopies);
+
+            if (!success)
             {
-                if (_magazine.Id == 0)
-                {
-                    _itemService.AddItem(_magazine);
-                }
-                else
-                {
-                    _itemService.UpdateItem(_magazine);
-                }
-                CloseAction();
+                MessageBox.Show("Cannot reduce total copies because it would result in negative available copies.", "Invalid Operation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return; // Prevent saving if the operation is invalid
+            }
+
+            if (Magazine.Id == 0)
+            {
+                Magazine.AvailableCopies = Magazine.TotalCopies;
+                _itemService.AddItem(Magazine);
             }
             else
             {
-                ShowValidationError();
+                _itemService.UpdateItem(Magazine);
             }
+
+            _closeAction();
         }
 
         private void Cancel()
         {
-            CloseAction();
+            _closeAction();
         }
-
-        private bool IsValid()
-        {
-            return !string.IsNullOrWhiteSpace(_magazine.Title) &&
-                   !string.IsNullOrWhiteSpace(_magazine.Editor) &&
-                   _magazine.IssueNumber > 0 &&
-                   !string.IsNullOrWhiteSpace(_magazine.Genre) &&
-                   !string.IsNullOrWhiteSpace(_magazine.Frequency) &&
-                   _magazine.TotalCopies > 0 &&
-                   _magazine.AvailableCopies >= 0 &&
-                   _magazine.TotalCopies >= _magazine.AvailableCopies;
-        }
-
-        private void ShowValidationError()
-        {
-            MessageBox.Show("Please fill in all fields and ensure that Total Copies is greater than or equal to Available Copies.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
-        public Action CloseAction { get; set; }
     }
 }

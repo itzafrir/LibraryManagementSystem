@@ -11,67 +11,49 @@ namespace LibraryManagementSystem.ViewModels
     public class EBookViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
-        private EBook _eBook;
+        private readonly Action _closeAction;
 
-        public EBook EBook
-        {
-            get => _eBook;
-            set => SetProperty(ref _eBook, value);
-        }
-
-        public EBookViewModel(EBook eBook, ItemService itemService)
-        {
-            _itemService = itemService;
-            _eBook = eBook;
-            SaveCommand = new RelayCommand(Save);
-            CancelCommand = new RelayCommand(Cancel);
-        }
+        public EBook EBook { get; }
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
+        public EBookViewModel(EBook ebook, ItemService itemService, Action closeAction)
+        {
+            EBook = ebook ?? new EBook();
+            _itemService = itemService;
+            _closeAction = closeAction;
+
+            SaveCommand = new RelayCommand(Save);
+            CancelCommand = new RelayCommand(Cancel);
+        }
+
         private void Save()
         {
-            if (IsValid())
+            bool success = EBook.TrySetTotalCopies(EBook.TotalCopies);
+
+            if (!success)
             {
-                if (_eBook.Id == 0)
-                {
-                    _itemService.AddItem(_eBook);
-                }
-                else
-                {
-                    _itemService.UpdateItem(_eBook);
-                }
-                CloseAction();
+                MessageBox.Show("Cannot reduce total copies because it would result in negative available copies.", "Invalid Operation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return; // Prevent saving if the operation is invalid
+            }
+
+            if (EBook.Id == 0)
+            {
+                EBook.AvailableCopies = EBook.TotalCopies;
+                _itemService.AddItem(EBook);
             }
             else
             {
-                ShowValidationError();
+                _itemService.UpdateItem(EBook);
             }
+
+            _closeAction();
         }
 
         private void Cancel()
         {
-            CloseAction();
+            _closeAction();
         }
-
-        private bool IsValid()
-        {
-            return !string.IsNullOrWhiteSpace(_eBook.Title) &&
-                   !string.IsNullOrWhiteSpace(_eBook.Author) &&
-                   !string.IsNullOrWhiteSpace(_eBook.FileFormat) &&
-                   _eBook.FileSize > 0 &&
-                   !string.IsNullOrWhiteSpace(_eBook.DownloadLink) &&
-                   _eBook.TotalCopies > 0 &&
-                   _eBook.AvailableCopies >= 0 &&
-                   _eBook.TotalCopies >= _eBook.AvailableCopies;
-        }
-
-        private void ShowValidationError()
-        {
-            MessageBox.Show("Please fill in all fields and ensure that Total Copies is greater than or equal to Available Copies.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
-        public Action CloseAction { get; set; }
     }
 }

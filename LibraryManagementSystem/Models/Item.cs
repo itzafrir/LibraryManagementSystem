@@ -123,5 +123,21 @@ namespace LibraryManagementSystem.Models
             ISBN = "ISBN-" + new Random().Next(1000000, 9999999);
             return ISBN;
         }
+        public bool TrySetTotalCopies(int newTotalCopies)
+        {
+            int difference = newTotalCopies - _totalCopies;
+
+            if (difference < 0 && AvailableCopies + difference < 0)
+            {
+                // Invalid operation
+                return false;
+            }
+
+            // Update the available copies and total copies
+            AvailableCopies += difference;
+            _totalCopies = newTotalCopies;
+            return true;
+        }
+
     }
 }

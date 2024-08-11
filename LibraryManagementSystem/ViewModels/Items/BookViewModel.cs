@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Services;
 using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
@@ -29,8 +30,18 @@ namespace LibraryManagementSystem.ViewModels
 
         private void Save()
         {
+            // Example of trying to set total copies
+            bool success = Book.TrySetTotalCopies(Book.TotalCopies);
+
+            if (!success)
+            {
+                MessageBox.Show("Cannot reduce total copies because it would result in negative available copies.", "Invalid Operation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return; // Prevent saving if the operation is invalid
+            }
+
             if (Book.Id == 0)
             {
+                Book.AvailableCopies = Book.TotalCopies;
                 _itemService.AddItem(Book);
             }
             else
