@@ -24,7 +24,7 @@
                                         <DataGridTextColumn Header="Title" Binding="{Binding Title}" IsReadOnly="True" Width="200"/>
                                         <DataGridTextColumn Header="Author" Binding="{Binding Author}" IsReadOnly="True" Width="150"/>
                                         <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" IsReadOnly="True" Width="100"/>
-                                        <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" IsReadOnly="True" Width="80"/>
+                                        <DataGridTextColumn Header="Rating" Binding="{Binding AverageRating}" IsReadOnly="True" Width="80"/>
                                         <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" IsReadOnly="True" Width="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -46,7 +46,7 @@
                                         <DataGridTextColumn Header="Title" Binding="{Binding Title}" IsReadOnly="True" Width="200"/>
                                         <DataGridTextColumn Header="Author" Binding="{Binding Author}" IsReadOnly="True" Width="150"/>
                                         <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" IsReadOnly="True" Width="100"/>
-                                        <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" IsReadOnly="True" Width="80"/>
+                                        <DataGridTextColumn Header="Rating" Binding="{Binding AverageRating}" IsReadOnly="True" Width="80"/>
                                         <DataGridTextColumn Header="Publication Date" Binding="{Binding PublicationDate, StringFormat=\{0:dd/MM/yyyy\}}" IsReadOnly="True" Width="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
