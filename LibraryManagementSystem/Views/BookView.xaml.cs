@@ -23,7 +23,6 @@ namespace LibraryManagementSystem.Views
             {
                 if (_book.Id == 0)
                 {
-                    _book.ISBN = _book.GenerateISBN();
                     _itemService.AddItem(_book);
                 }
                 else

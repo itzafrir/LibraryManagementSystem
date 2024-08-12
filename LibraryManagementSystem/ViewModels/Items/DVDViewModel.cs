@@ -97,11 +97,6 @@ namespace LibraryManagementSystem.ViewModels
                 errors.Add("Studio cannot be empty.");
             }
 
-            if (DVD.ReleaseDate == DateTime.MinValue)
-            {
-                errors.Add("Release Date must be a valid date.");
-            }
-
             if (errors.Count > 0)
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Validation Errors", MessageBoxButton.OK, MessageBoxImage.Warning);

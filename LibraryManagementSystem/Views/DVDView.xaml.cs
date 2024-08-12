@@ -51,7 +51,6 @@ namespace LibraryManagementSystem.Views
                    _dvd.Duration != default &&
                    !string.IsNullOrWhiteSpace(_dvd.Language) &&
                    !string.IsNullOrWhiteSpace(_dvd.Studio) &&
-                   _dvd.ReleaseDate != default &&
                    _dvd.TotalCopies > 0 &&
                    _dvd.AvailableCopies >= 0 &&
                    _dvd.TotalCopies >= _dvd.AvailableCopies;

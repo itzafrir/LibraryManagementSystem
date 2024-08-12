@@ -16,10 +16,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -30,43 +26,37 @@
         <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
         <TextBox Text="{Binding Title}" Grid.Row="0" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="ISBN:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding ISBN}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Publisher:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding Publisher}" Grid.Row="1" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="Publisher:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding Publisher}" Grid.Row="2" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Publication Date:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <DatePicker SelectedDate="{Binding PublicationDate}" Grid.Row="2" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="Publication Date:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <DatePicker SelectedDate="{Binding PublicationDate}" Grid.Row="3" Grid.Column="1" Margin="5"/>
-
-        <TextBlock Text="Description:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding Description}" Grid.Row="4" Grid.Column="1" Margin="5"/>
-
-        <TextBlock Text="Rating:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding Rating}" Grid.Row="5" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Description:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding Description}" Grid.Row="3" Grid.Column="1" Margin="5"/>
 
         <!-- Magazine Properties -->
-        <TextBlock Text="Editor:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding Editor}" Grid.Row="6" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Editor:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding Editor}" Grid.Row="4" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="Issue Number:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding IssueNumber}" Grid.Row="7" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Issue Number:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding IssueNumber}" Grid.Row="5" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="Genre:" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding Genre}" Grid.Row="8" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Genre:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding Genre}" Grid.Row="6" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="Frequency:" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding Frequency}" Grid.Row="9" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Frequency:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding Frequency}" Grid.Row="7" Grid.Column="1" Margin="5"/>
 
         <!-- Copies -->
-        <TextBlock Text="Total Copies:" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding TotalCopies}" Grid.Row="10" Grid.Column="1" Margin="5"/>
+        <TextBlock Text="Total Copies:" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding TotalCopies}" Grid.Row="8" Grid.Column="1" Margin="5"/>
 
-        <TextBlock Text="Available Copies:" Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <TextBox Text="{Binding AvailableCopies}" Grid.Row="11" Grid.Column="1" Margin="5" IsReadOnly="True"/>
+        <TextBlock Text="Available Copies:" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding AvailableCopies}" Grid.Row="9" Grid.Column="1" Margin="5" IsReadOnly="True"/>
 
         <!-- Actions -->
-        <StackPanel Orientation="Horizontal" Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
+        <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
             <Button Content="Save" Click="SaveButton_Click" Margin="5"/>
             <Button Content="Cancel" Click="CancelButton_Click" Margin="5"/>
         </StackPanel>

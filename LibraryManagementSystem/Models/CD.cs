@@ -10,7 +10,6 @@ namespace LibraryManagementSystem.Models
         public TimeSpan Duration { get; set; }
         public int TrackCount { get; set; }
         public string Label { get; set; }
-        public DateTime ReleaseDate { get; set; }
         public List<string> Tracks { get; set; }
 
         // Constructor to initialize CopiesByLocation and Tracks

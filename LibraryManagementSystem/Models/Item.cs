@@ -120,7 +120,7 @@ namespace LibraryManagementSystem.Models
         // Method to generate a random ISBN for the item
         public string GenerateISBN()
         {
-            ISBN = "ISBN-" + new Random().Next(1000000, 9999999);
+            ISBN = new Random().Next(1000000, 9999999).ToString();
             return ISBN;
         }
         public bool TrySetTotalCopies(int newTotalCopies)

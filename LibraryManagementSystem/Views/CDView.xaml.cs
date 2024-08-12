@@ -50,7 +50,6 @@ namespace LibraryManagementSystem.Views
                    !string.IsNullOrWhiteSpace(_cd.Genre) &&
                    _cd.TrackCount > 0 &&
                    !string.IsNullOrWhiteSpace(_cd.Label) &&
-                   _cd.ReleaseDate != default &&
                    _cd.TotalCopies > 0 &&
                    _cd.AvailableCopies >= 0 &&
                    _cd.TotalCopies >= _cd.AvailableCopies;
