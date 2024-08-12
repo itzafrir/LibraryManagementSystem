@@ -249,29 +249,40 @@ namespace LibraryManagementSystem.ViewModels
                 var result = MessageBox.Show("Are you sure you want to delete this item?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
-                    _itemService.DeleteItem(SelectedItem.Id);
+                    // Call the service to delete the item
+                    bool isDeleted = _itemService.DeleteItem(SelectedItem.Id);
 
-                    switch (SelectedItem)
+                    // If deletion was successful, remove the item from the UI
+                    if (isDeleted)
                     {
-                        case Book book:
-                            Books.Remove(book);
-                            break;
-                        case CD cd:
-                            CDs.Remove(cd);
-                            break;
-                        case EBook ebook:
-                            EBooks.Remove(ebook);
-                            break;
-                        case DVD dvd:
-                            DVDs.Remove(dvd);
-                            break;
-                        case Magazine magazine:
-                            Magazines.Remove(magazine);
-                            break;
+                        switch (SelectedItem)
+                        {
+                            case Book book:
+                                Books.Remove(book);
+                                break;
+                            case CD cd:
+                                CDs.Remove(cd);
+                                break;
+                            case EBook ebook:
+                                EBooks.Remove(ebook);
+                                break;
+                            case DVD dvd:
+                                DVDs.Remove(dvd);
+                                break;
+                            case Magazine magazine:
+                                Magazines.Remove(magazine);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        // If deletion was not successful, do nothing
+                        MessageBox.Show("Item deletion was canceled due to active loans or pending loan requests.", "Deletion Canceled", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }
         }
+
 
         private void SearchUsers()
         {
@@ -309,19 +320,22 @@ namespace LibraryManagementSystem.ViewModels
                 var result = MessageBox.Show("Are you sure you want to delete this user?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
-                    try
+                    // Attempt to delete the user and check if it was successful
+                    bool isDeleted = _userService.DeleteUser(SelectedUser.Id);
+
+                    if (isDeleted)
                     {
-                        _userService.DeleteUser(SelectedUser.Id);
                         Users.Remove(SelectedUser);
                         SelectedUser = null; // Unselect the user after deletion
                     }
-                    catch (InvalidOperationException ex)
+                    else
                     {
-                        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("User deletion was canceled due to active loans, loan requests, or outstanding fines.", "Deletion Canceled", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }
         }
+
 
         private void RefreshUsers()
         {

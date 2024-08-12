@@ -237,49 +237,64 @@ namespace LibraryManagementSystem.Services
             _userRepository.Update(user);
         }
 
-        public void DeleteUser(int userId)
+        public bool DeleteUser(int userId)
         {
             var user = _userRepository.GetById(userId);
             if (user != null)
             {
                 // Check for active loans
-                var activeLoans = _loanRepository.GetAll().Where(l => l.UserId == userId && l.LoanStatus == LoanStatus.Active);
-                if (activeLoans.Any())
-                {
-                    throw new InvalidOperationException("Cannot delete user with active loans.");
-                }
+                var activeLoans = _loanRepository.GetAll().Where(l => l.UserId == userId && l.LoanStatus == LoanStatus.Active).ToList();
 
                 // Check for pending loan requests
-                var pendingLoanRequests = _loanRequestRepository.GetAll().Where(lr => lr.UserId == userId);
-                if (pendingLoanRequests.Any())
-                {
-                    foreach (var request in pendingLoanRequests)
-                    {
-                        _loanRequestRepository.Delete(request.Id);
-                    }
-                }
+                var pendingLoanRequests = _loanRequestRepository.GetAll().Where(lr => lr.UserId == userId).ToList();
 
                 // Check for outstanding fines
-                var outstandingFines = _fineRepository.GetAll().Where(f => f.UserId == userId && f.Status != FineStatus.Paid);
-                if (outstandingFines.Any())
-                {
-                    throw new InvalidOperationException("Cannot delete user with outstanding fines.");
-                }
+                var outstandingFines = _fineRepository.GetAll().Where(f => f.UserId == userId && f.Status != FineStatus.Paid).ToList();
 
                 // Check for pending fine payment requests
-                var pendingFinePayRequests = _finePayRequestRepository.GetAll().Where(fpr => fpr.UserId == userId);
-                if (pendingFinePayRequests.Any())
+                var pendingFinePayRequests = _finePayRequestRepository.GetAll().Where(fpr => fpr.UserId == userId).ToList();
+
+                if (activeLoans.Any() || pendingLoanRequests.Any() || outstandingFines.Any() || pendingFinePayRequests.Any())
                 {
-                    foreach (var request in pendingFinePayRequests)
+                    // Prepare a generic message with the reasons why the user cannot be deleted
+                    string message = "This user cannot be deleted because they are currently associated with:\n\n";
+
+                    if (activeLoans.Any())
                     {
-                        _finePayRequestRepository.Delete(request.Id);
+                        message += $"- {activeLoans.Count} active loan(s)\n";
                     }
+
+                    if (pendingLoanRequests.Any())
+                    {
+                        message += $"- {pendingLoanRequests.Count} pending loan request(s)\n";
+                    }
+
+                    if (outstandingFines.Any())
+                    {
+                        message += $"- {outstandingFines.Count} outstanding fine(s)\n";
+                    }
+
+                    if (pendingFinePayRequests.Any())
+                    {
+                        message += $"- {pendingFinePayRequests.Count} pending fine payment request(s)\n";
+                    }
+
+                    // Display the message to the user
+                    MessageBox.Show(message, "User Deletion Canceled", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                    // Return false to indicate the deletion was not successful
+                    return false;
                 }
 
-                // Finally, delete the user
+                // If no blocking associations exist, proceed with deletion
                 _userRepository.Delete(userId);
+                return true; // Return true to indicate the deletion was successful
             }
+
+            return false; // User not found, deletion not successful
         }
+
+
 
         public bool ValidateUser(string username, string password)
         {

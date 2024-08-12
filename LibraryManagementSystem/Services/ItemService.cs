@@ -123,14 +123,63 @@ namespace LibraryManagementSystem.Services
             ProcessLoanRequests(item);
         }
 
-        public void DeleteItem(int itemId)
+        public bool DeleteItem(int itemId)
         {
             var item = _itemRepository.GetById(itemId);
             if (item != null)
             {
+                // Check for active loans
+                var activeLoans = _loanRepository.GetAll().Where(l => l.ItemId == itemId && l.LoanStatus == LoanStatus.Active).ToList();
+
+                // Check for loan requests
+                var loanRequests = _loanRequestRepository.GetAll().Where(lr => lr.ItemId == itemId).ToList();
+
+                if (activeLoans.Any() || loanRequests.Any())
+                {
+                    // Prepare the message with details about relevant users
+                    string message = "This item cannot be deleted because it is currently associated with:\n\n";
+
+                    if (activeLoans.Any())
+                    {
+                        message += "Active Loans:\n";
+                        foreach (var loan in activeLoans)
+                        {
+                            var user = _userService.GetUserById(loan.UserId);
+                            message += $"- User: {user.FullName}, Loan Date: {loan.LoanDate.ToShortDateString()}\n";
+                        }
+                    }
+
+                    if (loanRequests.Any())
+                    {
+                        message += "\nLoan Requests:\n";
+                        foreach (var request in loanRequests)
+                        {
+                            var user = _userService.GetUserById(request.UserId);
+                            message += $"- User: {user.FullName}, Request Date: {request.RequestDate.ToShortDateString()}\n";
+                        }
+                    }
+
+                    // Display the message to the user
+                    MessageBox.Show(message, "Item Deletion Canceled", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                    // Return false to indicate the deletion was not successful
+                    return false;
+                }
+                // Delete all associated reviews
+                var reviewsToDelete = _reviewRepository.GetAll().Where(r => r.ItemId == itemId).ToList();
+                foreach (var review in reviewsToDelete)
+                {
+                    _reviewRepository.Delete(review.Id);
+                }
+
+                // If no active loans or loan requests exist, proceed with deletion
                 _itemRepository.Delete(item.Id);
+                return true; // Return true to indicate the deletion was successful
             }
+
+            return false; // Item not found, deletion not successful
         }
+
         public Item GetItemById(int id)
         {
             return _itemRepository.GetById(id);
@@ -189,6 +238,5 @@ namespace LibraryManagementSystem.Services
 
             return string.Join(Environment.NewLine, errors);
         }
-    }
     }
 }

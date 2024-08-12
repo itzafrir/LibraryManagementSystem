@@ -38,7 +38,7 @@ namespace LibraryManagementSystem.ViewModels
             }
 
             // Step 2: Update the copies if needed (handled internally by the TrySetTotalCopies method)
-            bool success = DVD.TrySetTotalCopies(EBook.TotalCopies);
+            bool success = EBook.TrySetTotalCopies(EBook.TotalCopies);
 
             if (!success)
             {
