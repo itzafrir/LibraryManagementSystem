@@ -34,88 +34,88 @@ namespace LibraryManagementSystem.Data
             var loanRequests = loanRequestRepository.GetAll().ToList();
             _ = loanRequests.Count; // Ensure data is fetched by accessing Count
 
-            // Update the third && fourth users to have 0 loans and 0 loan requests
-            if (users.Count >= 4)
-            {
-                var thirdUser = users[2];
+            //// Update the third && fourth users to have 0 loans and 0 loan requests
+            //if (users.Count >= 4)
+            //{
+            //    var thirdUser = users[2];
 
-                // Remove loans associated with the third user
-                var userLoans = loans.Where(l => l.UserId == thirdUser.Id).ToList();
-                foreach (var loan in userLoans)
-                {
-                    loanRepository.Delete(loan.Id);
-                }
+            //    // Remove loans associated with the third user
+            //    var userLoans = loans.Where(l => l.UserId == thirdUser.Id).ToList();
+            //    foreach (var loan in userLoans)
+            //    {
+            //        loanRepository.Delete(loan.Id);
+            //    }
 
-                // Remove loan requests associated with the third user
-                var userLoanRequests = loanRequests.Where(lr => lr.UserId == thirdUser.Id).ToList();
-                foreach (var loanRequest in userLoanRequests)
-                {
-                    loanRequestRepository.Delete(loanRequest.Id);
-                }
+            //    // Remove loan requests associated with the third user
+            //    var userLoanRequests = loanRequests.Where(lr => lr.UserId == thirdUser.Id).ToList();
+            //    foreach (var loanRequest in userLoanRequests)
+            //    {
+            //        loanRequestRepository.Delete(loanRequest.Id);
+            //    }
 
-                // Clear the user's loan and loan request lists
-                thirdUser.CurrentLoans.Clear();
-                thirdUser.LoanRequests.Clear();
+            //    // Clear the user's loan and loan request lists
+            //    thirdUser.CurrentLoans.Clear();
+            //    thirdUser.LoanRequests.Clear();
 
-                // Update the user in the repository
-                userRepository.Update(thirdUser);
+            //    // Update the user in the repository
+            //    userRepository.Update(thirdUser);
 
-                thirdUser = users[3];
+            //    thirdUser = users[3];
 
-                // Remove loans associated with the third user
-                userLoans = loans.Where(l => l.UserId == thirdUser.Id).ToList();
-                foreach (var loan in userLoans)
-                {
-                    loanRepository.Delete(loan.Id);
-                }
+            //    // Remove loans associated with the third user
+            //    userLoans = loans.Where(l => l.UserId == thirdUser.Id).ToList();
+            //    foreach (var loan in userLoans)
+            //    {
+            //        loanRepository.Delete(loan.Id);
+            //    }
 
-                // Remove loan requests associated with the third user
-                userLoanRequests = loanRequests.Where(lr => lr.UserId == thirdUser.Id).ToList();
-                foreach (var loanRequest in userLoanRequests)
-                {
-                    loanRequestRepository.Delete(loanRequest.Id);
-                }
+            //    // Remove loan requests associated with the third user
+            //    userLoanRequests = loanRequests.Where(lr => lr.UserId == thirdUser.Id).ToList();
+            //    foreach (var loanRequest in userLoanRequests)
+            //    {
+            //        loanRequestRepository.Delete(loanRequest.Id);
+            //    }
 
-                // Clear the user's loan and loan request lists
-                thirdUser.CurrentLoans.Clear();
-                thirdUser.LoanRequests.Clear();
+            //    // Clear the user's loan and loan request lists
+            //    thirdUser.CurrentLoans.Clear();
+            //    thirdUser.LoanRequests.Clear();
 
-                // Update the user in the repository
-                userRepository.Update(thirdUser);
+            //    // Update the user in the repository
+            //    userRepository.Update(thirdUser);
 
 
-            }
+            //}
 
-            return;
+            //return;
 
-            # region Create a sample Fine
-            var firstUser = users.FirstOrDefault();
-            var firstItem = items.FirstOrDefault();
+            //# region Create a sample Fine
+            //var firstUser = users.FirstOrDefault();
+            //var firstItem = items.FirstOrDefault();
 
-            if (firstUser != null && firstItem != null)
-            {
-                var fine = new Fine
-                {
-                    UserId = firstUser.Id,
-                    ItemId = firstItem.Id,
-                    Amount = 50.0, // Sample fine amount
-                    DateIssued = DateTime.Now.AddDays(-5),
-                    Status = FineStatus.Unpaid
-                };
+            //if (firstUser != null && firstItem != null)
+            //{
+            //    var fine = new Fine
+            //    {
+            //        UserId = firstUser.Id,
+            //        ItemId = firstItem.Id,
+            //        Amount = 50.0, // Sample fine amount
+            //        DateIssued = DateTime.Now.AddDays(-5),
+            //        Status = FineStatus.Unpaid
+            //    };
 
-                fineRepository.Add(fine);
+            //    fineRepository.Add(fine);
 
-                // Create a sample FinePayRequest
-                var finePayRequest = new FinePayRequest
-                {
-                    FineId = fine.Id,
-                    UserId = firstUser.Id,
-                    RequestDate = DateTime.Now
-                };
+            //    // Create a sample FinePayRequest
+            //    var finePayRequest = new FinePayRequest
+            //    {
+            //        FineId = fine.Id,
+            //        UserId = firstUser.Id,
+            //        RequestDate = DateTime.Now
+            //    };
 
-                finePayRequestRepository.Add(finePayRequest);
-            }
-            #endregion
+            //    finePayRequestRepository.Add(finePayRequest);
+            //}
+            //#endregion
         }
     }
 }
