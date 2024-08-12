@@ -8,114 +8,92 @@ namespace LibraryManagementSystem.Data
 {
     public static class DataInitializer
     {
-        public static void Initialize(IRepository<Item> itemRepository, IRepository<User> userRepository, IRepository<Loan> loanRepository, IRepository<Review> reviewRepository, IRepository<Fine> fineRepository, IRepository<LoanRequest> loanRequestRepository, IRepository<FinePayRequest> finePayRequestRepository)
+        public static void Initialize(
+            IRepository<Item> itemRepository,
+            IRepository<User> userRepository,
+            IRepository<Loan> loanRepository,
+            IRepository<Review> reviewRepository,
+            IRepository<Fine> fineRepository,
+            IRepository<LoanRequest> loanRequestRepository,
+            IRepository<FinePayRequest> finePayRequestRepository)
         {
-            // Fetch and ensure users are loaded
+            // Ensure the database is initialized with existing data
             var users = userRepository.GetAll().ToList();
-            _ = users.Count; // Ensure data is fetched by accessing Count
-            
-            // Fetch and ensure items are loaded
             var items = itemRepository.GetAll().ToList();
-            _ = items.Count; // Ensure data is fetched by accessing Count
-
-            // Fetch and ensure loans are loaded
             var loans = loanRepository.GetAll().ToList();
-            _ = loans.Count; // Ensure data is fetched by accessing Count
-
-            // Fetch and ensure reviews are loaded
             var reviews = reviewRepository.GetAll().ToList();
-            _ = reviews.Count; // Ensure data is fetched by accessing Count
-
-            // Fetch and ensure fines are loaded
             var fines = fineRepository.GetAll().ToList();
-            _ = fines.Count; // Ensure data is fetched by accessing CountR
-
-            // Fetch and ensure loan requests are loaded
             var loanRequests = loanRequestRepository.GetAll().ToList();
-            _ = loanRequests.Count; // Ensure data is fetched by accessing Count
 
-            //// Update the third && fourth users to have 0 loans and 0 loan requests
-            //if (users.Count >= 4)
+            //// Create a new book item
+            //var book = new Book
             //{
-            //    var thirdUser = users[2];
+            //    Title = "1984",
+            //    Author = "George Orwell",
+            //    Genre = "Dystopian",
+            //    PageCount = 328,
+            //    Language = "English",
+            //    Format = "Paperback",
+            //    Dimensions = "5 x 8 inches",
+            //    Description = "A dystopian social science fiction novel.",
+            //    Series = "null",
+            //    Edition = 1,
+            //    Keywords = new System.Collections.Generic.List<string> { "Dystopia", "Totalitarianism", "Classic" },
+            //    PublicationDate = new DateTime(1949, 6, 8),
+            //    Publisher = "Secker & Warburg",
+            //    TotalCopies = 3,
+            //    AvailableCopies = 3,
+            //};
 
-            //    // Remove loans associated with the third user
-            //    var userLoans = loans.Where(l => l.UserId == thirdUser.Id).ToList();
-            //    foreach (var loan in userLoans)
-            //    {
-            //        loanRepository.Delete(loan.Id);
-            //    }
+            //book.GenerateISBN();
+            //itemRepository.Add(book);
 
-            //    // Remove loan requests associated with the third user
-            //    var userLoanRequests = loanRequests.Where(lr => lr.UserId == thirdUser.Id).ToList();
-            //    foreach (var loanRequest in userLoanRequests)
-            //    {
-            //        loanRequestRepository.Delete(loanRequest.Id);
-            //    }
-
-            //    // Clear the user's loan and loan request lists
-            //    thirdUser.CurrentLoans.Clear();
-            //    thirdUser.LoanRequests.Clear();
-
-            //    // Update the user in the repository
-            //    userRepository.Update(thirdUser);
-
-            //    thirdUser = users[3];
-
-            //    // Remove loans associated with the third user
-            //    userLoans = loans.Where(l => l.UserId == thirdUser.Id).ToList();
-            //    foreach (var loan in userLoans)
-            //    {
-            //        loanRepository.Delete(loan.Id);
-            //    }
-
-            //    // Remove loan requests associated with the third user
-            //    userLoanRequests = loanRequests.Where(lr => lr.UserId == thirdUser.Id).ToList();
-            //    foreach (var loanRequest in userLoanRequests)
-            //    {
-            //        loanRequestRepository.Delete(loanRequest.Id);
-            //    }
-
-            //    // Clear the user's loan and loan request lists
-            //    thirdUser.CurrentLoans.Clear();
-            //    thirdUser.LoanRequests.Clear();
-
-            //    // Update the user in the repository
-            //    userRepository.Update(thirdUser);
-
-
-            //}
-
-            //return;
-
-            //# region Create a sample Fine
-            //var firstUser = users.FirstOrDefault();
-            //var firstItem = items.FirstOrDefault();
-
-            //if (firstUser != null && firstItem != null)
+            //// Create a new user
+            //var user = new User
             //{
-            //    var fine = new Fine
-            //    {
-            //        UserId = firstUser.Id,
-            //        ItemId = firstItem.Id,
-            //        Amount = 50.0, // Sample fine amount
-            //        DateIssued = DateTime.Now.AddDays(-5),
-            //        Status = FineStatus.Unpaid
-            //    };
+            //    Username = "c",
+            //    Password = "c",
+            //    FullName = "John Doe",
+            //    Email = "johndoe@example.com",
+            //    Address = "123 Main St",
+            //    PhoneNumber = "123-456-7890",
+            //    UserType = UserType.Librarian,
+            //    MembershipDate = DateTime.Now.AddYears(-1)
+            //};
+            //userRepository.Add(user);
 
-            //    fineRepository.Add(fine);
+            //// Create a loan for the new book that is 2 months overdue
+            //var loan = new Loan
+            //{
+            //    ItemId = book.Id,
+            //    UserId = user.Id,
+            //    LoanDate = DateTime.Now.AddMonths(-3), // Loaned 3 months ago
+            //    DueDate = DateTime.Now.AddMonths(-2),  // Due 2 months ago
+            //    LoanStatus = LoanStatus.Active
+            //};
+            //loanRepository.Add(loan);
 
-            //    // Create a sample FinePayRequest
-            //    var finePayRequest = new FinePayRequest
-            //    {
-            //        FineId = fine.Id,
-            //        UserId = firstUser.Id,
-            //        RequestDate = DateTime.Now
-            //    };
+            ////// Mark the loan as overdue and create a fine
+            ////if (loan.IsOverdue())
+            ////{
+            ////    var fine = new Fine
+            ////    {
+            ////        UserId = user.Id,
+            ////        ItemId = book.Id,
+            ////        Amount = 2 * 1.0, // Assuming $1 per month overdue
+            ////        DateIssued = DateTime.Now,
+            ////        Status = FineStatus.Unpaid
+            ////    };
+            ////    fineRepository.Add(fine);
+            ////}
 
-            //    finePayRequestRepository.Add(finePayRequest);
-            //}
-            //#endregion
+            //// Update the user's current loans
+            //user.CurrentLoans.Add(loan);
+            //userRepository.Update(user);
+
+            //// Decrement available copies of the book
+            //book.AvailableCopies--;
+            //itemRepository.Update(book);
         }
     }
 }

@@ -82,16 +82,32 @@ namespace LibraryManagementSystem.Services
             return _finePayRequestRepository.GetAll().ToList();
         }
 
-        public void ApproveFinePayRequest(FinePayRequest finePayRequest)
+        public string ApproveFinePayRequest(FinePayRequest finePayRequest)
         {
             var fine = _fineRepository.GetById(finePayRequest.FineId);
             if (fine != null)
             {
+                // Check if the user has an active loan on the item
+                var activeLoan = _loanRepository.GetAll()
+                    .FirstOrDefault(l => l.ItemId == fine.ItemId && l.UserId == fine.UserId && l.LoanStatus == LoanStatus.Active);
+
+                if (activeLoan != null)
+                {
+                    // Return a message if an active loan exists
+                    return "Cannot approve fine payment while there is an active loan on the item.";
+                }
+
+                // If no active loan exists, approve the fine payment
                 fine.DatePaid = DateTime.Now;
                 fine.Status = FineStatus.Paid;
                 _fineRepository.Update(fine);
                 _finePayRequestRepository.Delete(finePayRequest.Id);
+
+                // Return success message
+                return "Success";
             }
+
+            return "Fine not found.";
         }
 
         public void RejectFinePayRequest(FinePayRequest finePayRequest)

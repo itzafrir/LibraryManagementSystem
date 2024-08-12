@@ -36,8 +36,14 @@ namespace LibraryManagementSystem
             var fineRequestRepository = _serviceProvider.GetRequiredService<IRepository<FinePayRequest>>();
             var loanRequestRepository = _serviceProvider.GetRequiredService<IRepository<LoanRequest>>();
 
-            DataInitializer.Initialize(itemRepository, userRepository, loanRepository, reviewRepository, fineRepository, loanRequestRepository,fineRequestRepository);
+            // Initialize the data
+            DataInitializer.Initialize(itemRepository, userRepository, loanRepository, reviewRepository, fineRepository, loanRequestRepository, fineRequestRepository);
 
+            // Generate or update fines at startup
+            var fineService = _serviceProvider.GetRequiredService<FineService>();
+            fineService.GenerateOrUpdateFines();
+
+            // Show the main window
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }
@@ -52,6 +58,7 @@ namespace LibraryManagementSystem
             services.AddSingleton<LoanService>();
             services.AddSingleton<ItemService>();
             services.AddSingleton<UserService>();
+            services.AddSingleton<FineService>(); // Register FineService
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<MainWindow>();
 
@@ -62,6 +69,7 @@ namespace LibraryManagementSystem
             services.AddSingleton<IRepository<Review>, Repository<Review>>();
             services.AddSingleton<IRepository<Fine>, Repository<Fine>>();
             services.AddSingleton<IRepository<LoanRequest>, Repository<LoanRequest>>();
+            services.AddSingleton<IRepository<FinePayRequest>, Repository<FinePayRequest>>();
         }
     }
 }

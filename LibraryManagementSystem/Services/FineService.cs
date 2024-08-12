@@ -37,7 +37,7 @@ public class FineService
                 {
                     UserId = loan.UserId,
                     ItemId = loan.ItemId,
-                    Amount = 1, // Starting fine amount for the second month
+                    Amount = monthsOverdue,
                     DateIssued = DateTime.Now,
                     Status = FineStatus.Unpaid
                 };

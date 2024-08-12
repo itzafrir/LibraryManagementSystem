@@ -388,8 +388,17 @@ namespace LibraryManagementSystem.ViewModels
         {
             if (SelectedFinePayRequest != null)
             {
-                _userService.ApproveFinePayRequest(SelectedFinePayRequest);
-                FinePayRequests.Remove(SelectedFinePayRequest);
+                var approvalResult = _userService.ApproveFinePayRequest(SelectedFinePayRequest);
+
+                if (approvalResult == "Success")
+                {
+                    FinePayRequests.Remove(SelectedFinePayRequest);
+                    MessageBox.Show("Fine payment approved successfully.", "Approval Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show(approvalResult, "Approval Failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
@@ -399,8 +408,10 @@ namespace LibraryManagementSystem.ViewModels
             {
                 _userService.RejectFinePayRequest(SelectedFinePayRequest);
                 FinePayRequests.Remove(SelectedFinePayRequest);
+                MessageBox.Show("Fine payment rejected successfully.", "Rejection Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+
 
         private void NavigateHome()
         {
