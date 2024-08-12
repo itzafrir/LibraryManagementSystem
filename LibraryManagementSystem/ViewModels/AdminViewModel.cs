@@ -320,6 +320,11 @@ namespace LibraryManagementSystem.ViewModels
                 var result = MessageBox.Show("Are you sure you want to delete this user?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
+                    if (SelectedUser == _userService.GetCurrentUser())
+                    {
+                        MessageBox.Show("Cannot delete current user", "Deletion Canceled", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
                     // Attempt to delete the user and check if it was successful
                     bool isDeleted = _userService.DeleteUser(SelectedUser.Id);
 
