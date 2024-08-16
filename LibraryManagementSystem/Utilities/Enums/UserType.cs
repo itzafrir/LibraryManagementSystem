@@ -5,7 +5,6 @@
         Guest,
         Member,
         Librarian,
-        Manager,
-        Assistant
+        Manager
     }
 }

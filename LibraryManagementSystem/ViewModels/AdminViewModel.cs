@@ -86,31 +86,44 @@ namespace LibraryManagementSystem.ViewModels
             _userService = userService;
             _navigateHome = navigateHome;
 
+            // Initialize collections
             Books = new ObservableCollection<Book>(_itemService.GetItemsByType<Book>());
             CDs = new ObservableCollection<CD>(_itemService.GetItemsByType<CD>());
             EBooks = new ObservableCollection<EBook>(_itemService.GetItemsByType<EBook>());
             DVDs = new ObservableCollection<DVD>(_itemService.GetItemsByType<DVD>());
             Magazines = new ObservableCollection<Magazine>(_itemService.GetItemsByType<Magazine>());
-
             Users = new ObservableCollection<User>(_userService.GetAllUsers());
             FinePayRequests = new ObservableCollection<FinePayRequest>(_userService.GetFinePayRequests());
 
+            // Define commands
             SearchCommand = new RelayCommand(SearchItems);
             AddItemCommand = new RelayCommand(OpenAddItemWindow);
             UpdateItemCommand = new RelayCommand(OpenUpdateItemWindow, () => IsItemSelected);
             DeleteItemCommand = new RelayCommand(DeleteItem, () => IsItemSelected);
+
             SearchUserCommand = new RelayCommand(SearchUsers);
-            AddUserCommand = new RelayCommand(OpenAddUserWindow);
-            EditUserCommand = new RelayCommand(OpenEditUserWindow, CanEditOrDeleteUser);
-            DeleteUserCommand = new RelayCommand(DeleteUser, CanEditOrDeleteUser);
-            ApproveFinePayRequestCommand = new RelayCommand(ApproveFinePayRequest);
-            RejectFinePayRequestCommand = new RelayCommand(RejectFinePayRequest);
+            AddUserCommand = new RelayCommand(OpenAddUserWindow, CanManageUsers);
+            EditUserCommand = new RelayCommand(OpenEditUserWindow, () => IsUserSelected && CanManageUsers());
+            DeleteUserCommand = new RelayCommand(DeleteUser, () => IsUserSelected && CanManageUsers());
+
+            ApproveFinePayRequestCommand = new RelayCommand(ApproveFinePayRequest, CanManageFines);
+            RejectFinePayRequestCommand = new RelayCommand(RejectFinePayRequest, CanManageFines);
+
             NavigateHomeCommand = new RelayCommand(NavigateHome);
             LogoutCommand = new RelayCommand(Logout, CanExecuteLogout);
 
             UpdateGreetingMessage();
         }
 
+        private bool CanManageUsers()
+        {
+            return _userService.GetCurrentUser().UserType == UserType.Manager;
+        }
+
+        private bool CanManageFines()
+        {
+            return _userService.GetCurrentUser().UserType == UserType.Manager;
+        }
         private void SearchItems()
         {
             Books.Clear();
