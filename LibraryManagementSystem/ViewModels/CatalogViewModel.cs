@@ -123,8 +123,8 @@ namespace LibraryManagementSystem.ViewModels
         {
             Items.Clear();
             var searchResults = _itemService.GetAllItems().Where(item =>
-                (string.IsNullOrEmpty(SearchTerm) || item.Title.Contains(SearchTerm)) &&
-                (!SelectedItemType.HasValue || item.GetItemTypeName() == SelectedItemType.Value.ToString())
+                (string.IsNullOrEmpty(SearchTerm) || MatchesSearchTerm(item)) &&
+                (!SelectedItemType.HasValue || (item.GetItemTypeName() == SelectedItemType.Value.ToString() || SelectedItemType.Value == ItemType.All))
             );
 
             foreach (var item in searchResults)
@@ -133,6 +133,47 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
+        private bool MatchesSearchTerm(Item item)
+        {
+            if (item.Title.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                item.Description.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            switch (item)
+            {
+                case Book book:
+                    return book.Author.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           book.Genre.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           book.Language.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           book.Format.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           book.Series.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase);
+
+                case CD cd:
+                    return cd.Artist.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           cd.Genre.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           cd.Label.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase);
+
+                case DVD dvd:
+                    return dvd.Director.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           dvd.Genre.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           dvd.Language.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           dvd.Studio.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase);
+
+                case EBook ebook:
+                    return ebook.Author.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           ebook.FileFormat.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase);
+
+                case Magazine magazine:
+                    return magazine.Editor.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           magazine.Genre.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
+                           magazine.Frequency.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase);
+
+                default:
+                    return false;
+            }
+        }
         private void ViewItemDetails()
         {
             if (SelectedItem != null)

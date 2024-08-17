@@ -6,6 +6,7 @@
         CD,
         DVD,
         EBook,
-        Magazine
+        Magazine,
+        All
     }
 }
