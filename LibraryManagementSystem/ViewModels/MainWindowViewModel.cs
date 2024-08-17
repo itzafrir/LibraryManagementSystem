@@ -129,7 +129,7 @@ namespace LibraryManagementSystem.ViewModels
 
         private bool CanNavigateToAdmin()
         {
-            return _userService.GetCurrentUser()?.UserType == UserType.Librarian;
+            return _userService.GetCurrentUser()?.UserType == UserType.Manager || _userService.GetCurrentUser()?.UserType == UserType.Librarian;
         }
 
         private void NavigateToMain()
