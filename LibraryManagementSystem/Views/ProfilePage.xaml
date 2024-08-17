@@ -74,6 +74,7 @@
 
         <!-- Buttons -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="2" Grid.Column="1" Margin="10">
+            <Button Content="Update Profile" Width="120" Command="{Binding UpdateProfileCommand}" Margin="5"/>
             <Button Content="Log Out" Width="100" Command="{Binding LogoutCommand}" Margin="5"/>
             <Button Content="Go Back" Width="100" Command="{Binding GoBackCommand}" Margin="5"/>
         </StackPanel>

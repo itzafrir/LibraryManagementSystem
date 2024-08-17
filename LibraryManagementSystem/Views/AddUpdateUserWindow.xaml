@@ -41,10 +41,15 @@
         <TextBox Text="{Binding EditableUser.PhoneNumber, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Grid.Column="1" Margin="5"/>
 
         <TextBlock Text="User Type:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <ComboBox SelectedItem="{Binding EditableUser.UserType}" ItemsSource="{Binding UserTypes}" Grid.Row="6" Grid.Column="1" Margin="5"/>
+        <ComboBox SelectedItem="{Binding EditableUser.UserType}" 
+                  ItemsSource="{Binding UserTypes}" 
+                  Grid.Row="6" Grid.Column="1" Margin="5"
+                  IsEnabled="{Binding IsUserTypeAndMembershipDateEditable}"/>
 
         <TextBlock Text="Membership Date:" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-        <DatePicker SelectedDate="{Binding EditableUser.MembershipDate}" Grid.Row="7" Grid.Column="1" Margin="5"/>
+        <DatePicker SelectedDate="{Binding EditableUser.MembershipDate}" 
+                    Grid.Row="7" Grid.Column="1" Margin="5"
+                    IsEnabled="{Binding IsUserTypeAndMembershipDateEditable}"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
             <Button Content="Save" Command="{Binding SaveCommand}" Margin="5" IsEnabled="{Binding CanSave}"/>

@@ -7,10 +7,10 @@ namespace LibraryManagementSystem.Views
 {
     public partial class AddUpdateUserWindow : Window
     {
-        public AddUpdateUserWindow(User user, UserService userService)
+        public AddUpdateUserWindow(User user, UserService userService, bool isEditable = true)
         {
             InitializeComponent();
-            var viewModel = new AddUpdateUserViewModel(user, userService, Close);
+            var viewModel = new AddUpdateUserViewModel(user, userService, Close, isEditable);
             DataContext = viewModel;
         }
     }

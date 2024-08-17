@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Services;
+using LibraryManagementSystem.Views;
 
 public partial class ProfileViewModel : ObservableObject
 {
@@ -30,6 +31,7 @@ public partial class ProfileViewModel : ObservableObject
     public ICommand GoBackCommand { get; }
     public ICommand PayFineCommand { get; }
     public ICommand ReturnItemCommand { get; }
+    public ICommand UpdateProfileCommand { get; }
 
     public event EventHandler RequestClose;
 
@@ -49,8 +51,16 @@ public partial class ProfileViewModel : ObservableObject
         GoBackCommand = new RelayCommand(GoBack);
         PayFineCommand = new RelayCommand<Fine>(PayFine);
         ReturnItemCommand = new RelayCommand<Loan>(ReturnItem);
+
+        // Initialize the UpdateProfileCommand
+        UpdateProfileCommand = new RelayCommand(UpdateProfile);
     }
 
+    private void UpdateProfile()
+    {
+        var updateUserWindow = new AddUpdateUserWindow(UserProfile, _userService, isEditable: false);
+        updateUserWindow.ShowDialog();
+    }
     private void Logout()
     {
         _userService.Logout();
