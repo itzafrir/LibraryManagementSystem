@@ -30,7 +30,7 @@ public class FineService
 
             var monthsOverdue = (DateTime.Now - loan.DueDate).Days / 30;
 
-            if (existingFine == null && monthsOverdue > 1)
+            if (existingFine == null)
             {
                 // Fine doesn't exist, create it starting at $1 for the second month
                 var newFine = new Fine
@@ -43,7 +43,7 @@ public class FineService
                 };
                 _fineRepository.Add(newFine);
             }
-            else if (existingFine != null && monthsOverdue > 1)
+            else if (existingFine != null)
             {
                 // Fine exists, update the amount based on months overdue
                 existingFine.Amount = monthsOverdue;

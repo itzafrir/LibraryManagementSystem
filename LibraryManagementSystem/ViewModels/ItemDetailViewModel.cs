@@ -83,7 +83,7 @@ namespace LibraryManagementSystem.ViewModels
         {
             get => $"{SelectedItem.AverageRating:F1} ({SelectedItem.Reviews.Count} reviews)";
         }
-
+        public string SelectedCreator => SelectedItem?.GetCreator();
         public string GreetingMessage => _userService.IsUserLoggedIn() ? $"Hello, {_userService.GetCurrentUser().FullName}" : "Hello, Guest";
 
         public bool IsLoginButtonEnabled => !_userService.IsUserLoggedIn();
