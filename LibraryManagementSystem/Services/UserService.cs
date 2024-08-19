@@ -5,6 +5,7 @@ using LibraryManagementSystem.Repositories;
 using System;
 using System.Windows;
 using LibraryManagementSystem.Utilities.Enums;
+using LibraryManagementSystem.Utilities;
 
 namespace LibraryManagementSystem.Services
 {
@@ -134,30 +135,6 @@ namespace LibraryManagementSystem.Services
             _finePayRequestRepository.Add(finePayRequest);
             fine.Status = FineStatus.Pending;
             _fineRepository.Update(fine);
-        }
-
-        public void CalculateFines()
-        {
-            var overdueLoans = _loanRepository.GetAll().Where(l => l.UserId == _currentUser.Id && l.IsOverdue());
-            foreach (var loan in overdueLoans)
-            {
-                var existingFine = _fineRepository.GetAll().FirstOrDefault(f => f.UserId == loan.UserId && f.ItemId == loan.ItemId && f.Status == FineStatus.Unpaid);
-                if (existingFine == null)
-                {
-                    var monthsOverdue = (DateTime.Now - loan.DueDate).Days / 30;
-                    var fineAmount = monthsOverdue * 1; // $1 per month overdue
-
-                    var fine = new Fine
-                    {
-                        UserId = loan.UserId,
-                        ItemId = loan.ItemId,
-                        Amount = fineAmount,
-                        DateIssued = DateTime.Now,
-                        Status = FineStatus.Unpaid
-                    };
-                    _fineRepository.Add(fine);
-                }
-            }
         }
 
         public void RequestLoan(Item item)

@@ -22,20 +22,5 @@ namespace LibraryManagementSystem.Services
         {
             return _finePayRequests;
         }
-
-        //public void ApproveFinePayRequest(FinePayRequest request)
-        //{
-        //    var fine = _fines.FirstOrDefault(f => f.Id == request.FineId);
-        //    if (fine != null)
-        //    {
-        //        fine.DatePaid = DateTime.Now;
-        //        request.Status = FinePayRequestStatus.Approved;
-        //    }
-        //}
-
-        //public void RejectFinePayRequest(FinePayRequest request)
-        //{
-        //    request.Status = FinePayRequestStatus.Rejected;
-        //}
     }
 }

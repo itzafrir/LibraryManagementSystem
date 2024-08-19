@@ -8,8 +8,8 @@ namespace LibraryManagementSystem.Models
         public string Genre { get; set; }
         public int PageCount { get; set; }
         public string Language { get; set; }
-        public string Format { get; set; } // e.g., Hardcover, Paperback, etc.
-        public string Dimensions { get; set; } // e.g., 6 x 9 inches
+        public string Format { get; set; } //i.e Hardcover, Paperback, etc.
+        public string Dimensions { get; set; } //i.e 6 x 9 inches
         public string Series { get; set; }
         public int Edition { get; set; }
         public List<string> Keywords { get; set; }

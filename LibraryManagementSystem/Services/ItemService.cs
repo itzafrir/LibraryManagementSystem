@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using LibraryManagementSystem.Utilities.Enums;
+using LibraryManagementSystem.Utilities;
 
 namespace LibraryManagementSystem.Services
 {
@@ -61,7 +62,7 @@ namespace LibraryManagementSystem.Services
                     ItemId = item.Id,
                     UserId = user.Id,
                     LoanDate = DateTime.Now,
-                    DueDate = DateTime.Now.AddDays(14),
+                    DueDate = DateTime.Now.AddDays(Constants.LOAN_LENGTH),
                     LoanStatus = LoanStatus.Active
                 };
                 _loanRepository.Add(loan);
