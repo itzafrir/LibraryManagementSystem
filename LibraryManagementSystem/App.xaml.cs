@@ -72,26 +72,3 @@ namespace LibraryManagementSystem
         }
     }
 }
-
-
-#region Clear DB
-//var entityTypes = context.Model.GetEntityTypes();
-
-//foreach (var entityType in entityTypes)
-//{
-//    var clrType = entityType.ClrType;
-
-//    // Get the DbSet for each entity type using reflection
-//    var method = context.GetType().GetMethod("Set", new Type[] { }).MakeGenericMethod(clrType);
-//    var dbSet = method.Invoke(context, null);
-
-//    // Get the entities in the DbSet
-//    var entities = (dbSet as IQueryable<object>).ToList();
-
-//    // Remove all entities
-//    context.RemoveRange(entities);
-//}
-
-//context.SaveChanges();
-
-#endregion
