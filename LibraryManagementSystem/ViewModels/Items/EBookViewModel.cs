@@ -9,16 +9,35 @@ using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the creation and editing of eBook items within the library management system.
+    /// </summary>
     public class EBookViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
         private readonly Action _closeAction;
 
+        /// <summary>
+        /// Gets the eBook item being created or edited.
+        /// </summary>
         public EBook EBook { get; }
 
+        /// <summary>
+        /// Command to save the eBook item to the system.
+        /// </summary>
         public ICommand SaveCommand { get; }
+
+        /// <summary>
+        /// Command to cancel the operation and close the view.
+        /// </summary>
         public ICommand CancelCommand { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EBookViewModel"/> class.
+        /// </summary>
+        /// <param name="ebook">The eBook item being managed. If null, a new eBook will be created.</param>
+        /// <param name="itemService">Service for managing item operations.</param>
+        /// <param name="closeAction">Action to execute when the view should be closed.</param>
         public EBookViewModel(EBook ebook, ItemService itemService, Action closeAction)
         {
             EBook = ebook ?? new EBook();
@@ -29,6 +48,9 @@ namespace LibraryManagementSystem.ViewModels
             CancelCommand = new RelayCommand(Cancel);
         }
 
+        /// <summary>
+        /// Validates the eBook's properties and saves it to the system.
+        /// </summary>
         private void Save()
         {
             // Step 1: Validate the data
@@ -60,6 +82,10 @@ namespace LibraryManagementSystem.ViewModels
             _closeAction();
         }
 
+        /// <summary>
+        /// Validates the properties of the eBook to ensure they meet the required criteria.
+        /// </summary>
+        /// <returns>True if the eBook is valid; otherwise, false.</returns>
         private bool ValidateEBook()
         {
             List<string> errors = new List<string>();
@@ -71,7 +97,7 @@ namespace LibraryManagementSystem.ViewModels
                 errors.Add(itemErrors);
             }
 
-            // Validate specific EBook properties
+            // Validate specific eBook properties
             if (string.IsNullOrWhiteSpace(EBook.Author))
             {
                 errors.Add("Author cannot be empty.");
@@ -92,6 +118,7 @@ namespace LibraryManagementSystem.ViewModels
                 errors.Add("Download Link cannot be empty.");
             }
 
+            // Show validation errors if any
             if (errors.Count > 0)
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Validation Errors", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -101,7 +128,9 @@ namespace LibraryManagementSystem.ViewModels
             return true; // Validation passed
         }
 
-
+        /// <summary>
+        /// Cancels the operation and closes the view without saving any changes.
+        /// </summary>
         private void Cancel()
         {
             _closeAction();

@@ -9,16 +9,35 @@ using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the creation and editing of book items within the library management system.
+    /// </summary>
     public class BookViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
         private readonly Action _closeAction;
 
+        /// <summary>
+        /// Gets the book item being created or edited.
+        /// </summary>
         public Book Book { get; }
 
+        /// <summary>
+        /// Command to save the book item to the system.
+        /// </summary>
         public ICommand SaveCommand { get; }
+
+        /// <summary>
+        /// Command to cancel the operation and close the view.
+        /// </summary>
         public ICommand CancelCommand { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookViewModel"/> class.
+        /// </summary>
+        /// <param name="book">The book item being managed. If null, a new book will be created.</param>
+        /// <param name="itemService">Service for managing item operations.</param>
+        /// <param name="closeAction">Action to execute when the view should be closed.</param>
         public BookViewModel(Book book, ItemService itemService, Action closeAction)
         {
             Book = book ?? new Book();
@@ -29,6 +48,9 @@ namespace LibraryManagementSystem.ViewModels
             CancelCommand = new RelayCommand(Cancel);
         }
 
+        /// <summary>
+        /// Validates the book's properties and saves it to the system.
+        /// </summary>
         private void Save()
         {
             // Step 1: Validate the data
@@ -60,21 +82,30 @@ namespace LibraryManagementSystem.ViewModels
             _closeAction();
         }
 
-
+        /// <summary>
+        /// Cancels the operation and closes the view without saving any changes.
+        /// </summary>
         private void Cancel()
         {
             _closeAction();
         }
+
+        /// <summary>
+        /// Validates the properties of the book to ensure they meet the required criteria.
+        /// </summary>
+        /// <returns>True if the book is valid; otherwise, false.</returns>
         private bool ValidateBook()
         {
             List<string> errors = new List<string>();
 
+            // Validate common item properties
             string itemErrors = _itemService.ValidateItemProperties(Book);
             if (!string.IsNullOrEmpty(itemErrors))
             {
                 errors.Add(itemErrors);
             }
 
+            // Validate specific book properties
             if (string.IsNullOrWhiteSpace(Book.Author))
             {
                 errors.Add("Author cannot be empty.");
@@ -90,14 +121,14 @@ namespace LibraryManagementSystem.ViewModels
                 errors.Add("Genre cannot be empty.");
             }
 
+            // Show validation errors if any
             if (errors.Count > 0)
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Validation Errors", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
-            return true; 
+            return true;
         }
-
     }
 }

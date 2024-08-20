@@ -3,25 +3,52 @@ using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Services;
 using LibraryManagementSystem.Utilities.Enums;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using System;
 
 public class AddUpdateUserViewModel : ObservableObject
 {
     private readonly UserService _userService;
     private readonly Action _closeWindow;
 
+    /// <summary>
+    /// Gets the user being edited.
+    /// </summary>
     public User EditableUser { get; private set; }
+
+    /// <summary>
+    /// Gets the original user data before any edits.
+    /// </summary>
     public User OriginalUser { get; private set; }
+
+    /// <summary>
+    /// Gets the collection of user types available for selection.
+    /// </summary>
     public ObservableCollection<UserType> UserTypes { get; }
 
+    /// <summary>
+    /// Gets the command to save the user.
+    /// </summary>
     public ICommand SaveCommand { get; }
+
+    /// <summary>
+    /// Gets the command to cancel the operation.
+    /// </summary>
     public ICommand CancelCommand { get; }
 
-    // New property to control the editability of UserType and MembershipDate
+    /// <summary>
+    /// Gets a value indicating whether the UserType and MembershipDate fields are editable.
+    /// </summary>
     public bool IsUserTypeAndMembershipDateEditable { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AddUpdateUserViewModel"/> class.
+    /// </summary>
+    /// <param name="user">The user to edit or add. If null, a new user is created.</param>
+    /// <param name="userService">The service used for managing users.</param>
+    /// <param name="closeWindow">The action to close the window.</param>
+    /// <param name="isEditable">Indicates whether the UserType and MembershipDate fields are editable.</param>
     public AddUpdateUserViewModel(User user, UserService userService, Action closeWindow, bool isEditable = true)
     {
         OriginalUser = user ?? new User();
@@ -53,6 +80,9 @@ public class AddUpdateUserViewModel : ObservableObject
         EditableUser.PropertyChanged += (s, e) => ((RelayCommand)SaveCommand).NotifyCanExecuteChanged();
     }
 
+    /// <summary>
+    /// Saves the changes made to the user. If the user is new, they are added; otherwise, the existing user is updated.
+    /// </summary>
     private void Save()
     {
         // Copy values from EditableUser to OriginalUser
@@ -82,11 +112,18 @@ public class AddUpdateUserViewModel : ObservableObject
         _closeWindow();
     }
 
+    /// <summary>
+    /// Cancels the operation and closes the window without saving changes.
+    /// </summary>
     private void Cancel()
     {
         _closeWindow();
     }
 
+    /// <summary>
+    /// Determines whether the save command can execute, based on the validity of the user input.
+    /// </summary>
+    /// <returns><c>true</c> if the save command can execute; otherwise, <c>false</c>.</returns>
     private bool CanSave()
     {
         return !string.IsNullOrWhiteSpace(EditableUser.Username) &&

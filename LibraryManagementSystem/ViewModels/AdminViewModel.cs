@@ -2,15 +2,18 @@
 using CommunityToolkit.Mvvm.Input;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Services;
+using LibraryManagementSystem.Utilities.Enums;
+using LibraryManagementSystem.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using LibraryManagementSystem.Utilities.Enums;
-using LibraryManagementSystem.Views;
 
 namespace LibraryManagementSystem.ViewModels
 {
+    /// <summary>
+    /// ViewModel for the admin interface, providing functionality for managing items, users, and fines in the library system.
+    /// </summary>
     public partial class AdminViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
@@ -21,20 +24,53 @@ namespace LibraryManagementSystem.ViewModels
         private User _selectedUser;
         private Item _selectedItem;
 
+        /// <summary>
+        /// Gets or sets the collection of fine payment requests.
+        /// </summary>
         public ObservableCollection<FinePayRequest> FinePayRequests { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the collection of books in the system.
+        /// </summary>
         public ObservableCollection<Book> Books { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the collection of CDs in the system.
+        /// </summary>
         public ObservableCollection<CD> CDs { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the collection of eBooks in the system.
+        /// </summary>
         public ObservableCollection<EBook> EBooks { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the collection of DVDs in the system.
+        /// </summary>
         public ObservableCollection<DVD> DVDs { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the collection of magazines in the system.
+        /// </summary>
         public ObservableCollection<Magazine> Magazines { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the collection of users in the system.
+        /// </summary>
         public ObservableCollection<User> Users { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the currently selected fine payment request.
+        /// </summary>
         public FinePayRequest SelectedFinePayRequest
         {
             get => _selectedFinePayRequest;
             set => SetProperty(ref _selectedFinePayRequest, value);
         }
 
+        /// <summary>
+        /// Gets or sets the currently selected item.
+        /// </summary>
         public Item SelectedItem
         {
             get => _selectedItem;
@@ -47,6 +83,9 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the currently selected user.
+        /// </summary>
         public User SelectedUser
         {
             get => _selectedUser;
@@ -59,10 +98,24 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the search term for items.
+        /// </summary>
         public string SearchTerm { get; set; }
+
+        /// <summary>
+        /// Gets or sets the search term for users.
+        /// </summary>
         public string SearchUserTerm { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether a user is selected.
+        /// </summary>
         public bool IsUserSelected => SelectedUser != null;
+
+        /// <summary>
+        /// Gets a value indicating whether an item is selected.
+        /// </summary>
         public bool IsItemSelected => SelectedItem != null;
 
         public ICommand SearchCommand { get; }
@@ -80,6 +133,12 @@ namespace LibraryManagementSystem.ViewModels
 
         public event EventHandler RequestClose;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdminViewModel"/> class.
+        /// </summary>
+        /// <param name="itemService">The service used to manage items.</param>
+        /// <param name="userService">The service used to manage users.</param>
+        /// <param name="navigateHome">The action to navigate back to the home screen.</param>
         public AdminViewModel(ItemService itemService, UserService userService, Action navigateHome)
         {
             _itemService = itemService;
@@ -115,15 +174,27 @@ namespace LibraryManagementSystem.ViewModels
             UpdateGreetingMessage();
         }
 
+        /// <summary>
+        /// Determines whether the current user can manage users.
+        /// </summary>
+        /// <returns><c>true</c> if the current user is a manager; otherwise, <c>false</c>.</returns>
         private bool CanManageUsers()
         {
             return _userService.GetCurrentUser().UserType == UserType.Manager;
         }
 
+        /// <summary>
+        /// Determines whether the current user can manage fines.
+        /// </summary>
+        /// <returns><c>true</c> if the current user is a manager; otherwise, <c>false</c>.</returns>
         private bool CanManageFines()
         {
             return _userService.GetCurrentUser().UserType == UserType.Manager;
         }
+
+        /// <summary>
+        /// Searches for items based on the search term.
+        /// </summary>
         private void SearchItems()
         {
             Books.Clear();
@@ -157,6 +228,9 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Opens the window to add a new item.
+        /// </summary>
         private void OpenAddItemWindow()
         {
             var itemTypeSelectionWindow = new ItemTypeSelectionWindow();
@@ -192,7 +266,9 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// Opens the window to update the selected item.
+        /// </summary>
         private void OpenUpdateItemWindow()
         {
             if (SelectedItem != null)
@@ -225,7 +301,9 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// Refreshes the list of items displayed in the UI.
+        /// </summary>
         private void RefreshItems()
         {
             Books.Clear();
@@ -255,6 +333,9 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Deletes the selected item after confirming with the user.
+        /// </summary>
         private void DeleteItem()
         {
             if (SelectedItem != null)
@@ -262,10 +343,8 @@ namespace LibraryManagementSystem.ViewModels
                 var result = MessageBox.Show("Are you sure you want to delete this item?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
-                    // Call the service to delete the item
                     bool isDeleted = _itemService.DeleteItem(SelectedItem.Id);
 
-                    // If deletion was successful, remove the item from the UI
                     if (isDeleted)
                     {
                         switch (SelectedItem)
@@ -289,14 +368,15 @@ namespace LibraryManagementSystem.ViewModels
                     }
                     else
                     {
-                        // If deletion was not successful, do nothing
                         MessageBox.Show("Item deletion was canceled due to active loans or pending loan requests.", "Deletion Canceled", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }
         }
 
-
+        /// <summary>
+        /// Searches for users based on the search term.
+        /// </summary>
         private void SearchUsers()
         {
             Users.Clear();
@@ -309,6 +389,9 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Opens the window to add a new user.
+        /// </summary>
         private void OpenAddUserWindow()
         {
             var addUserWindow = new AddUpdateUserWindow(null, _userService);
@@ -316,6 +399,9 @@ namespace LibraryManagementSystem.ViewModels
             RefreshUsers();
         }
 
+        /// <summary>
+        /// Opens the window to edit the selected user.
+        /// </summary>
         private void OpenEditUserWindow()
         {
             if (SelectedUser != null)
@@ -326,6 +412,9 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Deletes the selected user after confirming with the user.
+        /// </summary>
         private void DeleteUser()
         {
             if (SelectedUser != null)
@@ -338,13 +427,13 @@ namespace LibraryManagementSystem.ViewModels
                         MessageBox.Show("Cannot delete current user", "Deletion Canceled", MessageBoxButton.OK, MessageBoxImage.Information);
                         return;
                     }
-                    // Attempt to delete the user and check if it was successful
+
                     bool isDeleted = _userService.DeleteUser(SelectedUser.Id);
 
                     if (isDeleted)
                     {
                         Users.Remove(SelectedUser);
-                        SelectedUser = null; // Unselect the user after deletion
+                        SelectedUser = null;
                     }
                     else
                     {
@@ -354,7 +443,9 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// Refreshes the list of users displayed in the UI.
+        /// </summary>
         private void RefreshUsers()
         {
             Users.Clear();
@@ -364,37 +455,18 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
-        private bool CanEditOrDeleteUser()
-        {
-            return SelectedUser != null;
-        }
-
-        public string GreetingMessage
-        {
-            get => _userService.IsUserLoggedIn() ? $"Hello, {_userService.GetCurrentUser().FullName}" : "Hello, Guest";
-        }
-
-        public bool IsLoginButtonEnabled
-        {
-            get => !_userService.IsUserLoggedIn();
-        }
-
-        public bool IsLogoutButtonEnabled
-        {
-            get => _userService.IsUserLoggedIn();
-        }
-
-        private bool CanExecuteLogout()
-        {
-            return _userService.IsUserLoggedIn();
-        }
-
+        /// <summary>
+        /// Logs out the current user and navigates back to the home screen.
+        /// </summary>
         private void Logout()
         {
             _userService.Logout();
             NavigateHome();
         }
 
+        /// <summary>
+        /// Updates the greeting message displayed in the UI based on the current user.
+        /// </summary>
         private void UpdateGreetingMessage()
         {
             OnPropertyChanged(nameof(GreetingMessage));
@@ -402,6 +474,9 @@ namespace LibraryManagementSystem.ViewModels
             OnPropertyChanged(nameof(IsLogoutButtonEnabled));
         }
 
+        /// <summary>
+        /// Approves the selected fine payment request.
+        /// </summary>
         private void ApproveFinePayRequest()
         {
             if (SelectedFinePayRequest != null)
@@ -420,6 +495,9 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
+        /// <summary>
+        /// Rejects the selected fine payment request.
+        /// </summary>
         private void RejectFinePayRequest()
         {
             if (SelectedFinePayRequest != null)
@@ -430,11 +508,41 @@ namespace LibraryManagementSystem.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// Navigates back to the home screen.
+        /// </summary>
         private void NavigateHome()
         {
             _navigateHome?.Invoke();
             RequestClose?.Invoke(this, EventArgs.Empty);
+        }
+
+        public string GreetingMessage
+        {
+            get => _userService.IsUserLoggedIn() ? $"Hello, {_userService.GetCurrentUser().FullName}" : "Hello, Guest";
+        }
+
+        public bool IsLoginButtonEnabled
+        {
+            get => !_userService.IsUserLoggedIn();
+        }
+
+        public bool IsLogoutButtonEnabled
+        {
+            get => _userService.IsUserLoggedIn();
+        }
+
+        /// <summary>
+        /// Determines whether the logout command can execute.
+        /// </summary>
+        /// <returns><c>true</c> if a user is logged in; otherwise, <c>false</c>.</returns>
+        private bool CanExecuteLogout()
+        {
+            return _userService.IsUserLoggedIn();
+        }
+        private bool CanEditOrDeleteUser()
+        {
+            return SelectedUser != null;
         }
     }
 }

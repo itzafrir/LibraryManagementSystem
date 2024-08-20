@@ -9,16 +9,35 @@ using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the creation and editing of CD items within the library management system.
+    /// </summary>
     public class CDViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
         private readonly Action _closeAction;
 
+        /// <summary>
+        /// Gets the CD item being created or edited.
+        /// </summary>
         public CD CD { get; }
 
+        /// <summary>
+        /// Command to save the CD item to the system.
+        /// </summary>
         public ICommand SaveCommand { get; }
+
+        /// <summary>
+        /// Command to cancel the operation and close the view.
+        /// </summary>
         public ICommand CancelCommand { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CDViewModel"/> class.
+        /// </summary>
+        /// <param name="cd">The CD item being managed. If null, a new CD will be created.</param>
+        /// <param name="itemService">Service for managing item operations.</param>
+        /// <param name="closeAction">Action to execute when the view should be closed.</param>
         public CDViewModel(CD cd, ItemService itemService, Action closeAction)
         {
             CD = cd ?? new CD();
@@ -29,11 +48,13 @@ namespace LibraryManagementSystem.ViewModels
             CancelCommand = new RelayCommand(Cancel);
         }
 
+        /// <summary>
+        /// Validates the CD's properties and saves it to the system.
+        /// </summary>
         private void Save()
         {
             // Step 1: Validate the data
-            if (!ValidateCD
-                ())
+            if (!ValidateCD())
             {
                 return; // Prevent saving if validation fails
             }
@@ -61,6 +82,10 @@ namespace LibraryManagementSystem.ViewModels
             _closeAction();
         }
 
+        /// <summary>
+        /// Validates the properties of the CD to ensure they meet the required criteria.
+        /// </summary>
+        /// <returns>True if the CD is valid; otherwise, false.</returns>
         private bool ValidateCD()
         {
             List<string> errors = new List<string>();
@@ -98,6 +123,7 @@ namespace LibraryManagementSystem.ViewModels
                 errors.Add("Label cannot be empty.");
             }
 
+            // Show validation errors if any
             if (errors.Count > 0)
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Validation Errors", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -107,6 +133,9 @@ namespace LibraryManagementSystem.ViewModels
             return true; // Validation passed
         }
 
+        /// <summary>
+        /// Cancels the operation and closes the view without saving any changes.
+        /// </summary>
         private void Cancel()
         {
             _closeAction();

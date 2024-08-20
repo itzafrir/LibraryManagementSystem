@@ -55,7 +55,6 @@ namespace LibraryManagementSystem
                     .LogTo(Console.WriteLine, LogLevel.Information));
 
             services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
-            services.AddSingleton<LoanService>();
             services.AddSingleton<ItemService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<FineService>(); // Register FineService

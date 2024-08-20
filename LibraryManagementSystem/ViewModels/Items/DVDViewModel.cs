@@ -9,16 +9,35 @@ using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the creation and editing of DVD items within the library management system.
+    /// </summary>
     public class DVDViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
         private readonly Action _closeAction;
 
+        /// <summary>
+        /// Gets the DVD item being created or edited.
+        /// </summary>
         public DVD DVD { get; }
 
+        /// <summary>
+        /// Command to save the DVD item to the system.
+        /// </summary>
         public ICommand SaveCommand { get; }
+
+        /// <summary>
+        /// Command to cancel the operation and close the view.
+        /// </summary>
         public ICommand CancelCommand { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DVDViewModel"/> class.
+        /// </summary>
+        /// <param name="dvd">The DVD item being managed. If null, a new DVD will be created.</param>
+        /// <param name="itemService">Service for managing item operations.</param>
+        /// <param name="closeAction">Action to execute when the view should be closed.</param>
         public DVDViewModel(DVD dvd, ItemService itemService, Action closeAction)
         {
             DVD = dvd ?? new DVD();
@@ -29,6 +48,9 @@ namespace LibraryManagementSystem.ViewModels
             CancelCommand = new RelayCommand(Cancel);
         }
 
+        /// <summary>
+        /// Validates the DVD's properties and saves it to the system.
+        /// </summary>
         private void Save()
         {
             // Step 1: Validate the data
@@ -60,6 +82,10 @@ namespace LibraryManagementSystem.ViewModels
             _closeAction();
         }
 
+        /// <summary>
+        /// Validates the properties of the DVD to ensure they meet the required criteria.
+        /// </summary>
+        /// <returns>True if the DVD is valid; otherwise, false.</returns>
         private bool ValidateDVD()
         {
             List<string> errors = new List<string>();
@@ -97,6 +123,7 @@ namespace LibraryManagementSystem.ViewModels
                 errors.Add("Studio cannot be empty.");
             }
 
+            // Show validation errors if any
             if (errors.Count > 0)
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Validation Errors", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -106,6 +133,9 @@ namespace LibraryManagementSystem.ViewModels
             return true; // Validation passed
         }
 
+        /// <summary>
+        /// Cancels the operation and closes the view without saving any changes.
+        /// </summary>
         private void Cancel()
         {
             _closeAction();

@@ -9,16 +9,35 @@ using System.Windows.Input;
 
 namespace LibraryManagementSystem.ViewModels
 {
+    /// <summary>
+    /// ViewModel for managing the creation and editing of magazine items within the library management system.
+    /// </summary>
     public class MagazineViewModel : ObservableObject
     {
         private readonly ItemService _itemService;
         private readonly Action _closeAction;
 
-        public Magazine Magazine{ get; }
+        /// <summary>
+        /// Gets the magazine item being created or edited.
+        /// </summary>
+        public Magazine Magazine { get; }
 
+        /// <summary>
+        /// Command to save the magazine item to the system.
+        /// </summary>
         public ICommand SaveCommand { get; }
+
+        /// <summary>
+        /// Command to cancel the operation and close the view.
+        /// </summary>
         public ICommand CancelCommand { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MagazineViewModel"/> class.
+        /// </summary>
+        /// <param name="magazine">The magazine item being managed. If null, a new magazine will be created.</param>
+        /// <param name="itemService">Service for managing item operations.</param>
+        /// <param name="closeAction">Action to execute when the view should be closed.</param>
         public MagazineViewModel(Magazine magazine, ItemService itemService, Action closeAction)
         {
             Magazine = magazine ?? new Magazine();
@@ -29,6 +48,9 @@ namespace LibraryManagementSystem.ViewModels
             CancelCommand = new RelayCommand(Cancel);
         }
 
+        /// <summary>
+        /// Validates the magazine's properties and saves it to the system.
+        /// </summary>
         private void Save()
         {
             // Step 1: Validate the data
@@ -59,6 +81,11 @@ namespace LibraryManagementSystem.ViewModels
             // Step 4: Close the view
             _closeAction();
         }
+
+        /// <summary>
+        /// Validates the properties of the magazine to ensure they meet the required criteria.
+        /// </summary>
+        /// <returns>True if the magazine is valid; otherwise, false.</returns>
         private bool ValidateMagazine()
         {
             List<string> errors = new List<string>();
@@ -70,7 +97,7 @@ namespace LibraryManagementSystem.ViewModels
                 errors.Add(itemErrors);
             }
 
-            // Validate specific Magazine properties
+            // Validate specific magazine properties
             if (string.IsNullOrWhiteSpace(Magazine.Editor))
             {
                 errors.Add("Editor cannot be empty.");
@@ -91,6 +118,7 @@ namespace LibraryManagementSystem.ViewModels
                 errors.Add("Frequency cannot be empty.");
             }
 
+            // Show validation errors if any
             if (errors.Count > 0)
             {
                 MessageBox.Show(string.Join(Environment.NewLine, errors), "Validation Errors", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -100,7 +128,9 @@ namespace LibraryManagementSystem.ViewModels
             return true; // Validation passed
         }
 
-
+        /// <summary>
+        /// Cancels the operation and closes the view without saving any changes.
+        /// </summary>
         private void Cancel()
         {
             _closeAction();
