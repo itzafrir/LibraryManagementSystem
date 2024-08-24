@@ -18,7 +18,7 @@ namespace LibraryManagementSystem.Data
             IRepository<LoanRequest> loanRequestRepository,
             IRepository<FinePayRequest> finePayRequestRepository)
         {
-            // Ensure the database is initialized with existing data
+            // Ensure the database is initialized with existing data - easy for testing
             var users = userRepository.GetAll().ToList();
             var items = itemRepository.GetAll().ToList();
             var loans = loanRepository.GetAll().ToList();

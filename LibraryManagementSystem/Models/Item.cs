@@ -27,7 +27,7 @@ namespace LibraryManagementSystem.Models
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the International Standard Book Number (ISBN) for the item.
+        /// Gets or sets the Catalog Number (ISBN) for the item.
         /// </summary>
         public string ISBN { get; set; }
 

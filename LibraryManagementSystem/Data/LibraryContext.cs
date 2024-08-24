@@ -60,7 +60,7 @@ namespace LibraryManagementSystem.Data
 
             modelBuilder.Entity<Review>()
                 .HasIndex(r => new { r.UserId, r.ItemId })
-                .IsUnique(); // Add unique constraint on UserId and ItemId
+                .IsUnique(); 
 
             modelBuilder.Entity<Fine>()
                 .HasOne(f => f.User)
