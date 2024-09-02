@@ -50,9 +50,16 @@ namespace LibraryManagementSystem
 
         private void ConfigureServices(IServiceCollection services)
         {
+            // Get the base directory where the application is running
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            // Combine the base directory with the relative path to the database file
+            var dbPath = System.IO.Path.Combine(baseDirectory, "library.db");
+
+            // Use the relative path in the connection string
             services.AddDbContext<LibraryContext>(options =>
-                options.UseSqlite(@"Data Source=C:\Users\ItayTzafrir\source\repos\LibraryManagementSystem\LibraryManagementSystem\library.db")
-                    .LogTo(Console.WriteLine, LogLevel.Information));
+                options.UseSqlite($"Data Source={dbPath}")
+                       .LogTo(Console.WriteLine, LogLevel.Information));
 
             services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
             services.AddSingleton<ItemService>();

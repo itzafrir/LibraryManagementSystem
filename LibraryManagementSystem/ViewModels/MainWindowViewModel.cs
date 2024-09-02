@@ -90,6 +90,13 @@ namespace LibraryManagementSystem.ViewModels
         }
 
         /// <summary>
+        /// Gets a value indicating whether the admin button should be enabled.
+        /// </summary>
+        public bool IsAdminButtonEnabled
+        {
+            get => _userService.IsUserLoggedIn() && CanNavigateToAdmin();
+        }
+        /// <summary>
         /// Determines whether the logout command can execute.
         /// </summary>
         /// <returns>True if the user is logged in; otherwise, false.</returns>
@@ -125,6 +132,7 @@ namespace LibraryManagementSystem.ViewModels
             OnPropertyChanged(nameof(GreetingMessage));
             OnPropertyChanged(nameof(IsLoginButtonEnabled));
             OnPropertyChanged(nameof(IsLogoutButtonEnabled));
+            OnPropertyChanged(nameof(IsAdminButtonEnabled));
             LogoutCommand.NotifyCanExecuteChanged();
             NavigateToLoginCommand.NotifyCanExecuteChanged();
         }

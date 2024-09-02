@@ -16,7 +16,7 @@
             <Button Content="Search Items" Width="200" Command="{Binding NavigateToCatalogCommand}"/>
             <Button Content="My Profile" Width="200" Command="{Binding NavigateToProfileCommand}"/>
             <Button Content="Login" Width="200" Command="{Binding NavigateToLoginCommand}" IsEnabled="{Binding IsLoginButtonEnabled}"/>
-            <Button Content="Admin" Width="200" Command="{Binding NavigateToAdminCommand}" Visibility="{Binding IsAdminVisible}"/>
+            <Button Content="Admin" Width="200" Command="{Binding NavigateToAdminCommand}" IsEnabled="{Binding IsAdminButtonEnabled}"/>
         </StackPanel>
     </Grid>
 </Window>
